@@ -4,12 +4,33 @@ import html2canvas from "html2canvas";
 import BillTemplate from "../components/BillTemplate";
 import DownloadBill from "../components/DownloadBill";
 
-const billDetails = {
-  referenceNo: "12345678912345U",
-  amount: 480,
-  totalAmount: 500,
+
+// FUNCTION TO GET RANDOM NUMBER BETWEEN MIN AND MAX
+function getRandomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// FUNCTION TO GENERATE RANDOM 14-DIGIT NUMBER
+function generateRandom14DigitNumber() {
+  const min = 10000000000000;  // SMALLEST 14-digit number (10^13)
+  const max = 99999999999999;  // LARGE 14-digit number (10^14 - 1)
+  
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+const random14Digit = generateRandom14DigitNumber();
+const randomNumber = getRandomNumber(10, 30);
+const amount = Math.floor((Math.random() * 300)); // RANDOM AMOUNT OF BILL
+
+// BILL DETAILS
+const billDetails = {
+  referenceNo: random14Digit + "U",
+  amount: amount,
+  totalAmount: amount + randomNumber,
+}
+
+
+// PRINT PAGE COMPONENT
 const PrintPage = () => {
   const downloadBillRef = useRef(); // Reference to the DownloadBill component for download
 
@@ -33,7 +54,7 @@ const PrintPage = () => {
           pdf.save("bill.pdf");
         })
         .catch((err) => console.error("Error capturing the download bill: ", err));
-    }, 1000); // Delay capture to ensure all content is loaded
+    }, 1000); // DELAY TO ALLOW HTML2CANVAS TO CAPTURE THE ELEMENT
   };
 
   return (
