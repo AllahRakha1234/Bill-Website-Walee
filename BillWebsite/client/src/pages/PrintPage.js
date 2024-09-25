@@ -4,42 +4,42 @@ import html2canvas from "html2canvas";
 import BillTemplate from "../components/BillTemplate";
 import DownloadBill from "../components/DownloadBill";
 
-// FUNCTION TO GET RANDOM NUMBER BETWEEN MIN AND MAX
-function getRandomNumber(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-// FUNCTION TO GENERATE RANDOM 14-DIGIT NUMBER
-function generateRandom14DigitNumber() {
-  const min = 10000000000000; // SMALLEST 14-DIGIT NUMBER (10^13)
-  const max = 99999999999999; // LARGEST 14-DIGIT NUMBER (10^14 - 1)
-
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-const random14Digit = generateRandom14DigitNumber();
-const randomNumber = getRandomNumber(10, 30);
-const amount = Math.floor(Math.random() * 300); // RANDOM AMOUNT OF BILL
-
-// BILL DETAILS
-const billDetails = {
-  referenceNo: random14Digit + "U",
-  amount: amount,
-  totalAmount: amount + randomNumber,
-};
-
 // PRINT PAGE COMPONENT
 const PrintPage = () => {
-  const [isLoading, setIsLoading] = useState(true); // LOADER STATE
-  const downloadBillRef = useRef(); // REFERENCE TO THE DOWNLOADBILL COMPONENT FOR DOWNLOAD
+  const [isLoading, setIsLoading] = useState(true);
+  const [billDetails, setBillDetails] = useState({});
+  const downloadBillRef = useRef();
 
   useEffect(() => {
-    // SIMULATING LOADING TIME TO RENDER THE BILL PROPERLY
-    const timer = setTimeout(() => {
-      setIsLoading(false); // REMOVE THE LOADER AFTER 1.5 SECONDS
-    }, 1500); // YOU CAN ADJUST THIS TIME AS PER YOUR NEED
+    // Retrieve the MeterNo from local storage
+    const storedMeterNo = JSON.parse(localStorage.getItem("referenceNo"));
+    const storedData = JSON.parse(localStorage.getItem("bills")) || [];
+    // console.log("storedData inside printpage: ", storedData);
+    
+    // Find the bill details based on MeterNo
+    const billData = storedData.find(bill => parseInt(bill.MeterNo) === parseInt(storedMeterNo));
+    
+    if (billData) {
+      const amount = parseInt(billData.Amount);
+      const totalAmount = amount + 50; // Adjusting total amount as per your requirement
 
-    return () => clearTimeout(timer); // CLEANUP THE TIMEOUT IF THE COMPONENT IS UNMOUNTED
+      // Set the bill details
+      setBillDetails({
+        referenceNo: `${storedMeterNo}U`,
+        amount: amount,
+        totalAmount: totalAmount,
+      });
+
+    } else {
+      console.error("No bill found for the provided MeterNo.");
+    }
+
+    // Simulate loading time
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const downloadPdfDocument = () => {
@@ -64,36 +64,37 @@ const PrintPage = () => {
         .catch((err) =>
           console.error("ERROR CAPTURING THE DOWNLOAD BILL: ", err)
         );
-    }, 1000); // DELAY TO ALLOW HTML2CANVAS TO CAPTURE THE ELEMENT
+    }, 1000);
   };
 
   return (
     <div className="flex items-center flex-col">
-      {/* LOADER THAT WILL SHOW UNTIL BILL IS RENDERED */}
       {isLoading && (
         <div className="fixed inset-0 bg-white z-50 flex justify-center items-center">
           <div className="loader"></div>
         </div>
       )}
 
-      {/* PRINT BUTTON */}
       <div className="mx-auto">
         <button
           className="text-white bg-indigo-500 border-0 py-1 px-4 focus:outline-none hover:bg-indigo-600 rounded text-md"
           onClick={downloadPdfDocument}
+          disabled={!billDetails} // Disable button if billDetails is not set
         >
           DOWNLOAD BILL
         </button>
       </div>
 
-      {/* BILL TEMPLATE ONLY DISPLAYED */}
-      <div>
-        <BillTemplate billDetails={billDetails} />
-      </div>
+      {/* Pass billDetails as prop */}
+      {billDetails && (
+        <div>
+          <BillTemplate billDetails={billDetails} />
+        </div>
+      )}
 
-      {/* DOWNLOAD BILL HIDDEN OFF-SCREEN FOR DOWNLOAD */}
       <div style={{ position: "absolute", top: "-200vh", left: "-200vw" }}>
         <div ref={downloadBillRef}>
+          {/* Pass billDetails as prop */}
           <DownloadBill billDetails={billDetails} />
         </div>
       </div>

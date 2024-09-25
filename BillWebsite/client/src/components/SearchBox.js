@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 
-
 const SearchBox = () => {
   const [radioValue, setRadioValue] = useState("reference-no");
   const [selectedOption, setSelectedOption] = useState("");
   const [referenceNo, setReferenceNo] = useState("");
   const [referenceNoFlag, setReferenceNoFlag] = useState(true);
-
+  
   const navigate = useNavigate(); // Initialize navigate function
 
   const handleRadioChange = (event) => {
@@ -20,11 +19,23 @@ const SearchBox = () => {
   };
 
   const handleSearchBtnClick = () => {
-    if(referenceNo === "12345678912345") {
+    // Retrieve data from local storage
+    const storedData = JSON.parse(localStorage.getItem("bills")) || [];
+    console.log("storedData: ", storedData, typeof storedData);
+    for (let i = 0; i < storedData.length; i++) {
+      console.log("storedData: ", storedData[i].MeterNo, typeof storedData[i].MeterNo);
+    }
+    console.log("user input - referenceNo: ", referenceNo, typeof referenceNo);
+    // Check if the reference number exists in the stored data
+    const isReferenceNoValid = storedData.some(item => parseInt(item.MeterNo) === parseInt(referenceNo));
+
+    if (isReferenceNoValid) {
+      localStorage.setItem("referenceNo", JSON.stringify(referenceNo)); // Store the reference number in local storage for use in the PrintPage
       navigate("/print"); // Navigate to /print URL
     } else {
       alert("Reference No does not Exist.");
     }
+    
     setReferenceNo("");
   };
 
