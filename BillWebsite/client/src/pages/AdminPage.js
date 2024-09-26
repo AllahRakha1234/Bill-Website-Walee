@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx'; // Import the xlsx library
+import { useNavigate } from 'react-router-dom';
 
 const AdminPage = () => {
   const [fileData, setFileData] = useState([]);
-
+  const navigate = useNavigate();
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
 
@@ -50,8 +51,14 @@ const AdminPage = () => {
   };
 
   const handleSave = () => {
-    console.log("Saving file data", fileData);
-    // You can send the fileData to the backend or use it as needed
+    if(fileData.length > 0) {
+      // Save the data to the database or perform any other operations
+      console.log("Data saved successfully:", fileData);
+      navigate('/'); // Navigate to the home page
+    }
+    else {
+      alert("No data found! Please upload a file first.");
+    }
   };
 
   // Function to retrieve data from local storage
