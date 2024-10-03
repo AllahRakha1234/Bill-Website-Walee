@@ -33,6 +33,9 @@ const Navbar = () => {
           <Link to="/admin" className="text-xl mr-5 hover:text-blue-500">
             Admin
           </Link>
+          <Link to="/billdesign" className="text-xl mr-5 hover:text-blue-500">
+            Bill Design
+          </Link>
         </nav>
       </div>
     </header>
