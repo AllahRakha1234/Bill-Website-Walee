@@ -277,18 +277,20 @@ const BillDesign = () => {
 
           {/* EXPLAINATION OF LOWER PART - 4 COLS == METER No PREVIOUS PRESENT MF UNITS STATUS */}
           <div className="grid grid-cols-8">
-            {/* Left 4 Cols - Description */}
+            {/* Left 4 Cols */}
             <div className="col-span-4 border-r-2 border-black">
               <div className="grid grid-flow-col">
-                <div className="col-span-1 border-r-2 border-b-2 border-black text-center font-semibold text-[#1301ff]">
-                609641
+                  <div className="col-span-1 border-r-2 border-black flex items-center justify-center font-semibold text-[#CC0000] whitespace-nowrap min-w-[50px] h-[99px]">
+                    609641
+                  </div>
+                <div className="col-span-3 border-black text-center font-semibold text-[#1301ff]">
+                <div className="grid grid-cols-8">
+                    
                 </div>
-                <div className="col-span-3 border-b-2 border-black text-center font-semibold text-[#1301ff]">
-                  PREVIOUS
                 </div>
               </div>
             </div>
-            {/* Right 4 Cols - Description */}
+            {/* Right 4 Cols */}
             <div className="col-span-4">
               <div className="grid grid-flow-col grid-cols-12">
                 <div className="col-span-3 border-r-2 border-b-2 border-black text-center font-semibold text-[#1301ff]">
