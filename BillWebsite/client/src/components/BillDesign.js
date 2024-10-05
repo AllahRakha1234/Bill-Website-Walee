@@ -224,23 +224,23 @@ const BillDesign = () => {
         <div className="col-span-8 border-b-2 border-r-2 border-black">
           {/* Upper Part */}
           <div className="border-b-2 border-black">
-            <div className="uppercase border-b pl-1 text-left text-sm font-semibold ">
-              NAME & ADDRESS
+            <div className="uppercase underline border-b pl-1 text-left text-sm font-bold ">
+              NAME & ADDRESS.
             </div>
-            <div className="uppercase border-b pl-1 text-left text-sm font-semibold ">
-              NAME & ADDRESS
+            <div className="text-[#1301ff] border-b pl-1 text-left text-sm font-bold ">
+              Name
             </div>
-            <div className="uppercase border-b pl-1 text-left text-sm font-semibold ">
-              NAME & ADDRESS
+            <div className="text-[#1301ff] border-b pl-1 text-left text-sm font-bold ">
+              Appartment #
             </div>
-            <div className="uppercase border-b pl-1 text-left text-sm font-semibold ">
-              NAME & ADDRESS
+            <div className="text-[#002060] uppercase border-b pl-1 text-left text-sm font-bold ">
+              HQ NUST, SECTOR H-12
             </div>
-            <div className="uppercase border-b pl-1 text-left text-sm font-semibold ">
-              NAME & ADDRESS
+            <div className="text-[#002060] uppercase border-b pl-1 text-left text-sm font-bold ">
+              ISLAMABAD
             </div>
-            <div className="uppercase pl-1 text-left text-sm font-semibold ">
-              NAME & ADDRESS
+            <div className="pl-1 text-left text-sm ">
+              -
             </div>
           </div>
           {/* Lower Part */}
@@ -276,35 +276,62 @@ const BillDesign = () => {
           </div>
 
           {/* EXPLAINATION OF LOWER PART - 4 COLS == METER No PREVIOUS PRESENT MF UNITS STATUS */}
-          <div className="grid grid-cols-8">
+          <div className="grid grid-cols-8 ">
             {/* Left 4 Cols */}
             <div className="col-span-4 border-r-2 border-black">
-              <div className="grid grid-flow-col">
-                  <div className="col-span-1 border-r-2 border-black flex items-center justify-center font-semibold text-[#CC0000] whitespace-nowrap min-w-[50px] h-[99px]">
-                    609641
-                  </div>
-                <div className="col-span-3 border-black text-center font-semibold text-[#1301ff]">
-                <div className="grid grid-cols-8">
-                    
+              <div className="grid grid-flow-col grid-cols-8">
+                <div className="col-span-3 border-r-2 border-black flex items-center justify-center font-semibold text-[#CC0000] whitespace-nowrap min-w-[113px] h-[99px]">
+                  609641
                 </div>
+                <div className="col-span-5">
+                  <div className="grid grid-flow-row grid-cols-12">
+                    <div className="col-span-12 border-b-2 border-black">
+                      <div className="grid grid-flow-col grid-cols-12 h-[40px]">
+                        <div className="col-span-5 border-r-2 border-black font-bold flex items-center justify-center">
+                          Peak
+                        </div>
+                        <div className="col-span-7 font-semibold flex items-center justify-center">
+                          1798
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-span-12">
+                      <div className="grid grid-flow-col grid-cols-12 h-[57px]">
+                        <div className="col-span-5 border-r-2 border-black font-bold flex items-center justify-center">
+                          Off Peak
+                        </div>
+                        <div className="col-span-7 font-semibold flex items-center justify-center">
+                          9325
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             {/* Right 4 Cols */}
             <div className="col-span-4">
               <div className="grid grid-flow-col grid-cols-12">
-                <div className="col-span-3 border-r-2 border-b-2 border-black text-center font-semibold text-[#1301ff]">
-                  PRESENT
+                <div className="col-span-3 border-r-2 border-black text-center font-semibold ">
+                  <div className="border-b-2 border-black font-semibold h-[42px] flex items-center justify-center">
+                    1800
+                  </div>
+                  <div className="font-semibold h-[57px] flex items-center justify-center">
+                    9332
+                  </div>
                 </div>
-                <div className="col-span-3 border-r-2 border-b-2 border-black text-center font-semibold text-[#1301ff]">
-                  MF
+                <div className="col-span-3 border-r-2 border-black text-center font-semibold flex items-center justify-center">
+                  1
                 </div>
-                <div className="col-span-2 border-r-2 border-b-2 border-black text-center font-semibold text-[#1301ff]">
-                  UNITS
+                <div className="col-span-2 border-r-2 border-black text-center font-semibold">
+                  <div className="border-b-2 border-black font-semibold h-[42px] flex items-center justify-center">
+                    2
+                  </div>
+                  <div className="font-semibold h-[57px] flex items-center justify-center">
+                    7
+                  </div>
                 </div>
-                <div className="col-span-5 border-b-2 border-black text-center font-semibold text-[#1301ff]">
-                  STATUS
-                </div>
+                <div className="col-span-5 text-center font-semibold"></div>
               </div>
             </div>
           </div>
