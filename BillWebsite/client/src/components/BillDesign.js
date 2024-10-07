@@ -1,6 +1,22 @@
 import React from "react";
 
 const BillDesign = () => {
+  // Electicity Charges Data
+  const electricityBill = {
+    "TOTAL UNITS CONSUMED": 9,
+    "COST OF ELECTRICTY": 388,
+    GST: 79,
+    "Qtr Tex": 22,
+    "FUEL PRICE ADJUSTMENT": 20,
+    "Fixed Charged": 1000,
+    TOTAL: 1509,
+    "DEFERRED AMOUNT": null, // No value provided
+    "OUTSTANDING INSTALLMENT": null,
+    "PROG IT PAID F-Y": null,
+    "PROG GST PAID F-Y": null,
+  };
+
+  // RETURN JSX
   return (
     <div className="my-4 border-2 border-blue-800 max-w-4xl mx-auto pb-44">
       {/* <-- HEADER SECTION --> */}
@@ -239,9 +255,7 @@ const BillDesign = () => {
             <div className="text-[#002060] uppercase border-b pl-1 text-left text-sm font-bold ">
               ISLAMABAD
             </div>
-            <div className="pl-1 text-left text-sm ">
-              -
-            </div>
+            <div className="pl-1 text-left text-sm ">-</div>
           </div>
           {/* Lower Part */}
           <div className="grid grid-cols-8">
@@ -384,41 +398,75 @@ const BillDesign = () => {
         </div>
       </div>
 
-      {/* EXPLAINATION OF ABOVE LEFT SIDE - LOWER PART - 4 COLS */}
+      {/* ELECTRICITY + GOVT CHARGES + ARREARS SECTIONS */}
+      <div className="elecGovtArrearsSection grid grid-cols-12">
+        {/* ELECTRICITY - LEFT PART (Divided in 3-parts) */}
+        <div className="col-span-5 border-b-2 border-r-2 border-black">
+          <div className="grid grid-flow-row">
+            {/* Upper Part */}
+            <div className="uppercase border-b-2 border-black text-center text-sm text-[#CC0000] font-semibold">
+              ELECTRICITY CHARGES
+            </div>
+            {/* Middle Part */}
 
-      {/* Charges Breakdown Section */}
-      {/* <div className="border-t border-gray-300 pt-4 mb-6">
-        <h3 className="text-xl font-bold text-center mb-4">
-          Charges Breakdown
-        </h3>
-        <table className="w-full border-collapse text-left">
-          <thead>
-            <tr className="border-b bg-gray-100">
-              <th className="py-2">Description</th>
-              <th>Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b">
-              <td className="py-2">Energy Charges</td>
-              <td>PKR 5000</td>
-            </tr>
-            <tr className="border-b">
-              <td className="py-2">Meter Rent</td>
-              <td>PKR 200</td>
-            </tr>
-            <tr className="border-b">
-              <td className="py-2">GST (17%)</td>
-              <td>PKR 850</td>
-            </tr>
-            <tr className="border-b">
-              <td className="py-2">Total Amount</td>
-              <td>PKR 6050</td>
-            </tr>
-          </tbody>
-        </table>
-      </div> */}
+            {/* <div className="grid grid-flow-row grid-cols-5">
+              <div className="col-span-4 border-b border-r-2 border-black uppercase pl-1 text-left text-sm text-[#CC0000] font-semibold">
+                1
+              </div>
+              <div className="col-span-1 border-b border-black uppercase text-center text-sm text-[#CC0000] font-semibold">
+               2
+              </div>
 
+              <div className="col-span-4 border-b border-r-2 border-black uppercase pl-1 text-left text-sm text-[#CC0000] font-semibold">
+                3
+              </div>
+              <div className="col-span-1 border-b border-black uppercase text-center text-sm text-[#CC0000] font-semibold">
+               4
+              </div>
+            </div> */}
+
+            <div className="grid grid-flow-row grid-cols-5">
+              {Object.keys(electricityBill).map((key, index) => {
+                return (
+                  <>
+                    <div className="col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#1301ff] font-semibold">
+                      {key}
+                    </div>
+                    <div className="col-span-1 border-b border-black uppercase text-center text-sm font-semibold">
+                      {electricityBill[key]}
+                    </div>
+                  </>
+                );
+              })}
+            </div>
+
+            {/* Lower Part */}
+            <div className="grid grid-flow-col grid-cols-5 border-t border-black">
+              <div className="col-span-2 border-r-2 border-black text-sm font-semibold">
+                <div className="border-b-2 border-black text-[#1301ff] underline pl-1">S/No</div>
+                {/* Use row-span-2 directly here */}
+                <div className="grid grid-rows-5">
+                  <div className="row-span-2 border-b flex items-center justify-center">
+                    Rate
+                  </div>
+                  <div className="row-span-2 flex items-center justify-center border-b">TR</div>
+                  <div className="flex items-center justify-center border-b">-</div>
+                </div>
+              </div>
+              <div className="col-span-2 uppercase text-center text-sm text-[#CC0000] font-semibold">
+                <div className="border-r-2 border-black">TARIFF</div>
+              </div>
+              <div className="col-span-1 uppercase text-center text-sm text-[#CC0000] font-semibold">
+                <div className="">RS kWh</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* GOVT CHARGES - MIDDLE PART */}
+        <div className="col-span-3 border-b-2 border-r-2 border-black">M</div>
+        {/* ARREARS - RIGHT PART */}
+        <div className="col-span-4 border-b-2 border-black">r</div>
+      </div>
       {/* Placeholder for an image */}
       {/* <div className="border-t border-gray-300 pt-4 mb-6">
         <img
