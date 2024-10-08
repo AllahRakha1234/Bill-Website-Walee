@@ -16,6 +16,22 @@ const BillDesign = () => {
     "PROG GST PAID F-Y": null,
   };
 
+  // Govt Charges Data
+  const govtCharges = {
+    ptvFee: 35,
+    meterRent: 25,
+    incomeTax: null, // No value provided
+    extraTax: null, // No value provided
+    furtherTax: null, // No value provided
+    njSurcharge: null, // No value provided
+    gstOnFpa: null, // No value provided
+    itOnFpa: null, // No value provided
+    edOnFpa: null, // No value provided
+    fcSurcharge: 29,
+    trSurcharge: null, // No value provided
+    total: 89,
+  };
+
   // RETURN JSX
   return (
     <div className="my-4 border-2 border-blue-800 max-w-4xl mx-auto pb-44">
@@ -443,14 +459,20 @@ const BillDesign = () => {
             {/* Lower Part */}
             <div className="grid grid-flow-col grid-cols-5 border-t border-black">
               <div className="col-span-2 border-r-2 border-black text-sm font-semibold">
-                <div className="border-b-2 border-black text-[#1301ff] underline pl-1">S/No</div>
+                <div className="border-b-2 border-black text-[#1301ff] underline pl-1">
+                  S/No
+                </div>
                 {/* Use row-span-2 directly here */}
                 <div className="grid grid-rows-5">
                   <div className="row-span-2 border-b flex items-center justify-center">
                     Rate
                   </div>
-                  <div className="row-span-2 flex items-center justify-center border-b">TR</div>
-                  <div className="flex items-center justify-center border-b">-</div>
+                  <div className="row-span-2 flex items-center justify-center border-b">
+                    TR
+                  </div>
+                  <div className="flex items-center justify-center border-b">
+                    -
+                  </div>
                 </div>
               </div>
               <div className="col-span-2 uppercase text-center text-sm text-[#CC0000] font-semibold">
@@ -463,7 +485,25 @@ const BillDesign = () => {
           </div>
         </div>
         {/* GOVT CHARGES - MIDDLE PART */}
-        <div className="col-span-3 border-b-2 border-r-2 border-black">M</div>
+        <div className="col-span-3 border-b-2 border-r-2 border-black">
+          <div className="uppercase border-b-2 border-black text-center text-sm text-[#1301ff] font-semibold">
+            GOVT CHARGES
+          </div>
+          <div className="grid grid-flow-row grid-cols-5">
+              {Object.keys(govtCharges).map((key, index) => {
+                return (
+                  <>
+                    <div className="col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#CC0000] font-semibold">
+                      {key}
+                    </div>
+                    <div className="col-span-1 border-b border-black uppercase text-center text-sm font-semibold">
+                      {govtCharges[key]}
+                    </div>
+                  </>
+                );
+              })}
+            </div>
+        </div>
         {/* ARREARS - RIGHT PART */}
         <div className="col-span-4 border-b-2 border-black">r</div>
       </div>
