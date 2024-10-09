@@ -31,6 +31,16 @@ const BillDesign = () => {
     trSurcharge: null, // No value provided
     total: 89,
   };
+  // Arrears - Bill Data
+  const arrearsDetails = {
+  "CURRENT BILL": 1598,
+  "Water BILL": 250,
+  "PM RELIEF AMOUNT": 0,  // assuming no value provided
+  "INSTALMENT": 0,
+  "PAYABLE WITHIN DUE DATE": 1848,
+  "L.P. SURCHAGE": 185,
+  "PAYABLE AFTER DUE DATE": 2033
+};
 
   // RETURN JSX
   return (
@@ -490,22 +500,40 @@ const BillDesign = () => {
             GOVT CHARGES
           </div>
           <div className="grid grid-flow-row grid-cols-5">
-              {Object.keys(govtCharges).map((key, index) => {
-                return (
-                  <>
-                    <div className="col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#CC0000] font-semibold">
-                      {key}
-                    </div>
-                    <div className="col-span-1 border-b border-black uppercase text-center text-sm font-semibold">
-                      {govtCharges[key]}
-                    </div>
-                  </>
-                );
-              })}
-            </div>
+            {Object.keys(govtCharges).map((key, index) => {
+              return (
+                <>
+                  <div className="col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#CC0000] font-semibold">
+                    {key}
+                  </div>
+                  <div className="col-span-1 border-b border-black uppercase text-center text-sm font-semibold">
+                    {govtCharges[key]}
+                  </div>
+                </>
+              );
+            })}
+          </div>
         </div>
         {/* ARREARS - RIGHT PART */}
-        <div className="col-span-4 border-b-2 border-black">r</div>
+        <div className="col-span-4 border-b-2 border-black">
+          <div className="border-b-2 border-black pl-1 text-left text-sm text-[#1301ff] font-semibold">
+            Arrear
+          </div>
+          <div className="grid grid-flow-row grid-cols-5">
+            {Object.keys(arrearsDetails).map((key, index) => {
+              return (
+                <>
+                  <div className="col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#1301ff] font-semibold">
+                    {key}
+                  </div>
+                  <div className="col-span-1 border-b text-[#1301ff] border-black uppercase text-center text-sm font-semibold">
+                    {arrearsDetails[key]}
+                  </div>
+                </>
+              );
+            })}
+          </div>
+        </div>
       </div>
       {/* Placeholder for an image */}
       {/* <div className="border-t border-gray-300 pt-4 mb-6">
