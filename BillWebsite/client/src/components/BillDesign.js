@@ -18,29 +18,31 @@ const BillDesign = () => {
 
   // Govt Charges Data
   const govtCharges = {
-    ptvFee: 35,
-    meterRent: 25,
-    incomeTax: null, // No value provided
-    extraTax: null, // No value provided
-    furtherTax: null, // No value provided
-    njSurcharge: null, // No value provided
-    gstOnFpa: null, // No value provided
-    itOnFpa: null, // No value provided
-    edOnFpa: null, // No value provided
-    fcSurcharge: 29,
-    trSurcharge: null, // No value provided
-    total: 89,
+    "E.D": null,
+    "PTV FEE": 35,
+    "Meter Rent": 25,
+    "INCOME TAX": null,
+    "EXTRA TAX": null,
+    "FURTHER TAX": null,
+    "N.J SURCHARGE": null,
+    "GST ON FPA": null,
+    "IT ON FPA": null,
+    "ED ON FPA": null,
+    "FC SURCHARGE": 29,
+    "TR SURCHARGE": null,
+    TOTAL: 89,
   };
+
   // Arrears - Bill Data
   const arrearsDetails = {
-  "CURRENT BILL": 1598,
-  "Water BILL": 250,
-  "PM RELIEF AMOUNT": 0,  // assuming no value provided
-  "INSTALMENT": 0,
-  "PAYABLE WITHIN DUE DATE": 1848,
-  "L.P. SURCHAGE": 185,
-  "PAYABLE AFTER DUE DATE": 2033
-};
+    "CURRENT BILL": 1598,
+    "Water BILL": 250,
+    "PM RELIEF AMOUNT": 0, // assuming no value provided
+    INSTALMENT: 0,
+    "PAYABLE WITHIN DUE DATE": 1848,
+    "L.P. SURCHAGE": 185,
+    "PAYABLE AFTER DUE DATE": 2033,
+  };
 
   // RETURN JSX
   return (
@@ -451,14 +453,22 @@ const BillDesign = () => {
               </div>
             </div> */}
 
-            <div className="grid grid-flow-row grid-cols-5">
+            <div className="grid grid-flow-row grid-cols-5 grid-rows-5">
               {Object.keys(electricityBill).map((key, index) => {
                 return (
                   <>
-                    <div className="col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#1301ff] font-semibold">
+                    <div
+                      className={`col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#1301ff] font-semibold flex items-center ${
+                        key === "GST" ? "row-span-2" : ""
+                      }`}
+                    >
                       {key}
                     </div>
-                    <div className="col-span-1 border-b border-black uppercase text-center text-sm font-semibold">
+                    <div
+                      className={`col-span-1 border-b border-black uppercase text-sm font-semibold flex items-center justify-center ${
+                        key === "GST" ? "row-span-2" : ""
+                      }`}
+                    >
                       {electricityBill[key]}
                     </div>
                   </>
@@ -485,11 +495,31 @@ const BillDesign = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-span-2 uppercase text-center text-sm text-[#CC0000] font-semibold">
-                <div className="border-r-2 border-black">TARIFF</div>
+              <div className="col-span-2 border-r-2 border-black text-sm text-[#CC0000] font-semibold">
+                <div className="border-b-2 border-black text-[#1301ff] underline text-center">
+                  TARIFF
+                </div>
+                <div className="grid grid-flow-row">
+                  <div className="row-span-2 pl-1 border-b">Peak</div>
+                  <div className="row-span-2 pl-1 border-b-2 border-black">
+                    Off Peak
+                  </div>
+                  <div className="pl-1 border-b">-</div>
+                  <div className="pl-1 border-b">-</div>
+                </div>
               </div>
-              <div className="col-span-1 uppercase text-center text-sm text-[#CC0000] font-semibold">
-                <div className="">RS kWh</div>
+              <div className="col-span-1 text-center text-sm text-[#1301ff] font-semibold">
+                <div className="border-b-2 border-black  underline text-center">
+                  RS kWh
+                </div>
+                <div className="grid grid-flow-row">
+                  <div className="row-span-2 pl-1 border-b">48.00</div>
+                  <div className="row-span-2 pl-1 border-b-2 border-black">
+                    41.68
+                  </div>
+                  <div className="pl-1 border-b">-</div>
+                  <div className="pl-1 border-b-2 border-black">-</div>
+                </div>
               </div>
             </div>
           </div>
@@ -499,19 +529,33 @@ const BillDesign = () => {
           <div className="uppercase border-b-2 border-black text-center text-sm text-[#1301ff] font-semibold">
             GOVT CHARGES
           </div>
-          <div className="grid grid-flow-row grid-cols-5">
+          <div className="grid grid-flow-row grid-cols-7 grid-rows-7">
             {Object.keys(govtCharges).map((key, index) => {
               return (
                 <>
-                  <div className="col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#CC0000] font-semibold">
+                  <div
+                    className={`col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#CC0000] font-semibold flex items-center ${
+                      key === "FURTHER TAX" ? "row-span-2" : ""
+                    }`}
+                  >
                     {key}
                   </div>
-                  <div className="col-span-1 border-b border-black uppercase text-center text-sm font-semibold">
+                  <div
+                    className={`col-span-3 border-b border-black uppercase text-center text-sm font-semibold flex items-center justify-center ${
+                      key === "FURTHER TAX" ? "row-span-2" : ""
+                    }`}
+                  >
                     {govtCharges[key]}
                   </div>
                 </>
               );
             })}
+          </div>
+          <div className="uppercase border-t border-t-black border-b text-center text-sm font-semibold">
+            PAYABLE IN
+          </div>
+          <div className="uppercase border-b-2 border-black text-center text-sm font-semibold">
+            NUST ACCOUNT
           </div>
         </div>
         {/* ARREARS - RIGHT PART */}
@@ -519,19 +563,49 @@ const BillDesign = () => {
           <div className="border-b-2 border-black pl-1 text-left text-sm text-[#1301ff] font-semibold">
             Arrear
           </div>
-          <div className="grid grid-flow-row grid-cols-5">
+          <div className="grid grid-flow-row grid-cols-5 grid-rows-8">
             {Object.keys(arrearsDetails).map((key, index) => {
               return (
                 <>
-                  <div className="col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#1301ff] font-semibold">
+                  <div
+                    className={`col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#1301ff] font-semibold flex items-center ${
+                      key === "L.P. SURCHAGE" ? "row-span-2" : ""
+                    } ${
+                      key === "PAYABLE AFTER DUE DATE"
+                        ? "text-[#CC0000]"
+                        : "text-[#1301ff]"
+                    } ${
+                      key === "PAYABLE AFTER DUE DATE" ? "bg-[#F2DBDB]" : ""
+                    }`}
+                  >
                     {key}
                   </div>
-                  <div className="col-span-1 border-b text-[#1301ff] border-black uppercase text-center text-sm font-semibold">
+                  <div
+                    className={`col-span-1 border-b text-[#1301ff] border-black uppercase text-center text-sm font-semibold flex items-center justify-center ${
+                      key === "L.P. SURCHAGE" ? "row-span-2" : ""
+                    }`}
+                  >
                     {arrearsDetails[key]}
                   </div>
                 </>
               );
             })}
+          </div>
+          <div className="border-b-2 border-t border-black text-center text-sm font-semibold">
+            FUEL PRICE ADJUSTMENT
+          </div>
+          <div className="grid grid-cols-5 grid-flow-col">
+            <div className="col-span-2 border-b-2 border-r-2 border-black flex items-center justify-center text-center text-sm font-semibold">
+              FPA
+            </div>
+            <div className="col-span-2 border-b-2 border-r-2 border-black text-center text-sm font-semibold">
+              <div className="border-b-2 border-black">Month</div>
+              <div className="">Jun-24 Rs.</div>
+            </div>
+            <div className="col-span-2 border-b-2 border-black text-center text-sm font-semibold">
+              <div className="border-b-2 border-black">Rate</div>
+              <div className="bg-[#92D050]">3.5627</div>
+            </div>
           </div>
         </div>
       </div>
