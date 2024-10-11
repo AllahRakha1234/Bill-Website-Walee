@@ -1,10 +1,11 @@
 import SearchBox from "./components/SearchBox";
 import Layout from "./components/Layout";
-import PrintPage from "./pages/PrintPage"; 
+// import PrintPage from "./pages/PrintPage"; 
 import NoPage from "./pages/NoPage"; 
 import AdminPage from './pages/AdminPage';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import AboutPage from './pages/AboutPage';
+import DownloadBillPage from './pages/DownloadBillPage';
 import BillDesign from './components/BillDesign';
 
 
@@ -14,7 +15,7 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<SearchBox />} />
-          <Route path="/print" element={<PrintPage />} />
+          <Route path="/print" element={<DownloadBillPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/billdesign" element={<BillDesign />} />

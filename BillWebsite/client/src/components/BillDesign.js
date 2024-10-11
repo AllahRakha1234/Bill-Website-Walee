@@ -1,6 +1,6 @@
 import React from "react";
 
-const BillDesign = () => {
+const BillDesign = ({billDetails}) => {
   // Electicity Charges Data
   const electricityBill = {
     "TOTAL UNITS CONSUMED": 9,
@@ -46,7 +46,7 @@ const BillDesign = () => {
 
   // RETURN JSX
   return (
-    <div className="my-4 border-2 border-blue-800 max-w-4xl mx-auto pb-44">
+    <div className="my-4 border-2 border-blue-800 max-w-4xl mx-auto">
       {/* <-- HEADER SECTION --> */}
       <div className="headerSection grid grid-cols-8 text-center">
         {/* Left Side with NUST Logo */}
@@ -362,7 +362,7 @@ const BillDesign = () => {
                     9332
                   </div>
                 </div>
-                <div className="col-span-3 border-r-2 border-black text-center font-semibold flex items-center justify-center">
+                <div className="bg-[#FFFF00] col-span-3 border-r-2 border-black text-center font-semibold flex items-center justify-center">
                   1
                 </div>
                 <div className="col-span-2 border-r-2 border-black text-center font-semibold">
@@ -428,7 +428,7 @@ const BillDesign = () => {
 
       {/* ELECTRICITY + GOVT CHARGES + ARREARS SECTIONS */}
       <div className="elecGovtArrearsSection grid grid-cols-12">
-        {/* ELECTRICITY - LEFT PART (Divided in 3-parts) */}
+        {/* ELECTRICITY CHARGES - LEFT PART (Divided in 3-parts) */}
         <div className="col-span-5 border-b-2 border-r-2 border-black">
           <div className="grid grid-flow-row">
             {/* Upper Part */}
@@ -436,23 +436,6 @@ const BillDesign = () => {
               ELECTRICITY CHARGES
             </div>
             {/* Middle Part */}
-
-            {/* <div className="grid grid-flow-row grid-cols-5">
-              <div className="col-span-4 border-b border-r-2 border-black uppercase pl-1 text-left text-sm text-[#CC0000] font-semibold">
-                1
-              </div>
-              <div className="col-span-1 border-b border-black uppercase text-center text-sm text-[#CC0000] font-semibold">
-               2
-              </div>
-
-              <div className="col-span-4 border-b border-r-2 border-black uppercase pl-1 text-left text-sm text-[#CC0000] font-semibold">
-                3
-              </div>
-              <div className="col-span-1 border-b border-black uppercase text-center text-sm text-[#CC0000] font-semibold">
-               4
-              </div>
-            </div> */}
-
             <div className="grid grid-flow-row grid-cols-5 grid-rows-5">
               {Object.keys(electricityBill).map((key, index) => {
                 return (
@@ -460,14 +443,14 @@ const BillDesign = () => {
                     <div
                       className={`col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#1301ff] font-semibold flex items-center ${
                         key === "GST" ? "row-span-2" : ""
-                      }`}
+                      } `}
                     >
                       {key}
                     </div>
                     <div
                       className={`col-span-1 border-b border-black uppercase text-sm font-semibold flex items-center justify-center ${
                         key === "GST" ? "row-span-2" : ""
-                      }`}
+                      } ${key === "FUEL PRICE ADJUSTMENT" || key === "Fixed Charged" ? "bg-[#92D050]" : ""}`}
                     >
                       {electricityBill[key]}
                     </div>
@@ -525,8 +508,8 @@ const BillDesign = () => {
           </div>
         </div>
         {/* GOVT CHARGES - MIDDLE PART */}
-        <div className="col-span-3 border-b-2 border-r-2 border-black">
-          <div className="uppercase border-b-2 border-black text-center text-sm text-[#1301ff] font-semibold">
+        <div className="col-span-3 border-b-2 border-black">
+          <div className="uppercase border-b-2 border-r-2 border-black text-center text-sm text-[#1301ff] font-semibold">
             GOVT CHARGES
           </div>
           <div className="grid grid-flow-row grid-cols-7 grid-rows-7">
@@ -541,9 +524,9 @@ const BillDesign = () => {
                     {key}
                   </div>
                   <div
-                    className={`col-span-3 border-b border-black uppercase text-center text-sm font-semibold flex items-center justify-center ${
+                    className={`col-span-3 border-b border-r-2 border-black uppercase text-center text-sm font-semibold flex items-center justify-center ${
                       key === "FURTHER TAX" ? "row-span-2" : ""
-                    }`}
+                    } ${["FC SURCHARGE", "TR SURCHARGE", "TOTAL"].includes(key) ? "" : "bg-[#92D050]"}`}
                   >
                     {govtCharges[key]}
                   </div>
@@ -551,11 +534,14 @@ const BillDesign = () => {
               );
             })}
           </div>
-          <div className="uppercase border-t border-t-black border-b text-center text-sm font-semibold">
+          <div className="uppercase border-t border-t-black border-b border-r-2 border-r-black text-center text-sm font-semibold">
             PAYABLE IN
           </div>
-          <div className="uppercase border-b-2 border-black text-center text-sm font-semibold">
+          <div className="uppercase pt-[1px] border-b-2 border-black border-r-2 border-r-black text-center text-sm font-semibold">
             NUST ACCOUNT
+          </div>
+          <div className="bg-[#FFFF00] text-3xl font-bold flex items-center justify-center pt-1">
+            NUST SGI A/C
           </div>
         </div>
         {/* ARREARS - RIGHT PART */}
@@ -591,11 +577,12 @@ const BillDesign = () => {
               );
             })}
           </div>
-          <div className="border-b-2 border-t border-black text-center text-sm font-semibold">
+          {/* Fuel Price Adjustment Section*/}
+          <div className="border-b-2 border-t border-black text-center pt-[2px] text-xs font-semibold">
             FUEL PRICE ADJUSTMENT
           </div>
           <div className="grid grid-cols-5 grid-flow-col">
-            <div className="col-span-2 border-b-2 border-r-2 border-black flex items-center justify-center text-center text-sm font-semibold">
+            <div className="col-span-2 border-b-2 border-r-2 border-black flex items-center justify-center font-semibold">
               FPA
             </div>
             <div className="col-span-2 border-b-2 border-r-2 border-black text-center text-sm font-semibold">
@@ -607,23 +594,36 @@ const BillDesign = () => {
               <div className="bg-[#92D050]">3.5627</div>
             </div>
           </div>
+          {/* Contact Billing Department for any inquiries */}
+          <div className="border-b-2 border-black text-[13px] font-semibold">
+            <div className="text-[#1301ff] pl-1 underline border-b">
+              For Electric Supply Failure Contact
+            </div>
+            <div className="text-[#1301ff] pl-1 border-b">
+              <span className="underline">Sub Engr. E&M </span>: 0301 5596511
+            </div>
+            <div className="text-[#1301ff] pl-1 border-b">
+              <span className="underline">CH. E&M </span>: 0300 5332432
+            </div>
+            <div className="text-[#1301ff] pl-1 border-b-2 border-black">
+              <span className="underline">COMPLAINT OFFICE </span>: 051 9085
+              1279
+            </div>
+            <div className="text-[#1301ff] pl-1 pt-[1px]">-</div>
+          </div>
+          {/* Nust SGI */}
+          <div className="bg-[#FFFF00] pt-1 text-3xl font-bold flex items-center justify-center">
+            2292-700026740-1
+          </div>
         </div>
       </div>
-      {/* Placeholder for an image */}
-      {/* <div className="border-t border-gray-300 pt-4 mb-6">
-        <img
-          src="your-image-link-here"
-          alt="Bill Image"
-          className="w-full h-auto object-cover"
-        />
-      </div> */}
-
       {/* Footer Section */}
-      {/* <div className="text-center mt-8 border-t border-gray-300 pt-4">
-        <p className="text-gray-700 font-medium">
-          For any inquiries, contact the billing department.
-        </p>
-      </div> */}
+      <div className="">
+        <div className="border-b">-</div>
+        <div className="border-b">-</div>
+        <div className="border-b">-</div>
+        <div className="border-b font-semibold text-right mr-1">AE( E&M)</div>
+      </div>
     </div>
   );
 };
