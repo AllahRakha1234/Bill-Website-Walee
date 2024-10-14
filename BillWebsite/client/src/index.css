@@ -15,24 +15,12 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+
+ 
   
-  .bill-container {
-    width: 1200px; /* Fixed width */
-    /* height: 1200px; */
-    margin: 0 auto; /* Center the content */
-    background-color: white;
-    padding: 20px;
-    border: 1px solid #ccc; /* Optional: border for better visibility */
-    box-sizing: border-box;
-  }
-  
-  @media print {
-    .bill-container {
-      width: 1200px !important;
-      /* height: 1200px !important; */
-      max-width: 800px !important;
-      margin: 0;
-    }
+  .no-page-break {
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
   
   
