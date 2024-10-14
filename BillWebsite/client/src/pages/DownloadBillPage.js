@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import BillDesign from './../components/BillDesign';
+import BillDesignDownload from './../components/BillDesignDownload';
 
 // PRINT PAGE COMPONENT
 const DownloadBillPage = () => {
@@ -52,7 +53,7 @@ const DownloadBillPage = () => {
     document.fonts.ready.then(() => {
       html2canvas(input, {
         scale: 2, 
-        width: 1200,
+        width: 932,
         height: input.scrollHeight,
       }).then((canvas) => {
         const imgData = canvas.toDataURL("image/png");
@@ -88,8 +89,12 @@ const DownloadBillPage = () => {
       </div>
 
       {/* Only capture this specific div for the PDF */}
-      <div ref={downloadBillPageRef} className="p-4 bg-white shadow-lg">
-        {/* Pass billDetails as prop */}
+      {/* FOR DOWNLOAD THE BILL */}
+      <div ref={downloadBillPageRef} style={{ position: "absolute", top: "-200vh", left: "-200vw" }} className="p-4 bg-white shadow-lg">
+        <BillDesignDownload billDetails={billDetails} />
+      </div>
+      {/* FOR DISPLAY */}
+      <div className="p-4 bg-white shadow-lg">
         <BillDesign billDetails={billDetails} />
       </div>
     </div>
