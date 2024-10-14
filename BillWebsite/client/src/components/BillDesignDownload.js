@@ -1,6 +1,6 @@
 import React from "react";
 
-const BillDesign = ({billDetails}) => {
+const BillDesign = ({ billDetails }) => {
   // Electicity Charges Data
   const electricityBill = {
     "TOTAL UNITS CONSUMED": 9,
@@ -450,7 +450,12 @@ const BillDesign = ({billDetails}) => {
                     <div
                       className={`col-span-1 border-b border-black uppercase text-sm font-semibold flex items-center justify-center ${
                         key === "GST" ? "row-span-2" : ""
-                      } ${key === "FUEL PRICE ADJUSTMENT" || key === "Fixed Charged" ? "bg-[#92D050]" : ""}`}
+                      } ${
+                        key === "FUEL PRICE ADJUSTMENT" ||
+                        key === "Fixed Charged"
+                          ? "bg-[#92D050]"
+                          : ""
+                      }`}
                     >
                       {electricityBill[key]}
                     </div>
@@ -473,7 +478,7 @@ const BillDesign = ({billDetails}) => {
                   <div className="row-span-2 flex items-center justify-center border-b">
                     TR
                   </div>
-                  <div className="flex items-center justify-center border-b">
+                  <div className="flex items-center justify-center border-b py-[1px]">
                     -
                   </div>
                 </div>
@@ -526,7 +531,11 @@ const BillDesign = ({billDetails}) => {
                   <div
                     className={`col-span-3 border-b border-r-2 border-black uppercase text-center text-sm font-semibold flex items-center justify-center ${
                       key === "FURTHER TAX" ? "row-span-2" : ""
-                    } ${["FC SURCHARGE", "TR SURCHARGE", "TOTAL"].includes(key) ? "" : "bg-[#92D050]"}`}
+                    } ${
+                      ["FC SURCHARGE", "TR SURCHARGE", "TOTAL"].includes(key)
+                        ? ""
+                        : "bg-[#92D050]"
+                    }`}
                   >
                     {govtCharges[key]}
                   </div>
@@ -534,14 +543,17 @@ const BillDesign = ({billDetails}) => {
               );
             })}
           </div>
-          <div className="uppercase border-t border-t-black border-b border-r-2 border-r-black text-center text-sm font-semibold">
-            PAYABLE IN
-          </div>
-          <div className="uppercase pt-[1px] border-b-2 border-black border-r-2 border-r-black text-center text-sm font-semibold">
-            NUST ACCOUNT
-          </div>
-          <div className="bg-[#FFFF00] text-3xl font-bold flex items-center justify-center pt-1">
-            NUST SGI A/C
+          {/* <div className="mt-[5px]"> */}
+          <div className="">
+            <div className="uppercase border-t border-t-black border-b border-r-2 border-r-black text-center text-sm font-semibold py-[2.5px]">
+              PAYABLE IN
+            </div>
+            <div className="uppercase pt-[1px] border-b-2 border-black border-r-2 border-r-black text-center text-sm font-semibold py-[1px]">
+              NUST ACCOUNT
+            </div>
+            <div className="bg-[#FFFF00] text-3xl font-bold flex items-center justify-center pt-1">
+              NUST SGI A/C
+            </div>
           </div>
         </div>
         {/* ARREARS - RIGHT PART */}
