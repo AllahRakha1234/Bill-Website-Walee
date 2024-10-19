@@ -1,17 +1,17 @@
 // Import mongoose to help establish a connection to MongoDB
 const mongoose = require('mongoose');
+require('dotenv').config(); 
 
 // Define the MongoDB connection URL (replace with your own database URL)
-const DB_URI = process.env.DB_URI || 'mongodb://localhost:27017/NustBillWebsite';
+const MONGO_URL = process.env.MONGO_URL;
+
+console.log("URL: ", MONGO_URL)
 
 // Function to connect to the database
 const connectDB = async () => {
     try {
         // Mongoose connects to the MongoDB database
-        await mongoose.connect(DB_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
+        await mongoose.connect(MONGO_URL);
         console.log('Database connection successful');
     } catch (err) {
         console.error('Database connection error:', err.message);
