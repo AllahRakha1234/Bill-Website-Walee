@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Papa from "papaparse";
 import * as XLSX from "xlsx"; // Import the xlsx library
 import { useNavigate } from "react-router-dom";
+import FixedSetting from "../components/AdminPageComponents/FixedSetting";
 
 const AdminPage = () => {
   const [fileData, setFileData] = useState([]);
@@ -307,47 +308,7 @@ const AdminPage = () => {
             </form>
           </div>
         )}
-        {activeOption === "Fixed Setting" && (
-          <div className="bg-white shadow-md rounded-lg p-8 w-[90%] md:w-[50%]">
-            <h1 className="text-3xl font-bold text-center mb-6 text-indigo-600">
-              Fixed Setting Section
-            </h1>
-            <form>
-              <div className="mb-4">
-                <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="setting-field"
-                >
-                  Setting Field
-                </label>
-                <input
-                  type="text"
-                  id="setting-field"
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="setting-description"
-                >
-                  Description
-                </label>
-                <input
-                  type="text"
-                  id="setting-description"
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-              >
-                Update Settings
-              </button>
-            </form>
-          </div>
-        )}
+        {activeOption === "Fixed Setting" && <FixedSetting/>}
       </div>
     </div>
   );
