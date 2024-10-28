@@ -2,16 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const FixedSetting = () => {
-  const [fixedSettings, setFixedSettings] = useState([
-    { name: "TV Fee", value: 35 },
-    { name: "Meter Rent", value: 25 },
-    { name: "Water Bill", value: 250 },
-    { name: "Fixed Charges", value: 1000 },
-    { name: "FPA Rate", value: 0.43 },
-    { name: "FC Rate", value: 0.43 },
-    { name: "ED", value: 0 },
-    { name: "NJ", value: 0 },
-  ]);
+  const [fixedSettings, setFixedSettings] = useState([ ]);
 
   // Update a specific setting's value in local state
   const handleUpdateSetting = (name, newValue) => {
