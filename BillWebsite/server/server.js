@@ -3,6 +3,10 @@ const express = require('express');
 const connectDB = require('./conn'); // Import the MongoDB connection function
 require('dotenv').config(); // Load environment variables
 const cors = require("cors");
+// Import routes
+const fixedSettingsRoute = require("./routes/FixedSettings");
+const meterInfoRoute = require("./routes/MeterInfo");
+const userInfoRoute = require("./routes/UserInfo");
 
 const app = express();
 
@@ -18,11 +22,10 @@ const PORT = process.env.PORT || 3001;
 // Connect to MongoDB before starting the server
 connectDB();
 
-// Import routes
-const fixedSettingsRoute = require("./routes/FixedSettings");
-
 // Define routes
 app.use("/api/fixed-settings", fixedSettingsRoute); // Fixed settings routes
+app.use("/api/meter-info", meterInfoRoute); // Meter info routes
+app.use("/api/user-info", userInfoRoute); // Meter info routes
 
 // Defining a basic route
 app.get('/', (req, res) => {
