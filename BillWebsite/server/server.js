@@ -7,6 +7,8 @@ const cors = require("cors");
 const fixedSettingsRoute = require("./routes/FixedSettings");
 const meterInfoRoute = require("./routes/MeterInfo");
 const userInfoRoute = require("./routes/UserInfo");
+const uploadOnceBillData = require("./routes/UploadOnceBillData");
+const templateBillData = require("./routes/TemplateBillData");
 
 const app = express();
 
@@ -26,6 +28,8 @@ connectDB();
 app.use("/api/fixed-settings", fixedSettingsRoute); // Fixed settings routes
 app.use("/api/meter-info", meterInfoRoute); // Meter info routes
 app.use("/api/user-info", userInfoRoute); // Meter info routes
+app.use("/api/upload-once-bill-data", uploadOnceBillData); // Meter info routes
+app.use("/api/get-bill-template-data", templateBillData); // Meter info routes
 
 // Defining a basic route
 app.get('/', (req, res) => {

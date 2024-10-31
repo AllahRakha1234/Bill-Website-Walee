@@ -94,7 +94,7 @@ const billSchema = new mongoose.Schema({
 });
 
 // Create the electricity bill model
-const Bill = mongoose.model('Bill', billSchema);
+const TemplateBillData = mongoose.model('TemplateBillData', billSchema);
 
 // Export the model
-module.exports = Bill;
+module.exports = TemplateBillData;
