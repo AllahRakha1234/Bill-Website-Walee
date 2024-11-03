@@ -9,8 +9,11 @@ const FixedSetting = () => {
     { name: "FPA Rate", value: 0.43 },
     { name: "FC Rate", value: 0.43 },
     { name: "QTR Rate", value: 0.43 },
+    { name: "edOnFpa Rate", value: 0.43 },
+    { name: "gstOnFpa Rate", value: 0.43 },
     { name: "ED", value: 0 },
-    { name: "NJ", value: 0 }, ]);
+    { name: "NJ", value: 0 }, 
+  ]);
 
   // Update a specific setting's value in local state
   const handleUpdateSetting = (name, newValue) => {

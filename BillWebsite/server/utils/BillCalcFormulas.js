@@ -20,7 +20,7 @@ const calculateQtrTex = (totalUnits, qtrRate) => {
 // Calculate FPA (Fuel Price Adjustment) | FPA Rate = 3.3287 , 
 // FPA = (Total Units * FPA Rate) + GST on FPA + ED on FPA  
 const calculateFPA = (totalUnitsOld, fpaRate, edOnFpaRate, gstOnFpaRate) => {
-  const fpaCost = totalUnits * fpaRate;
+  const fpaCost = totalUnitsOld * fpaRate;
   const edOnFpa = totalUnitsOld * edOnFpaRate; // 1.5% of old total units
   const gstOnFpa = (fpaCost + edOnFpa) * gstOnFpaRate; 
   return (fpaCost + edOnFpa) + gstOnFpa;
