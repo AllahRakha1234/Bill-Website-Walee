@@ -9,13 +9,13 @@ const getFixedSettings = async (req, res) => {
             // Initialize default settings in DB if they don't exist
             const defaultSettings = [
                 { name: "TV Fee", value: 35 },
-                { name: "Meter Rent", value: 25 },
+                { name: "Meter Rent", value: 215 },
                 { name: "Water Bill", value: 250 },
-                { name: "Fixed Charges", value: 1000 },
+                { name: "Fixed Charges", value: 1020 },
                 { name: "FPA Rate", value: 0.43 },
-                { name: "FC Rate", value: 0.43 },
+                { name: "FC Rate", value: 0.48 },
                 { name: "QTR Rate", value: 0.43 },
-                { name: "edOnFpa Rate", value: 0.015 },
+                { name: "edOnFpa Rate", value: 0.019 },
                 { name: "gstOnFpa Rate", value: 0.17 },
                 { name: "ED", value: 0 },
                 { name: "NJ", value: 0 },
