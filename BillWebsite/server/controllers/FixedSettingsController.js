@@ -23,15 +23,21 @@ const getFixedSettings = async (req, res) => {
 
             // Insert default settings into the database
             await FixedSetting.insertMany(defaultSettings);
-            return res.status(200).json({ settings: defaultSettings });
+            return res.status(200).json({
+                settings: defaultSettings.map(setting => ({ [setting.name]: setting.value }))
+            });
         }
 
-        res.status(200).json({ settings });
+        // Format settings in the desired structure
+        const formattedSettings = settings.map(setting => ({ [setting.name]: setting.value }));
+
+        res.status(200).json({ settings: formattedSettings });
     } catch (error) {
         console.error("Error fetching settings:", error);
         res.status(500).json({ message: "Failed to fetch settings." });
     }
 };
+
 
 // Update fixed settings
 const updateFixedSettings = async (req, res) => {

@@ -2,7 +2,7 @@
 // Calculate Electric Cost
 // Electric Cost = (Peak Units * Peak Tariff Rate) + (Off Peak Units * Off Peak Tariff Rate)
 const calculateElectricCost = (peakUnits, offPeakUnits, tariffSlabs) => {
-  return (peakUnits * tariffSlabs) + (offPeakUnits * tariffSlabs);
+  return (peakUnits * tariffSlabs.peak) + (offPeakUnits * tariffSlabs.offPeak);
 };
 
 // Calculate GST

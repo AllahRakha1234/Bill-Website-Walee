@@ -3,23 +3,8 @@ const mongoose = require('mongoose');
 
 // Define the electricity bill schema for digital meters
 const billSchema = new mongoose.Schema({
-  serialNumber: {
-    type: Number,
-    required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  institute: {
-    type: String,
-    required: true,
-  },
-  location: {
-    type: String,
-    required: true,
-  },
-  meterNumber: {
+  // BELOW ADDRESS SECTION :: (UNITS PEAK AND OFFPEAK = PRESENT READING - PREVIOUS READING)
+  meterNo: {
     type: Number,
     required: true,
   },
@@ -27,35 +12,28 @@ const billSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  currentReadingPeak: {
-    type: Number,
-    required: true,
-  },
-  unitsPeak: {
-    type: Number,
-    required: true,
-  },
   previousReadingOffPeak: {
     type: Number,
     required: true,
   },
-  currentReadingOffPeak: {
+  presentReadingPeak: {
     type: Number,
     required: true,
   },
-  unitsOffPeak: {
+  presentReadingOffPeak: {
     type: Number,
     required: true,
   },
-  electricCost: {
+  mfValue: {
     type: Number,
     required: true,
   },
-  fixedCharges: {
+  // ELECTRICITY CHARGES SECTION :: (TOTAL = + OF ALL VALUES ABOVE EXCEPT TOTAL UNITS)
+  costOfElectricity: {
     type: Number,
     required: true,
   },
-  fcSurcharge: {
+  qtrTex: {
     type: Number,
     required: true,
   },
@@ -63,7 +41,16 @@ const billSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  tvFee: {
+  fuelPriceAdjustment: {
+    type: Number,
+    required: true,
+  },
+  fixedCharges: {
+    type: Number,
+    required: true,
+  },
+  // GOVT CHARGES SECTION :: (TOTAL = + OF ALL VALUES ABOVE)
+  ptvFee: {
     type: Number,
     required: true,
   },
@@ -71,26 +58,23 @@ const billSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  fpa: {
+  fcSurcharge: {
     type: Number,
     required: true,
   },
-  qtrTax: {
-    type: Number,
-    required: true,
-  },
+  // ARREARS SECTION :: (CURRENT BILL = ELECT CHARGES TOTAL + GOVT CHARGES TOTAL) (PAYABLEWITHIN DUE DATE = CURRENT BILL + WATER BILL) (PAYABLEAFTER DUE DATE = PAYABLEWITHIN DUE DATE + LPSURCHARGE)
   waterBill: {
     type: Number,
     required: true,
   },
-  totalBill: {
+  lpSurcharge: {
     type: Number,
     required: true,
   },
-  remarks: {
-    type: String,
-    required: false,
-  },
+  fpaRate:{
+    type: Number,
+    required: true,
+  }
 });
 
 // Create the electricity bill model
