@@ -1,6 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 
-const BillDesign = ({billDetails}) => {
+const BillDesign = ({ billDetails }) => {
+  // Below Address Values
+  const [belowAddressSection, setBelowAddressSection] = useState({
+  });
+
+  useEffect(() => {
+    
+  }, [])
+  
+
+
+  
+
   // Electicity Charges Data
   const electricityBill = {
     "TOTAL UNITS CONSUMED": 9,
@@ -43,6 +55,8 @@ const BillDesign = ({billDetails}) => {
     "L.P. SURCHAGE": 185,
     "PAYABLE AFTER DUE DATE": 2033,
   };
+
+  console.log("billDetails in billdesign: ", billDetails);
 
   // RETURN JSX
   return (
@@ -322,8 +336,8 @@ const BillDesign = ({billDetails}) => {
             {/* Left 4 Cols */}
             <div className="col-span-4 border-r-2 border-black">
               <div className="grid grid-flow-col grid-cols-8">
-                <div className="col-span-3 border-r-2 border-black flex items-center justify-center font-semibold text-[#CC0000] whitespace-nowrap min-w-[113px] h-[99px]">
-                  609641
+                <div className="col-span-3 border-r-2 border-black flex items-center justify-center font-semibold text-sm text-[#CC0000] whitespace-nowrap min-w-[113px] h-[99px]">
+                  {belowAddressSection.meterNo}
                 </div>
                 <div className="col-span-5">
                   <div className="grid grid-flow-row grid-cols-12">
@@ -333,7 +347,7 @@ const BillDesign = ({billDetails}) => {
                           Peak
                         </div>
                         <div className="col-span-7 font-semibold flex items-center justify-center">
-                          1798
+                          {belowAddressSection.previousReadingPeak}
                         </div>
                       </div>
                     </div>
@@ -343,7 +357,7 @@ const BillDesign = ({billDetails}) => {
                           Off Peak
                         </div>
                         <div className="col-span-7 font-semibold flex items-center justify-center">
-                          9325
+                          {belowAddressSection.previousReadingOffPeak}
                         </div>
                       </div>
                     </div>
@@ -356,21 +370,21 @@ const BillDesign = ({billDetails}) => {
               <div className="grid grid-flow-col grid-cols-12">
                 <div className="col-span-3 border-r-2 border-black text-center font-semibold ">
                   <div className="border-b-2 border-black font-semibold h-[42px] flex items-center justify-center">
-                    1800
+                    {belowAddressSection.presentReadingPeak}
                   </div>
                   <div className="font-semibold h-[57px] flex items-center justify-center">
-                    9332
+                    {belowAddressSection.presentReadingOffPeak}
                   </div>
                 </div>
                 <div className="bg-[#FFFF00] col-span-3 border-r-2 border-black text-center font-semibold flex items-center justify-center">
-                  1
+                  {belowAddressSection.mfValue}
                 </div>
                 <div className="col-span-2 border-r-2 border-black text-center font-semibold">
                   <div className="border-b-2 border-black font-semibold h-[42px] flex items-center justify-center">
-                    2
+                    {belowAddressSection.peakUnits}
                   </div>
                   <div className="font-semibold h-[57px] flex items-center justify-center">
-                    7
+                    {belowAddressSection.peakOffUnits}
                   </div>
                 </div>
                 <div className="col-span-5 text-center font-semibold"></div>
@@ -450,7 +464,12 @@ const BillDesign = ({billDetails}) => {
                     <div
                       className={`col-span-1 border-b border-black uppercase text-sm font-semibold flex items-center justify-center ${
                         key === "GST" ? "row-span-2" : ""
-                      } ${key === "FUEL PRICE ADJUSTMENT" || key === "Fixed Charged" ? "bg-[#92D050]" : ""}`}
+                      } ${
+                        key === "FUEL PRICE ADJUSTMENT" ||
+                        key === "Fixed Charged"
+                          ? "bg-[#92D050]"
+                          : ""
+                      }`}
                     >
                       {electricityBill[key]}
                     </div>
@@ -526,7 +545,11 @@ const BillDesign = ({billDetails}) => {
                   <div
                     className={`col-span-3 border-b border-r-2 border-black uppercase text-center text-sm font-semibold flex items-center justify-center ${
                       key === "FURTHER TAX" ? "row-span-2" : ""
-                    } ${["FC SURCHARGE", "TR SURCHARGE", "TOTAL"].includes(key) ? "" : "bg-[#92D050]"}`}
+                    } ${
+                      ["FC SURCHARGE", "TR SURCHARGE", "TOTAL"].includes(key)
+                        ? ""
+                        : "bg-[#92D050]"
+                    }`}
                   >
                     {govtCharges[key]}
                   </div>

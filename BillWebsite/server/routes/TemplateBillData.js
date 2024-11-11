@@ -6,7 +6,7 @@ const { getTemplateBillData } = require("../controllers/TemplateBillDataControll
 const router = express.Router();
 
 // Define routes and link them to controller functions
-router.get("/", getTemplateBillData);
+router.get("/:meterId", getTemplateBillData);
 
 
 module.exports = router;

@@ -11,10 +11,19 @@ const DownloadBillPage = () => {
   const downloadBillPageRef = useRef();
 
   useEffect(() => {
-    // Retrieve the MeterNo from local storage
+    // Retrieve the MeterNo and Bill Details from local storage
     const storedMeterNo = JSON.parse(localStorage.getItem("referenceNo"));
-    const storedData = JSON.parse(localStorage.getItem("bills")) || [];
+    const storedData = JSON.parse(localStorage.getItem("billDetails")) || [];
+    console.log("storedMeterNo:", storedMeterNo);
+    console.log("storedBillData:", storedData);
 
+    if (storedData.length > 0){
+      setBillDetails(storedData[storedData.length -1]) // Last Month Bill Details
+      console.log("billDetails local: ", billDetails)
+    }
+    else{
+      console.log("No Bill ")
+    }
     // Find the bill details based on MeterNo
     const billData = storedData.find(bill => parseInt(bill.MeterNo) === parseInt(storedMeterNo));
     
@@ -69,7 +78,7 @@ const DownloadBillPage = () => {
   };
   
   
-
+  // RETURN JSX
   return (
     <div className="flex items-center flex-col">
       {isLoading && (

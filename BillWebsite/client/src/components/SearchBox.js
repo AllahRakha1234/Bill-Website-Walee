@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios"; // Import axios
 import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 
 const SearchBox = () => {
@@ -6,7 +7,7 @@ const SearchBox = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [referenceNo, setReferenceNo] = useState("");
   const [referenceNoFlag, setReferenceNoFlag] = useState(true);
-  
+
   const navigate = useNavigate(); // Initialize navigate function
 
   const handleRadioChange = (event) => {
@@ -18,27 +19,27 @@ const SearchBox = () => {
     setSelectedOption(event.target.value);
   };
 
-  const handleSearchBtnClick = () => {
-    // Retrieve data from local storage
-    const storedData = JSON.parse(localStorage.getItem("bills")) || [];
-    console.log("storedData: ", storedData, typeof storedData);
-    for (let i = 0; i < storedData.length; i++) {
-      console.log("storedData: ", storedData[i].MeterNo, typeof storedData[i].MeterNo);
+  // HANDLE SEARCH BUTTON FUNCTION
+  const handleSearchBtnClick = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/api/get-bill-template-data/${referenceNo}`
+      );
+      if (response.status === 200) {
+        localStorage.setItem("referenceNo", JSON.stringify(referenceNo));
+        localStorage.setItem("billDetails", JSON.stringify(response.data)); // Store fetched data for `DownloadBillPage`
+        navigate("/print"); // Navigate to DownloadBillPage
+      }
+    } catch (error) {
+      if (error.response?.status === 404) {
+        alert("Reference No does not exist.");
+      } else {
+        alert("Error occurred while searching for Meter ID.");
+      }
     }
-    console.log("user input - referenceNo: ", referenceNo, typeof referenceNo);
-    // Check if the reference number exists in the stored data
-    const isReferenceNoValid = storedData.some(item => parseInt(item.MeterNo) === parseInt(referenceNo));
-
-    if (isReferenceNoValid) {
-      localStorage.setItem("referenceNo", JSON.stringify(referenceNo)); // Store the reference number in local storage for use in the PrintPage
-      navigate("/print"); // Navigate to /print URL
-    } else {
-      alert("Reference No does not Exist.");
-    }
-    
-    setReferenceNo("");
   };
 
+  // RETURN JSX
   return (
     <div className="container mx-auto flex items-center justify-center flex-col mt-10">
       <div className="text-2xl font-semibold mb-3">
@@ -62,7 +63,10 @@ const SearchBox = () => {
                 onChange={handleRadioChange}
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded-full"
               />
-              <label htmlFor="reference-no-radio" className="ml-2 text-gray-700">
+              <label
+                htmlFor="reference-no-radio"
+                className="ml-2 text-gray-700"
+              >
                 Reference No
               </label>
             </div>
@@ -87,7 +91,11 @@ const SearchBox = () => {
               type="text"
               value={referenceNo}
               onChange={(e) => setReferenceNo(e.target.value)}
-              placeholder={referenceNoFlag ? "Enter 14-digit valid Reference No" : "Enter 10-digit valid Customer ID"}
+              placeholder={
+                referenceNoFlag
+                  ? "Enter 14-digit valid Reference No"
+                  : "Enter 10-digit valid Customer ID"
+              }
               className="border border-gray-300 p-2 rounded w-96"
             />
           </div>
@@ -108,7 +116,10 @@ const SearchBox = () => {
         </div>
         {/* SEARCH BUTTON */}
         <div className="p-2">
-          <button onClick={handleSearchBtnClick} className="flex text-white bg-indigo-500 border-0 py-1 px-4 focus:outline-none hover:bg-indigo-600 rounded text-md">
+          <button
+            onClick={handleSearchBtnClick}
+            className="flex text-white bg-indigo-500 border-0 py-1 px-4 focus:outline-none hover:bg-indigo-600 rounded text-md"
+          >
             Search
           </button>
         </div>

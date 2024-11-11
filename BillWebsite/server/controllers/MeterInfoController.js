@@ -46,11 +46,26 @@ const calculateTemplateBillData = async (
   mfValue = 1; // Meter Factor Value
 
   // ELECTRICITY + GOVT CHARGES SECTION
-  const costOfElectricity = await calculateElectricCost(peakUnits, offPeakUnits, tariffSlabs);
-  const qtrTex = await calculateQtrTex(totalUnits, fixedSettingsGlobal["QTR Rate"]);
-  const fcSurcharge = await calculateFC(totalUnits, fixedSettingsGlobal["FC Rate"]); 
-  const gst = await calculateGST(costOfElectricity, fcSurcharge, qtrTex); 
-  const fuelPriceAdjustment = await calculateFPA(totalUnits, fixedSettingsGlobal["FPA Rate"], fixedSettingsGlobal["edOnFpa Rate"], fixedSettingsGlobal["gstOnFpa Rate"]);
+  const costOfElectricity = await calculateElectricCost(
+    peakUnits,
+    offPeakUnits,
+    tariffSlabs
+  );
+  const qtrTex = await calculateQtrTex(
+    totalUnits,
+    fixedSettingsGlobal["QTR Rate"]
+  );
+  const fcSurcharge = await calculateFC(
+    totalUnits,
+    fixedSettingsGlobal["FC Rate"]
+  );
+  const gst = await calculateGST(costOfElectricity, fcSurcharge, qtrTex);
+  const fuelPriceAdjustment = await calculateFPA(
+    totalUnits,
+    fixedSettingsGlobal["FPA Rate"],
+    fixedSettingsGlobal["edOnFpa Rate"],
+    fixedSettingsGlobal["gstOnFpa Rate"]
+  );
   const fixedCharges = fixedSettingsGlobal["Fixed Charges"];
   const ptvFee = fixedSettingsGlobal["TV Fee"];
   const meterRent = fixedSettingsGlobal["Meter Rent"];
@@ -60,24 +75,23 @@ const calculateTemplateBillData = async (
 
   return {
     meterNo,
-    previousReadingPeak,
-    previousReadingOffPeak,
-    presentReadingPeak,
-    presentReadingOffPeak,
-    mfValue,
-    costOfElectricity,
-    qtrTex,
-    gst,
-    fuelPriceAdjustment,
-    fixedCharges,
-    ptvFee,
-    meterRent,
-    fcSurcharge,
-    waterBill,
-    lpSurcharge,
-    fpaRate
-};
-
+    previousReadingPeak: Math.round(previousReadingPeak),
+    previousReadingOffPeak: Math.round(previousReadingOffPeak),
+    presentReadingPeak: Math.round(presentReadingPeak),
+    presentReadingOffPeak: Math.round(presentReadingOffPeak),
+    mfValue: Math.round(mfValue),
+    costOfElectricity: Math.round(costOfElectricity),
+    qtrTex: Math.round(qtrTex),
+    gst: Math.round(gst),
+    fuelPriceAdjustment: Math.round(fuelPriceAdjustment),
+    fixedCharges: Math.round(fixedCharges),
+    ptvFee: Math.round(ptvFee),
+    meterRent: Math.round(meterRent),
+    fcSurcharge: Math.round(fcSurcharge),
+    waterBill: Math.round(waterBill),
+    lpSurcharge: Math.round(lpSurcharge),
+    fpaRate: fpaRate.toFixed(4),
+  };
 };
 
 // ADD METER INFO CONTROLLER FUNCTION
@@ -85,7 +99,7 @@ const addMeterInfo = async (req, res) => {
   try {
     // REMAINING WORK
     // First of all there will be multiple meter info -- file
-    // Second thing is to populate the template bill data for user bill downloading
+    // Tarrif slabs are hardcoded
 
     // TARIFF SLABS VALUES (FOR NOW HARDCODED)
     const tariffSlabs = {
@@ -146,7 +160,6 @@ const addMeterInfo = async (req, res) => {
       const billTemplateData = new TemplateBillData(templateBillData);
       await billTemplateData.save();
     }
-
     res.status(200).json({ message: "Meter info added successfully" });
   } catch (error) {
     console.log("Error adding meter info:", error);
