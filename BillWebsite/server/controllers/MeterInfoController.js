@@ -31,6 +31,7 @@ const calculateTemplateBillData = async (
   previousOffPeakReading,
   present_peak_reading,
   present_off_peak_reading,
+  totalUnitsForFpaCalc,
   tariffSlabs
 ) => {
   const meterNo = meterId;
@@ -60,8 +61,9 @@ const calculateTemplateBillData = async (
     fixedSettingsGlobal["FC Rate"]
   );
   const gst = await calculateGST(costOfElectricity, fcSurcharge, qtrTex);
+  // Here totalUnits = totalunits of month before current and previous 2 months (For August it will be of May)
   const fuelPriceAdjustment = await calculateFPA(
-    totalUnits,
+    totalUnitsForFpaCalc,
     fixedSettingsGlobal["FPA Rate"],
     fixedSettingsGlobal["edOnFpa Rate"],
     fixedSettingsGlobal["gstOnFpa Rate"]
@@ -70,7 +72,7 @@ const calculateTemplateBillData = async (
   const ptvFee = fixedSettingsGlobal["TV Fee"];
   const meterRent = fixedSettingsGlobal["Meter Rent"];
   const waterBill = fixedSettingsGlobal["Water Bill"];
-  const lpSurcharge = 0; // HARDCODED VALUE
+  const lpSurchargeRate = fixedSettingsGlobal["L.P.Surcharge Rate"];
   const fpaRate = fixedSettingsGlobal["FPA Rate"];
 
   return {
@@ -89,7 +91,7 @@ const calculateTemplateBillData = async (
     meterRent: Math.round(meterRent),
     fcSurcharge: Math.round(fcSurcharge),
     waterBill: Math.round(waterBill),
-    lpSurcharge: Math.round(lpSurcharge),
+    lpSurchargeRate: lpSurchargeRate.toFixed(4),
     fpaRate: fpaRate.toFixed(4),
   };
 };
@@ -112,12 +114,11 @@ const addMeterInfo = async (req, res) => {
     for (let i = 0; i < fixedSettings.length; i++) {
       fixedSettingsGlobal[fixedSettings[i].name] = fixedSettings[i].value;
     }
-    // console.log("fixed settings:", fixedSettingsGlobal);
 
     // DESTRUCTURING THE METER INFO ARRAY
     const meterInfoArray = req.body;
 
-    // LOOPING OVER ALL THE METER INFOs
+    // LOOPING OVER ALL THE METER INFOs (There will be a list of current readings of meter infos)
     for (let i = 0; i < meterInfoArray.length; i++) {
       // Destructuring Present Meter Info
       const meterId = meterInfoArray[i].meterId;
@@ -125,32 +126,45 @@ const addMeterInfo = async (req, res) => {
       const present_off_peak_reading =
         meterInfoArray[i].present_off_peak_reading;
 
+      // Variable to store Template Data Function Result
+      let templateBillData = {};
+
       // Finding the previous meter info
       const previousMeterInfo = await UploadOnceBillData.findOne({
         meterId: meterId,
       });
+
       if (previousMeterInfo?.previousReadings?.length) {
         const previousReadingIndex =
           previousMeterInfo.previousReadings.length - 1;
-        previousPeakReading =
+        const previousPeakReading =
           previousMeterInfo.previousReadings[previousReadingIndex]
             .previous_peak;
-        previousOffPeakReading =
+        const previousOffPeakReading =
           previousMeterInfo.previousReadings[previousReadingIndex]
             .previous_off_peak;
+        // Finding totalUnits value for FPA calculation :: (For August Required May Units)
+        const tempIndex = previousMeterInfo.previousReadings.length;
+        totalUnitsForFpaCalc =
+          previousMeterInfo.previousReadings[tempIndex - 3].previous_peak -
+          previousMeterInfo.previousReadings[tempIndex - 4].previous_peak +
+          (previousMeterInfo.previousReadings[tempIndex - 3].previous_off_peak -
+            previousMeterInfo.previousReadings[tempIndex - 4]
+              .previous_off_peak);
+
+        // Calling the function to calculate the template bill data
+        templateBillData = await calculateTemplateBillData(
+          meterId,
+          previousPeakReading,
+          previousOffPeakReading,
+          present_peak_reading,
+          present_off_peak_reading,
+          totalUnitsForFpaCalc,
+          tariffSlabs
+        );
       } else {
         console.error("No previous readings found for the specified meterId");
       }
-
-      // Calling the function to calculate the template bill data
-      const templateBillData = await calculateTemplateBillData(
-        meterId,
-        previousPeakReading,
-        previousOffPeakReading,
-        present_peak_reading,
-        present_off_peak_reading,
-        tariffSlabs
-      );
 
       // Saving the Meter Info
       const meterInfo = new MeterInfo(meterInfoArray[i]);

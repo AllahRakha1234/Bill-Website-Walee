@@ -10,6 +10,7 @@ const DownloadBillPage = () => {
   const [billDetails, setBillDetails] = useState({});
   const downloadBillPageRef = useRef();
 
+  // UseEffect to handle Bill Data
   useEffect(() => {
     // Retrieve the MeterNo and Bill Details from local storage
     const storedMeterNo = JSON.parse(localStorage.getItem("referenceNo"));
@@ -18,28 +19,42 @@ const DownloadBillPage = () => {
     console.log("storedBillData:", storedData);
 
     if (storedData.length > 0){
-      setBillDetails(storedData[storedData.length -1]) // Last Month Bill Details
-      console.log("billDetails local: ", billDetails)
+      const currentBillDetails = storedData[storedData.length -1];// Last Entry Details Means Current Month Details
+      const updatedBillData = {
+      belowAddressSection: {
+        meterNo: currentBillDetails.meterNo,
+        previousReadingPeak: currentBillDetails.previousReadingPeak,
+        previousReadingOffPeak: currentBillDetails.previousReadingOffPeak,
+        presentReadingPeak: currentBillDetails.presentReadingPeak,
+        presentReadingOffPeak: currentBillDetails.presentReadingOffPeak,
+        mfValue: currentBillDetails.mfValue,
+        peakUnits: currentBillDetails.presentReadingPeak - currentBillDetails.previousReadingPeak,
+        peakOffUnits: currentBillDetails.presentReadingOffPeak - currentBillDetails.previousReadingOffPeak,
+      },
+      electricityCharges: {
+        costOfElectricity: currentBillDetails.costOfElectricity,
+        gst: currentBillDetails.gst,
+        qtrTex: currentBillDetails.qtrTex, 
+        fuelPriceAdjustment: currentBillDetails.fuelPriceAdjustment,
+        fixedCharges: currentBillDetails.fixedCharges,
+      },
+      govtCharges: {
+        ptvFee: currentBillDetails.ptvFee,
+        meterRent: currentBillDetails.meterRent,
+        fcSurcharge: currentBillDetails.fcSurcharge,
+      },
+      arrears: {
+        waterBill: currentBillDetails.waterBill,
+      },
+      lpSurchargeRate: currentBillDetails.lpSurchargeRate,
+      fpaRate: currentBillDetails.fpaRate
+      // Add more sections here if needed
+    };
+    setBillDetails(updatedBillData);
+    console.log("billDetails local: ", billDetails)
     }
     else{
       console.log("No Bill ")
-    }
-    // Find the bill details based on MeterNo
-    const billData = storedData.find(bill => parseInt(bill.MeterNo) === parseInt(storedMeterNo));
-    
-    if (billData) {
-      const amount = parseInt(billData.Amount);
-      const totalAmount = amount + 50; // Adjusting total amount as per your requirement
-
-      // Set the bill details
-      setBillDetails({
-        referenceNo: `${storedMeterNo}U`,
-        amount: amount,
-        totalAmount: totalAmount,
-      });
-
-    } else {
-      console.error("No bill found for the provided MeterNo.");
     }
 
     // Simulate loading time
@@ -50,6 +65,7 @@ const DownloadBillPage = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Download pdf Function
   const downloadPdfDocument = () => {
     const input = downloadBillPageRef.current;
   
@@ -99,9 +115,9 @@ const DownloadBillPage = () => {
 
       {/* Only capture this specific div for the PDF */}
       {/* FOR DOWNLOAD THE BILL */}
-      <div ref={downloadBillPageRef} style={{ position: "absolute", top: "-200vh", left: "-200vw" }} className="p-4 bg-white shadow-lg">
+      {/* <div ref={downloadBillPageRef} style={{ position: "absolute", top: "-200vh", left: "-200vw" }} className="p-4 bg-white shadow-lg">
         <BillDesignDownload billDetails={billDetails} />
-      </div>
+      </div> */}
       {/* FOR DISPLAY */}
       <div className="p-4 bg-white shadow-lg">
         <BillDesign billDetails={billDetails} />

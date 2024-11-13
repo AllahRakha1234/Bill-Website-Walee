@@ -28,6 +28,7 @@ const SearchBox = () => {
       if (response.status === 200) {
         localStorage.setItem("referenceNo", JSON.stringify(referenceNo));
         localStorage.setItem("billDetails", JSON.stringify(response.data)); // Store fetched data for `DownloadBillPage`
+        console.log("response.data:", response.data);
         navigate("/print"); // Navigate to DownloadBillPage
       }
     } catch (error) {

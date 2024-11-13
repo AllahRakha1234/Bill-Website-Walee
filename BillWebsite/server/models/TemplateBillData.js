@@ -67,7 +67,7 @@ const billSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  lpSurcharge: {
+  lpSurchargeRate: {
     type: Number,
     required: true,
   },

@@ -2,18 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const FixedSetting = () => {
-  const [fixedSettings, setFixedSettings] = useState([ { name: "TV Fee", value: 35 },
-    { name: "Meter Rent", value: 25 },
-    { name: "Water Bill", value: 250 },
-    { name: "Fixed Charges", value: 1000 },
-    { name: "FPA Rate", value: 0.43 },
-    { name: "FC Rate", value: 0.43 },
-    { name: "QTR Rate", value: 0.43 },
-    { name: "edOnFpa Rate", value: 0.015 },
-    { name: "gstOnFpa Rate", value: 0.17 },
-    { name: "ED", value: 0 },
-    { name: "NJ", value: 0 }, 
-  ]);
+  const [fixedSettings, setFixedSettings] = useState([]);
 
   // Update a specific setting's value in local state
   const handleUpdateSetting = (name, newValue) => {
@@ -73,19 +62,19 @@ const FixedSetting = () => {
         Fixed Setting Section
       </h1>
       <div className="grid grid-cols-10 gap-2">
-        {fixedSettings.map((setting) => (
-          <div key={setting.name} className="mb-4 col-span-3">
+        {fixedSettings?.map((item) => (
+          <div key={item.name} className="mb-4 col-span-3">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor={setting.name}
+              htmlFor={item.name}
             >
-              {setting.name}
+              {item.name}
             </label>
             <input
               type="number"
-              id={setting.name}
-              value={setting.value}
-              onChange={(e) => handleUpdateSetting(setting.name, e.target.value)}
+              id={item.name}
+              value={item.value}
+              onChange={(e) => handleUpdateSetting(item.name, e.target.value)}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>

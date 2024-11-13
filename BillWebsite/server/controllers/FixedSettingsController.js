@@ -9,14 +9,15 @@ const getFixedSettings = async (req, res) => {
             // Initialize default settings in DB if they don't exist
             const defaultSettings = [
                 { name: "TV Fee", value: 35 },
-                { name: "Meter Rent", value: 215 },
+                { name: "Meter Rent", value: 25 },
                 { name: "Water Bill", value: 250 },
-                { name: "Fixed Charges", value: 1020 },
-                { name: "FPA Rate", value: 0.43 },
-                { name: "FC Rate", value: 0.48 },
-                { name: "QTR Rate", value: 0.43 },
-                { name: "edOnFpa Rate", value: 0.019 },
-                { name: "gstOnFpa Rate", value: 0.17 },
+                { name: "Fixed Charges", value: 1000 },
+                { name: "FPA Rate", value: 3.3287 },
+                { name: "FC Rate", value: 3.23 },
+                { name: "QTR Rate", value: 2.47 },
+                { name: "edOnFpa Rate", value: 0.015 },
+                { name: "gstOnFpa Rate", value: 0.18 },
+                { name: "L.P.Surcharge Rate", value: 0.0835 },
                 { name: "ED", value: 0 },
                 { name: "NJ", value: 0 },
             ];
@@ -24,14 +25,11 @@ const getFixedSettings = async (req, res) => {
             // Insert default settings into the database
             await FixedSetting.insertMany(defaultSettings);
             return res.status(200).json({
-                settings: defaultSettings.map(setting => ({ [setting.name]: setting.value }))
+                settings: defaultSettings
             });
         }
 
-        // Format settings in the desired structure
-        const formattedSettings = settings.map(setting => ({ [setting.name]: setting.value }));
-
-        res.status(200).json({ settings: formattedSettings });
+        res.status(200).json({ settings: settings });
     } catch (error) {
         console.error("Error fetching settings:", error);
         res.status(500).json({ message: "Failed to fetch settings." });

@@ -1,27 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const BillDesign = ({ billDetails }) => {
-  // Below Address Values
-  const [belowAddressSection, setBelowAddressSection] = useState({
-  });
-
-  useEffect(() => {
-    
-  }, [])
-  
 
 
+  const lpSurchargeCalc = (totalElecBill, totalGovtCharges, waterBill, rate) => {
+    const result = (Number(totalElecBill) + Number(totalGovtCharges) + Number(waterBill)) * Number(rate);
+    console.log("totalElectBill", totalElecBill);
+    console.log("totalGovtCharges", totalGovtCharges);
+    console.log("waterBill", waterBill);
+    console.log("rate", rate);
+    console.log("Result: ", result)
+    return Math.round(result);  // Round to the nearest integer
+  };
   
 
   // Electicity Charges Data
   const electricityBill = {
-    "TOTAL UNITS CONSUMED": 9,
-    "COST OF ELECTRICTY": 388,
-    GST: 79,
-    "Qtr Tex": 22,
-    "FUEL PRICE ADJUSTMENT": 20,
-    "Fixed Charged": 1000,
-    TOTAL: 1509,
+    "TOTAL UNITS CONSUMED": billDetails?.belowAddressSection?.peakUnits + billDetails?.belowAddressSection?.peakOffUnits,
+    "COST OF ELECTRICTY": billDetails?.electricityCharges?.costOfElectricity,
+    "GST": billDetails?.electricityCharges?.gst,
+    "Qtr Tex": billDetails?.electricityCharges?.qtrTex,
+    "FUEL PRICE ADJUSTMENT": billDetails?.electricityCharges?.fuelPriceAdjustment,
+    "Fixed Charged": billDetails?.electricityCharges?.fixedCharges,
+    "TOTAL": (billDetails?.electricityCharges?.costOfElectricity) + (billDetails?.electricityCharges?.gst) + (billDetails?.electricityCharges?.qtrTex) + (billDetails?.electricityCharges?.fuelPriceAdjustment) + (billDetails?.electricityCharges?.fixedCharges),
     "DEFERRED AMOUNT": null, // No value provided
     "OUTSTANDING INSTALLMENT": null,
     "PROG IT PAID F-Y": null,
@@ -31,8 +32,8 @@ const BillDesign = ({ billDetails }) => {
   // Govt Charges Data
   const govtCharges = {
     "E.D": null,
-    "PTV FEE": 35,
-    "Meter Rent": 25,
+    "PTV FEE": billDetails?.govtCharges?.ptvFee,
+    "Meter Rent": billDetails?.govtCharges?.meterRent,
     "INCOME TAX": null,
     "EXTRA TAX": null,
     "FURTHER TAX": null,
@@ -40,23 +41,26 @@ const BillDesign = ({ billDetails }) => {
     "GST ON FPA": null,
     "IT ON FPA": null,
     "ED ON FPA": null,
-    "FC SURCHARGE": 29,
+    "FC SURCHARGE": billDetails?.govtCharges?.fcSurcharge,
     "TR SURCHARGE": null,
-    TOTAL: 89,
+    "TOTAL": (billDetails?.govtCharges?.ptvFee) + (billDetails?.govtCharges?.meterRent) + (billDetails?.govtCharges?.fcSurcharge),
   };
 
   // Arrears - Bill Data
   const arrearsDetails = {
-    "CURRENT BILL": 1598,
-    "Water BILL": 250,
-    "PM RELIEF AMOUNT": 0, // assuming no value provided
-    INSTALMENT: 0,
-    "PAYABLE WITHIN DUE DATE": 1848,
-    "L.P. SURCHAGE": 185,
-    "PAYABLE AFTER DUE DATE": 2033,
+    "CURRENT BILL": govtCharges["TOTAL"] + electricityBill["TOTAL"],
+    "Water BILL": billDetails?.arrears?.waterBill,
+    "PM RELIEF AMOUNT": null, // assuming no value provided
+    "INSTALMENT": 0,
+    "PAYABLE WITHIN DUE DATE": govtCharges["TOTAL"] + electricityBill["TOTAL"] + billDetails?.arrears?.waterBill,
+    // "L.P. SURCHAGE": Math.round((govtCharges["TOTAL"] + electricityBill["TOTAL"] + billDetails?.arrears?.waterBill) * billDetails?.lpSurchargeRate),
+    "L.P. SURCHAGE": lpSurchargeCalc(electricityBill["TOTAL"], govtCharges["TOTAL"], billDetails?.arrears?.waterBill,  billDetails?.lpSurchargeRate),
+    "PAYABLE AFTER DUE DATE": Math.round((govtCharges["TOTAL"] + electricityBill["TOTAL"] + billDetails?.arrears?.waterBill) * billDetails?.lpSurchargeRate) + (govtCharges["TOTAL"] + electricityBill["TOTAL"] + billDetails?.arrears?.waterBill),
   };
 
   console.log("billDetails in billdesign: ", billDetails);
+  // console.log("Total hi:", Math.round((parseInt(govtCharges["TOTAL"]) + parseInt(electricityBill["TOTAL"]) + parseInt(billDetails?.arrears?.waterBill)) * parseFloat(billDetails?.lpSurchargeRate)))
+
 
   // RETURN JSX
   return (
@@ -332,12 +336,12 @@ const BillDesign = ({ billDetails }) => {
           </div>
 
           {/* EXPLAINATION OF LOWER PART - 4 COLS == METER No PREVIOUS PRESENT MF UNITS STATUS */}
-          <div className="grid grid-cols-8 ">
+          {billDetails?.belowAddressSection ? (<div className="grid grid-cols-8 ">
             {/* Left 4 Cols */}
             <div className="col-span-4 border-r-2 border-black">
               <div className="grid grid-flow-col grid-cols-8">
                 <div className="col-span-3 border-r-2 border-black flex items-center justify-center font-semibold text-sm text-[#CC0000] whitespace-nowrap min-w-[113px] h-[99px]">
-                  {belowAddressSection.meterNo}
+                  {billDetails.belowAddressSection.meterNo}
                 </div>
                 <div className="col-span-5">
                   <div className="grid grid-flow-row grid-cols-12">
@@ -347,7 +351,7 @@ const BillDesign = ({ billDetails }) => {
                           Peak
                         </div>
                         <div className="col-span-7 font-semibold flex items-center justify-center">
-                          {belowAddressSection.previousReadingPeak}
+                          {billDetails.belowAddressSection.previousReadingPeak}
                         </div>
                       </div>
                     </div>
@@ -357,7 +361,7 @@ const BillDesign = ({ billDetails }) => {
                           Off Peak
                         </div>
                         <div className="col-span-7 font-semibold flex items-center justify-center">
-                          {belowAddressSection.previousReadingOffPeak}
+                          {billDetails.belowAddressSection.previousReadingOffPeak}
                         </div>
                       </div>
                     </div>
@@ -370,27 +374,29 @@ const BillDesign = ({ billDetails }) => {
               <div className="grid grid-flow-col grid-cols-12">
                 <div className="col-span-3 border-r-2 border-black text-center font-semibold ">
                   <div className="border-b-2 border-black font-semibold h-[42px] flex items-center justify-center">
-                    {belowAddressSection.presentReadingPeak}
+                    {billDetails.belowAddressSection.presentReadingPeak}
                   </div>
                   <div className="font-semibold h-[57px] flex items-center justify-center">
-                    {belowAddressSection.presentReadingOffPeak}
+                    {billDetails.belowAddressSection.presentReadingOffPeak}
                   </div>
                 </div>
                 <div className="bg-[#FFFF00] col-span-3 border-r-2 border-black text-center font-semibold flex items-center justify-center">
-                  {belowAddressSection.mfValue}
+                  {billDetails.belowAddressSection.mfValue}
                 </div>
                 <div className="col-span-2 border-r-2 border-black text-center font-semibold">
                   <div className="border-b-2 border-black font-semibold h-[42px] flex items-center justify-center">
-                    {belowAddressSection.peakUnits}
+                    {billDetails.belowAddressSection.peakUnits}
                   </div>
                   <div className="font-semibold h-[57px] flex items-center justify-center">
-                    {belowAddressSection.peakOffUnits}
+                    {billDetails.belowAddressSection.peakOffUnits}
                   </div>
                 </div>
                 <div className="col-span-5 text-center font-semibold"></div>
               </div>
             </div>
-          </div>
+          </div>): (
+        <p>Loading Below Address Section Bill Details...</p>
+      )}
         </div>
 
         {/* Right Side */}
@@ -614,7 +620,7 @@ const BillDesign = ({ billDetails }) => {
             </div>
             <div className="col-span-2 border-b-2 border-black text-center text-sm font-semibold">
               <div className="border-b-2 border-black">Rate</div>
-              <div className="bg-[#92D050]">3.5627</div>
+              <div className="bg-[#92D050]">{billDetails?.fpaRate}</div>
             </div>
           </div>
           {/* Contact Billing Department for any inquiries */}
