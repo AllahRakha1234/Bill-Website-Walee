@@ -73,7 +73,7 @@ const AdminPage = () => {
               }`}
               onClick={() => setActiveOption("Terif")}
             >
-              Terif
+              Tariff
             </button>
             {activeOption === "Terif" && (
               <div className="pl-4">
