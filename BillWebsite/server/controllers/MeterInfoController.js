@@ -173,6 +173,10 @@ const addMeterInfo = async (req, res) => {
       // Saving the template bill data
       const billTemplateData = new TemplateBillData(templateBillData);
       await billTemplateData.save();
+
+      // REMAINING WORK HERE IS THAT UPDATE THE ONCE UPLOAD ARRAY READINGS DATA WITH THE CURRENT READING. IT MEANS THAT PUSH THE CURRENT READING AT THE END OF THE ONCEUPLOADBILLDATA ARRAY.
+      
+
     }
     res.status(200).json({ message: "Meter info added successfully" });
   } catch (error) {

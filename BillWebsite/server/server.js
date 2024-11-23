@@ -27,7 +27,7 @@ connectDB();
 // Define routes
 app.use("/api/fixed-settings", fixedSettingsRoute); // Fixed settings routes
 app.use("/api/meter-info", meterInfoRoute); // Meter info routes
-app.use("/api/user-info", userInfoRoute); // Meter info routes
+app.use("/api/user-info", userInfoRoute); // User info routes
 app.use("/api/upload-once-bill-data", uploadOnceBillData); // Meter info routes
 app.use("/api/get-bill-template-data", templateBillData); // Meter info routes
 
