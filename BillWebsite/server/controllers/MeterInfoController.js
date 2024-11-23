@@ -174,9 +174,17 @@ const addMeterInfo = async (req, res) => {
       const billTemplateData = new TemplateBillData(templateBillData);
       await billTemplateData.save();
 
-      // REMAINING WORK HERE IS THAT UPDATE THE ONCE UPLOAD ARRAY READINGS DATA WITH THE CURRENT READING. IT MEANS THAT PUSH THE CURRENT READING AT THE END OF THE ONCEUPLOADBILLDATA ARRAY.
-      
-
+      // UPDATING THE ONCE UPLOAD ARRAY READINGS DATA WITH THE CURRENT READING. IT MEANS THAT PUSH THE CURRENT READING AT THE END OF THE ONCEUPLOADBILLDATA ARRAY.
+      const previousReadingsArrayOfMeter = previousMeterInfo.previousReadings;
+      // Remove the first entry
+      previousReadingsArrayOfMeter.shift()
+      // Add the new entry at the end
+      previousReadingsArrayOfMeter.push({ "previous_peak": present_peak_reading, "previous_off_peak": present_off_peak_reading });
+      // Update the document in the database
+      await UploadOnceBillData.updateOne(
+        { _id: previousMeterInfo._id }, // Match the document by ID or other criteria
+        { $set: { "previousReadings": previousReadingsArrayOfMeter } } // Update the array
+      );
     }
     res.status(200).json({ message: "Meter info added successfully" });
   } catch (error) {

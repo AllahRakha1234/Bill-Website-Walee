@@ -5,11 +5,6 @@ const BillDesign = ({ billDetails }) => {
 
   const lpSurchargeCalc = (totalElecBill, totalGovtCharges, waterBill, rate) => {
     const result = (Number(totalElecBill) + Number(totalGovtCharges) + Number(waterBill)) * Number(rate);
-    console.log("totalElectBill", totalElecBill);
-    console.log("totalGovtCharges", totalGovtCharges);
-    console.log("waterBill", waterBill);
-    console.log("rate", rate);
-    console.log("Result: ", result)
     return Math.round(result);  // Round to the nearest integer
   };
   
@@ -58,7 +53,6 @@ const BillDesign = ({ billDetails }) => {
     "PAYABLE AFTER DUE DATE": Math.round((govtCharges["TOTAL"] + electricityBill["TOTAL"] + billDetails?.arrears?.waterBill) * billDetails?.lpSurchargeRate) + (govtCharges["TOTAL"] + electricityBill["TOTAL"] + billDetails?.arrears?.waterBill),
   };
 
-  console.log("billDetails in billdesign: ", billDetails);
   // console.log("Total hi:", Math.round((parseInt(govtCharges["TOTAL"]) + parseInt(electricityBill["TOTAL"]) + parseInt(billDetails?.arrears?.waterBill)) * parseFloat(billDetails?.lpSurchargeRate)))
 
 
@@ -406,7 +400,7 @@ const BillDesign = ({ billDetails }) => {
             <div className="uppercase text-center text-sm text-[#1301ff] font-semibold col-span-2 border-b-2 border-r-2 border-black">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m, index) => {
                 return (
-                  <div className="border-b" id={index}>
+                  <div className="border-b" key={index} id={index}>
                     {m}
                   </div>
                 );
@@ -416,7 +410,7 @@ const BillDesign = ({ billDetails }) => {
             <div className="uppercase text-center text-sm text-[#1301ff] font-semibold col-span-2 border-b-2 border-r-2 border-black">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m, index) => {
                 return (
-                  <div className="border-b" id={index}>
+                  <div className="border-b" key={index} id={index}>
                     {m}
                   </div>
                 );
@@ -426,7 +420,7 @@ const BillDesign = ({ billDetails }) => {
             <div className="text-[#1301ff] text-sm text-center font-semibold col-span-2 border-b-2 border-r-2 border-black">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m, index) => {
                 return (
-                  <div className="border-b" id={index}>
+                  <div className="border-b" key={index} id={index}>
                     {m}
                   </div>
                 );
@@ -436,7 +430,7 @@ const BillDesign = ({ billDetails }) => {
             <div className="uppercase text-center text-sm text-[#1301ff] font-semibold col-span-2 border-b-2 border-black">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m, index) => {
                 return (
-                  <div className="border-b" id={index}>
+                  <div className="border-b" key={index} id={index}>
                     {m}
                   </div>
                 );
@@ -459,7 +453,7 @@ const BillDesign = ({ billDetails }) => {
             <div className="grid grid-flow-row grid-cols-5 grid-rows-5">
               {Object.keys(electricityBill).map((key, index) => {
                 return (
-                  <>
+                  <React.Fragment key={key}>
                     <div
                       className={`col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#1301ff] font-semibold flex items-center ${
                         key === "GST" ? "row-span-2" : ""
@@ -479,7 +473,7 @@ const BillDesign = ({ billDetails }) => {
                     >
                       {electricityBill[key]}
                     </div>
-                  </>
+                  </React.Fragment>
                 );
               })}
             </div>
@@ -540,7 +534,7 @@ const BillDesign = ({ billDetails }) => {
           <div className="grid grid-flow-row grid-cols-7 grid-rows-7">
             {Object.keys(govtCharges).map((key, index) => {
               return (
-                <>
+                <React.Fragment key={index}>
                   <div
                     className={`col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#CC0000] font-semibold flex items-center ${
                       key === "FURTHER TAX" ? "row-span-2" : ""
@@ -559,7 +553,7 @@ const BillDesign = ({ billDetails }) => {
                   >
                     {govtCharges[key]}
                   </div>
-                </>
+                </React.Fragment>
               );
             })}
           </div>
@@ -581,7 +575,7 @@ const BillDesign = ({ billDetails }) => {
           <div className="grid grid-flow-row grid-cols-5 grid-rows-8">
             {Object.keys(arrearsDetails).map((key, index) => {
               return (
-                <>
+                <React.Fragment key={index}>
                   <div
                     className={`col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#1301ff] font-semibold flex items-center ${
                       key === "L.P. SURCHAGE" ? "row-span-2" : ""
@@ -602,7 +596,7 @@ const BillDesign = ({ billDetails }) => {
                   >
                     {arrearsDetails[key]}
                   </div>
-                </>
+                </React.Fragment>
               );
             })}
           </div>

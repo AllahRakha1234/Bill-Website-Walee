@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import Papa from "papaparse";
+import axios from "axios";
 import * as XLSX from "xlsx"; // Import the xlsx library
 import { useNavigate } from "react-router-dom";
 import FixedSetting from "../components/AdminPageComponents/FixedSetting";
 
 const AdminPage = () => {
   const [fileData, setFileData] = useState([]);
-  const [activeOption, setActiveOption] = useState("Upload Data");
+  const [activeOption, setActiveOption] = useState(""); // Set the default active option to be shown on the page when the admin page opens like "Once Upload Data"
   const [activeSubOption, setActiveSubOption] = useState(null);
+  const [onceOrMonthlyOption, setOnceOrMonthlyOption] = useState("");
   const navigate = useNavigate();
 
   const handleFileUpload = (e) => {
@@ -27,7 +29,6 @@ const AdminPage = () => {
           header: true,
           complete: (result) => {
             setFileData(result.data);
-            localStorage.setItem("bills", JSON.stringify(result.data));
           },
           error: (error) => {
             console.error("Error parsing CSV:", error);
@@ -42,22 +43,48 @@ const AdminPage = () => {
           const worksheet = workbook.Sheets[sheetName];
           const parsedData = XLSX.utils.sheet_to_json(worksheet);
           setFileData(parsedData);
-          localStorage.setItem("bills", JSON.stringify(parsedData));
         };
         reader.readAsArrayBuffer(file);
       }
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (fileData.length > 0) {
-      console.log("Data saved successfully:", fileData);
-      navigate("/");
+      try {
+        // Send the data to the backend using axios
+        let response = null;
+        if (activeOption === "Monthly Upload Data") {
+          response = await axios.post(
+            "http://localhost:3001/api/meter-info",
+            fileData
+          );
+        } else if (activeOption === "Once Upload Data") {
+          console.log("Inside Monthly Upload Data");
+          response = await axios.post(
+            "http://localhost:3001/api/upload-once-bill-data",
+            fileData
+          );
+        }
+
+        if (response.status === 200) {
+          console.log("Data saved successfully:", fileData);
+          alert("Data saved successfully!");
+          window.location.reload();
+        } else {
+          console.error("Failed to save data:", response);
+          alert("Error saving data. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error saving data:", error);
+        alert("Error saving data. Please try again.");
+      }
     } else {
       alert("No data found! Please upload a file first.");
     }
   };
 
+  // RETURN JSX CODE
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
@@ -104,6 +131,7 @@ const AdminPage = () => {
               </div>
             )}
           </div>
+          {/* Protected Terrif Section */}
           <div className="relative mb-2">
             <button
               className={`text-left p-2 rounded-md w-full ${
@@ -148,16 +176,30 @@ const AdminPage = () => {
               </div>
             )}
           </div>
+          {/* New Option - Upload Data */}
           <button
             className={`text-left p-2 rounded-md mb-2 ${
-              activeOption === "Upload Data" ? "bg-indigo-500" : ""
+              activeOption === "Once Upload Data" ? "bg-indigo-500" : ""
             }`}
             onClick={() => {
-              setActiveOption("Upload Data");
+              setActiveOption("Once Upload Data");
               setActiveSubOption(null);
             }}
           >
-            Upload Data
+            Once Upload Data
+          </button>
+
+          {/* New Option - Monthly Upload Data */}
+          <button
+            className={`text-left p-2 rounded-md mb-2 ${
+              activeOption === "Monthly Upload Data" ? "bg-indigo-500" : ""
+            }`}
+            onClick={() => {
+              setActiveOption("Monthly Upload Data");
+              setActiveSubOption(null);
+            }}
+          >
+            Monthly Upload Data
           </button>
 
           {/* New Option - Fixed Setting */}
@@ -177,7 +219,8 @@ const AdminPage = () => {
 
       {/* Main Content */}
       <div className="w-3/4 h-full flex flex-col justify-center items-center bg-gray-100">
-        {activeOption === "Upload Data" && (
+        {/* Once Upload Data Section */}
+        {activeOption === "Once Upload Data" && (
           <div className="bg-white shadow-md rounded-lg p-8 w-[90%] md:w-[50%]">
             <h1 className="text-3xl font-bold text-center mb-6 text-indigo-600">
               Admin Section
@@ -222,6 +265,54 @@ const AdminPage = () => {
             </button>
           </div>
         )}
+
+        {/* Monthly Upload Data Section */}
+        {activeOption === "Monthly Upload Data" && (
+          <div className="bg-white shadow-md rounded-lg p-8 w-[90%] md:w-[50%]">
+            <h1 className="text-3xl font-bold text-center mb-6 text-indigo-600">
+              Admin Section
+            </h1>
+
+            {/* File Upload and Download Button Row */}
+            <div className="mb-4 flex justify-between items-center">
+              <div className="flex-1 mr-4">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="file-upload"
+                >
+                  Upload CSV/Excel File
+                </label>
+                <input
+                  type="file"
+                  id="file-upload"
+                  accept=".csv, .xlsx"
+                  onChange={handleFileUpload}
+                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+
+              {/* Download Sample Button */}
+              <div className="mt-6">
+                <a
+                  href="/SampleFile.csv" // Link to the file in public folder
+                  download="SampleFile.csv"
+                  className="bg-indigo-500  text-white px-4 py-2 rounded-md hover:bg-indigo-600"
+                >
+                  Download Sample File
+                </a>
+              </div>
+            </div>
+
+            {/* Save Button */}
+            <button
+              onClick={handleSave}
+              className="w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            >
+              Save
+            </button>
+          </div>
+        )}
+
         {(activeSubOption === "Residential" ||
           activeSubOption === "Industrial" ||
           activeSubOption === "Commercial") && (
@@ -308,7 +399,7 @@ const AdminPage = () => {
             </form>
           </div>
         )}
-        {activeOption === "Fixed Setting" && <FixedSetting/>}
+        {activeOption === "Fixed Setting" && <FixedSetting />}
       </div>
     </div>
   );
