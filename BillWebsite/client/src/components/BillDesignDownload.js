@@ -1,16 +1,24 @@
 import React from "react";
 
 const BillDesign = ({ billDetails }) => {
-  // Electicity Charges Data
+  // Electricity Charges Data
   const electricityBill = {
-    "TOTAL UNITS CONSUMED": 9,
-    "COST OF ELECTRICTY": 388,
-    GST: 79,
-    "Qtr Tex": 22,
-    "FUEL PRICE ADJUSTMENT": 20,
-    "Fixed Charged": 1000,
-    TOTAL: 1509,
-    "DEFERRED AMOUNT": null, // No value provided
+    "TOTAL UNITS CONSUMED":
+      billDetails?.belowAddressSection?.peakUnits +
+      billDetails?.belowAddressSection?.peakOffUnits,
+    "COST OF ELECTRICTY": billDetails?.electricityCharges?.costOfElectricity,
+    GST: billDetails?.electricityCharges?.gst,
+    "Qtr Tex": billDetails?.electricityCharges?.qtrTex,
+    "FUEL PRICE ADJUSTMENT":
+      billDetails?.electricityCharges?.fuelPriceAdjustment,
+    "Fixed Charged": billDetails?.electricityCharges?.fixedCharges,
+    TOTAL:
+      billDetails?.electricityCharges?.costOfElectricity +
+      billDetails?.electricityCharges?.gst +
+      billDetails?.electricityCharges?.qtrTex +
+      billDetails?.electricityCharges?.fuelPriceAdjustment +
+      billDetails?.electricityCharges?.fixedCharges,
+    "DEFERRED AMOUNT": null,
     "OUTSTANDING INSTALLMENT": null,
     "PROG IT PAID F-Y": null,
     "PROG GST PAID F-Y": null,
@@ -19,8 +27,8 @@ const BillDesign = ({ billDetails }) => {
   // Govt Charges Data
   const govtCharges = {
     "E.D": null,
-    "PTV FEE": 35,
-    "Meter Rent": 25,
+    "PTV FEE": billDetails?.govtCharges?.ptvFee,
+    "Meter Rent": billDetails?.govtCharges?.meterRent,
     "INCOME TAX": null,
     "EXTRA TAX": null,
     "FURTHER TAX": null,
@@ -28,20 +36,40 @@ const BillDesign = ({ billDetails }) => {
     "GST ON FPA": null,
     "IT ON FPA": null,
     "ED ON FPA": null,
-    "FC SURCHARGE": 29,
+    "FC SURCHARGE": billDetails?.govtCharges?.fcSurcharge,
     "TR SURCHARGE": null,
-    TOTAL: 89,
+    TOTAL:
+      billDetails?.govtCharges?.ptvFee +
+      billDetails?.govtCharges?.meterRent +
+      billDetails?.govtCharges?.fcSurcharge,
   };
 
   // Arrears - Bill Data
   const arrearsDetails = {
-    "CURRENT BILL": 1598,
-    "Water BILL": 250,
-    "PM RELIEF AMOUNT": 0, // assuming no value provided
+    "CURRENT BILL": govtCharges.TOTAL + electricityBill.TOTAL,
+    "Water BILL": billDetails?.arrears?.waterBill,
+    "PM RELIEF AMOUNT": 0,
     INSTALMENT: 0,
-    "PAYABLE WITHIN DUE DATE": 1848,
-    "L.P. SURCHAGE": 185,
-    "PAYABLE AFTER DUE DATE": 2033,
+    "PAYABLE WITHIN DUE DATE":
+      govtCharges.TOTAL +
+      electricityBill.TOTAL +
+      billDetails?.arrears?.waterBill,
+    "L.P. SURCHAGE": Math.round(
+      (govtCharges.TOTAL +
+        electricityBill.TOTAL +
+        billDetails?.arrears?.waterBill) *
+        billDetails?.lpSurchargeRate
+    ),
+    "PAYABLE AFTER DUE DATE":
+      Math.round(
+        (govtCharges.TOTAL +
+          electricityBill.TOTAL +
+          billDetails?.arrears?.waterBill) *
+          billDetails?.lpSurchargeRate
+      ) +
+      (govtCharges.TOTAL +
+        electricityBill.TOTAL +
+        billDetails?.arrears?.waterBill),
   };
 
   // RETURN JSX
