@@ -13,10 +13,9 @@ const DownloadBillPage = () => {
   // UseEffect to handle Bill Data
   useEffect(() => {
     // Retrieve the MeterNo and Bill Details from local storage
-    const storedMeterNo = JSON.parse(localStorage.getItem("referenceNo"));
     const storedData = JSON.parse(localStorage.getItem("billDetails")) || [];
-    console.log("storedMeterNo:", storedMeterNo);
-    console.log("storedBillData:", storedData);
+    // console.log("storedMeterNo:", storedMeterNo);
+    // console.log("storedBillData:", storedData);
 
     if (storedData.length > 0){
       const currentBillDetails = storedData[storedData.length -1];// Last Entry Details Means Current Month Details
@@ -51,10 +50,10 @@ const DownloadBillPage = () => {
       // Add more sections here if needed
     };
     setBillDetails(updatedBillData);
-    console.log("billDetails local: ", billDetails)
+    // console.log("billDetails local: ", billDetails)
     }
     else{
-      console.log("No Bill ")
+      console.log("No Bill found.")
     }
 
     // Simulate loading time
@@ -115,9 +114,9 @@ const DownloadBillPage = () => {
 
       {/* Only capture this specific div for the PDF */}
       {/* FOR DOWNLOAD THE BILL */}
-      {/* <div ref={downloadBillPageRef} style={{ position: "absolute", top: "-200vh", left: "-200vw" }} className="p-4 bg-white shadow-lg">
+      <div ref={downloadBillPageRef} style={{ position: "absolute", top: "-200vh", left: "-200vw" }} className="p-4 bg-white shadow-lg">
         <BillDesignDownload billDetails={billDetails} />
-      </div> */}
+      </div>
       {/* FOR DISPLAY */}
       <div className="p-4 bg-white shadow-lg">
         <BillDesign billDetails={billDetails} />

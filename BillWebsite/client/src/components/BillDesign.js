@@ -53,8 +53,6 @@ const BillDesign = ({ billDetails }) => {
     "PAYABLE AFTER DUE DATE": Math.round((govtCharges["TOTAL"] + electricityBill["TOTAL"] + billDetails?.arrears?.waterBill) * billDetails?.lpSurchargeRate) + (govtCharges["TOTAL"] + electricityBill["TOTAL"] + billDetails?.arrears?.waterBill),
   };
 
-  // console.log("Total hi:", Math.round((parseInt(govtCharges["TOTAL"]) + parseInt(electricityBill["TOTAL"]) + parseInt(billDetails?.arrears?.waterBill)) * parseFloat(billDetails?.lpSurchargeRate)))
-
 
   // RETURN JSX
   return (
@@ -453,7 +451,7 @@ const BillDesign = ({ billDetails }) => {
             <div className="grid grid-flow-row grid-cols-5 grid-rows-5">
               {Object.keys(electricityBill).map((key, index) => {
                 return (
-                  <React.Fragment key={key}>
+                  <React.Fragment key={index}>
                     <div
                       className={`col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#1301ff] font-semibold flex items-center ${
                         key === "GST" ? "row-span-2" : ""

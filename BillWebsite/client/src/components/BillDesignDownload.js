@@ -346,67 +346,76 @@ const BillDesign = ({ billDetails }) => {
           </div>
 
           {/* EXPLAINATION OF LOWER PART - 4 COLS == METER No PREVIOUS PRESENT MF UNITS STATUS */}
-          <div className="grid grid-cols-8 ">
-            {/* Left 4 Cols */}
-            <div className="col-span-4 border-r-2 border-black">
-              <div className="grid grid-flow-col grid-cols-8">
-                <div className="col-span-3 border-r-2 border-black flex items-center justify-center font-semibold text-[#CC0000] whitespace-nowrap min-w-[113px] h-[99px]">
-                  609641
-                </div>
-                <div className="col-span-5">
-                  <div className="grid grid-flow-row grid-cols-12">
-                    <div className="col-span-12 border-b-2 border-black">
-                      <div className="grid grid-flow-col grid-cols-12 h-[40px]">
-                        <div className="col-span-5 border-r-2 border-black font-bold flex items-center justify-center">
-                          Peak
-                        </div>
-                        <div className="col-span-7 font-semibold flex items-center justify-center">
-                          1798
+          {billDetails?.belowAddressSection ? (
+            <div className="grid grid-cols-8 ">
+              {/* Left 4 Cols */}
+              <div className="col-span-4 border-r-2 border-black">
+                <div className="grid grid-flow-col grid-cols-8">
+                  <div className="col-span-3 border-r-2 border-black flex items-center justify-center font-semibold text-[#CC0000] whitespace-nowrap min-w-[113px] h-[99px]">
+                    609641
+                  </div>
+                  <div className="col-span-5">
+                    <div className="grid grid-flow-row grid-cols-12">
+                      <div className="col-span-12 border-b-2 border-black">
+                        <div className="grid grid-flow-col grid-cols-12 h-[40px]">
+                          <div className="col-span-5 border-r-2 border-black font-bold flex items-center justify-center">
+                            Peak
+                          </div>
+                          <div className="col-span-7 font-semibold flex items-center justify-center">
+                            {
+                              billDetails.belowAddressSection
+                                .previousReadingPeak
+                            }
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="col-span-12">
-                      <div className="grid grid-flow-col grid-cols-12 h-[57px]">
-                        <div className="col-span-5 border-r-2 border-black font-bold flex items-center justify-center">
-                          Off Peak
-                        </div>
-                        <div className="col-span-7 font-semibold flex items-center justify-center">
-                          9325
+                      <div className="col-span-12">
+                        <div className="grid grid-flow-col grid-cols-12 h-[57px]">
+                          <div className="col-span-5 border-r-2 border-black font-bold flex items-center justify-center">
+                            Off Peak
+                          </div>
+                          <div className="col-span-7 font-semibold flex items-center justify-center">
+                            {
+                              billDetails.belowAddressSection
+                                .previousReadingOffPeak
+                            }
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            {/* Right 4 Cols */}
-            <div className="col-span-4">
-              <div className="grid grid-flow-col grid-cols-12">
-                <div className="col-span-3 border-r-2 border-black text-center font-semibold ">
-                  <div className="border-b-2 border-black font-semibold h-[42px] flex items-center justify-center">
-                    1800
+              {/* Right 4 Cols */}
+              <div className="col-span-4">
+                <div className="grid grid-flow-col grid-cols-12">
+                  <div className="col-span-3 border-r-2 border-black text-center font-semibold ">
+                    <div className="border-b-2 border-black font-semibold h-[42px] flex items-center justify-center">
+                      {billDetails.belowAddressSection.presentReadingPeak}
+                    </div>
+                    <div className="font-semibold h-[57px] flex items-center justify-center">
+                      {billDetails.belowAddressSection.presentReadingOffPeak}
+                    </div>
                   </div>
-                  <div className="font-semibold h-[57px] flex items-center justify-center">
-                    9332
+                  <div className="bg-[#FFFF00] col-span-3 border-r-2 border-black text-center font-semibold flex items-center justify-center">
+                    {billDetails.belowAddressSection.mfValue}
                   </div>
+                  <div className="col-span-2 border-r-2 border-black text-center font-semibold">
+                    <div className="border-b-2 border-black font-semibold h-[42px] flex items-center justify-center">
+                      {billDetails.belowAddressSection.peakUnits}
+                    </div>
+                    <div className="font-semibold h-[57px] flex items-center justify-center">
+                      {billDetails.belowAddressSection.peakOffUnits}
+                    </div>
+                  </div>
+                  <div className="col-span-5 text-center font-semibold"></div>
                 </div>
-                <div className="bg-[#FFFF00] col-span-3 border-r-2 border-black text-center font-semibold flex items-center justify-center">
-                  1
-                </div>
-                <div className="col-span-2 border-r-2 border-black text-center font-semibold">
-                  <div className="border-b-2 border-black font-semibold h-[42px] flex items-center justify-center">
-                    2
-                  </div>
-                  <div className="font-semibold h-[57px] flex items-center justify-center">
-                    7
-                  </div>
-                </div>
-                <div className="col-span-5 text-center font-semibold"></div>
               </div>
             </div>
-          </div>
+          ) : (
+            <p>Loading Below Address Section Bill Details...</p>
+          )}
         </div>
-
         {/* Right Side */}
         <div className="col-span-4">
           <div className="grid grid-flow-col grid-cols-8">
@@ -414,7 +423,7 @@ const BillDesign = ({ billDetails }) => {
             <div className="uppercase text-center text-sm text-[#1301ff] font-semibold col-span-2 border-b-2 border-r-2 border-black">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m, index) => {
                 return (
-                  <div className="border-b" id={index}>
+                  <div className="border-b" key={index} id={index}>
                     {m}
                   </div>
                 );
@@ -424,7 +433,7 @@ const BillDesign = ({ billDetails }) => {
             <div className="uppercase text-center text-sm text-[#1301ff] font-semibold col-span-2 border-b-2 border-r-2 border-black">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m, index) => {
                 return (
-                  <div className="border-b" id={index}>
+                  <div className="border-b" key={index} id={index}>
                     {m}
                   </div>
                 );
@@ -434,7 +443,7 @@ const BillDesign = ({ billDetails }) => {
             <div className="text-[#1301ff] text-sm text-center font-semibold col-span-2 border-b-2 border-r-2 border-black">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m, index) => {
                 return (
-                  <div className="border-b" id={index}>
+                  <div className="border-b" key={index} id={index}>
                     {m}
                   </div>
                 );
@@ -444,7 +453,7 @@ const BillDesign = ({ billDetails }) => {
             <div className="uppercase text-center text-sm text-[#1301ff] font-semibold col-span-2 border-b-2 border-black">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m, index) => {
                 return (
-                  <div className="border-b" id={index}>
+                  <div className="border-b" key={index} id={index}>
                     {m}
                   </div>
                 );
@@ -467,7 +476,7 @@ const BillDesign = ({ billDetails }) => {
             <div className="grid grid-flow-row grid-cols-5 grid-rows-5">
               {Object.keys(electricityBill).map((key, index) => {
                 return (
-                  <>
+                  <React.Fragment key={index}>
                     <div
                       className={`col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#1301ff] font-semibold flex items-center ${
                         key === "GST" ? "row-span-2" : ""
@@ -487,7 +496,7 @@ const BillDesign = ({ billDetails }) => {
                     >
                       {electricityBill[key]}
                     </div>
-                  </>
+                  </React.Fragment>
                 );
               })}
             </div>
@@ -548,7 +557,7 @@ const BillDesign = ({ billDetails }) => {
           <div className="grid grid-flow-row grid-cols-7 grid-rows-7">
             {Object.keys(govtCharges).map((key, index) => {
               return (
-                <>
+                <React.Fragment key={index}>
                   <div
                     className={`col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#CC0000] font-semibold flex items-center ${
                       key === "FURTHER TAX" ? "row-span-2" : ""
@@ -567,7 +576,7 @@ const BillDesign = ({ billDetails }) => {
                   >
                     {govtCharges[key]}
                   </div>
-                </>
+                </React.Fragment>
               );
             })}
           </div>
@@ -592,7 +601,7 @@ const BillDesign = ({ billDetails }) => {
           <div className="grid grid-flow-row grid-cols-5 grid-rows-8">
             {Object.keys(arrearsDetails).map((key, index) => {
               return (
-                <>
+                <React.Fragment key={index}>
                   <div
                     className={`col-span-4 border-b border-r-2 border-black pl-1 text-left text-sm text-[#1301ff] font-semibold flex items-center ${
                       key === "L.P. SURCHAGE" ? "row-span-2" : ""
@@ -613,7 +622,7 @@ const BillDesign = ({ billDetails }) => {
                   >
                     {arrearsDetails[key]}
                   </div>
-                </>
+                </React.Fragment>
               );
             })}
           </div>
@@ -631,7 +640,7 @@ const BillDesign = ({ billDetails }) => {
             </div>
             <div className="col-span-2 border-b-2 border-black text-center text-sm font-semibold">
               <div className="border-b-2 border-black">Rate</div>
-              <div className="bg-[#92D050]">3.5627</div>
+              <div className="bg-[#92D050]">{billDetails?.fpaRate}</div>
             </div>
           </div>
           {/* Contact Billing Department for any inquiries */}
