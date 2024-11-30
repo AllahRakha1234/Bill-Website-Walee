@@ -4,6 +4,8 @@ import axios from "axios";
 import * as XLSX from "xlsx"; // Import the xlsx library
 import { useNavigate } from "react-router-dom";
 import FixedSetting from "../components/AdminPageComponents/FixedSetting";
+import UploadData from "../components/AdminPageComponents/UploadData";
+import TariffSetting from './../components/AdminPageComponents/TariffSetting';
 
 const AdminPage = () => {
   const [fileData, setFileData] = useState([]);
@@ -96,13 +98,13 @@ const AdminPage = () => {
           <div className="relative mb-2">
             <button
               className={`text-left p-2 rounded-md w-full ${
-                activeOption === "Terif" ? "bg-indigo-500" : ""
+                activeOption === "Tariff" ? "bg-indigo-500" : ""
               }`}
-              onClick={() => setActiveOption("Terif")}
+              onClick={() => setActiveOption("Tariff")}
             >
               Tariff
             </button>
-            {activeOption === "Terif" && (
+            {activeOption === "Tariff" && (
               <div className="pl-4">
                 <button
                   className={`text-left p-2 rounded-md mb-2 w-full ${
@@ -135,13 +137,13 @@ const AdminPage = () => {
           <div className="relative mb-2">
             <button
               className={`text-left p-2 rounded-md w-full ${
-                activeOption === "Protected Terif" ? "bg-indigo-500" : ""
+                activeOption === "Protected Tariff" ? "bg-indigo-500" : ""
               }`}
-              onClick={() => setActiveOption("Protected Terif")}
+              onClick={() => setActiveOption("Protected Tariff")}
             >
-              Protected Terif
+              Protected Tariff
             </button>
-            {activeOption === "Protected Terif" && (
+            {activeOption === "Protected Tariff" && (
               <div className="pl-4">
                 <button
                   className={`text-left p-2 rounded-md mb-2 w-full ${
@@ -221,147 +223,31 @@ const AdminPage = () => {
       <div className="w-3/4 h-full flex flex-col justify-center items-center bg-gray-100">
         {/* Once Upload Data Section */}
         {activeOption === "Once Upload Data" && (
-          <div className="bg-white shadow-md rounded-lg p-8 w-[90%] md:w-[50%]">
-            <h1 className="text-3xl font-bold text-center mb-6 text-indigo-600">
-              Admin Section
-            </h1>
-
-            {/* File Upload and Download Button Row */}
-            <div className="mb-4 flex justify-between items-center">
-              <div className="flex-1 mr-4">
-                <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="file-upload"
-                >
-                  Upload CSV/Excel File
-                </label>
-                <input
-                  type="file"
-                  id="file-upload"
-                  accept=".csv, .xlsx"
-                  onChange={handleFileUpload}
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-
-              {/* Download Sample Button */}
-              <div className="mt-6">
-                <a
-                  href="/SampleFile.csv" // Link to the file in public folder
-                  download="SampleFile.csv"
-                  className="bg-indigo-500  text-white px-4 py-2 rounded-md hover:bg-indigo-600"
-                >
-                  Download Sample File
-                </a>
-              </div>
-            </div>
-
-            {/* Save Button */}
-            <button
-              onClick={handleSave}
-              className="w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            >
-              Save
-            </button>
-          </div>
+          <UploadData
+            handleFileUpload={handleFileUpload}
+            handleSave={handleSave}
+          />
         )}
 
         {/* Monthly Upload Data Section */}
         {activeOption === "Monthly Upload Data" && (
-          <div className="bg-white shadow-md rounded-lg p-8 w-[90%] md:w-[50%]">
-            <h1 className="text-3xl font-bold text-center mb-6 text-indigo-600">
-              Admin Section
-            </h1>
-
-            {/* File Upload and Download Button Row */}
-            <div className="mb-4 flex justify-between items-center">
-              <div className="flex-1 mr-4">
-                <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="file-upload"
-                >
-                  Upload CSV/Excel File
-                </label>
-                <input
-                  type="file"
-                  id="file-upload"
-                  accept=".csv, .xlsx"
-                  onChange={handleFileUpload}
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-
-              {/* Download Sample Button */}
-              <div className="mt-6">
-                <a
-                  href="/SampleFile.csv" // Link to the file in public folder
-                  download="SampleFile.csv"
-                  className="bg-indigo-500  text-white px-4 py-2 rounded-md hover:bg-indigo-600"
-                >
-                  Download Sample File
-                </a>
-              </div>
-            </div>
-
-            {/* Save Button */}
-            <button
-              onClick={handleSave}
-              className="w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            >
-              Save
-            </button>
-          </div>
+          <UploadData
+            handleFileUpload={handleFileUpload}
+            handleSave={handleSave}
+          />
         )}
 
         {(activeSubOption === "Residential" ||
           activeSubOption === "Industrial" ||
           activeSubOption === "Commercial") && (
-          <div className="bg-white shadow-md rounded-lg p-8 w-[90%] md:w-[50%]">
-            <h1 className="text-3xl font-bold text-center mb-6 text-indigo-600">
-              {activeSubOption} Terif Section
-            </h1>
-            <form>
-              <div className="mb-4">
-                <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="tariff-rate"
-                >
-                  Tariff Rate
-                </label>
-                <input
-                  type="text"
-                  id="tariff-rate"
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="tariff-description"
-                >
-                  Description
-                </label>
-                <input
-                  type="text"
-                  id="tariff-description"
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-              >
-                Update
-              </button>
-            </form>
-          </div>
+         <TariffSetting activeSubOption={activeSubOption} />
         )}
         {(activeSubOption === "Residential Protected" ||
           activeSubOption === "Industrial Protected" ||
           activeSubOption === "Commercial Protected") && (
           <div className="bg-white shadow-md rounded-lg p-8 w-[90%] md:w-[50%]">
             <h1 className="text-3xl font-bold text-center mb-6 text-indigo-600">
-              {activeSubOption} Protected Terif Section
+              {activeSubOption} Protected Tariff Section
             </h1>
             <form>
               <div className="mb-4">

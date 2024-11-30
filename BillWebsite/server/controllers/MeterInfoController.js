@@ -1,3 +1,4 @@
+const Tariff = require("../models/Tariff");
 const MeterInfo = require("../models/MeterInfo");
 const FixedSetting = require("../models/FixedSetting");
 const TemplateBillData = require("../models/TemplateBillData");
@@ -101,13 +102,23 @@ const addMeterInfo = async (req, res) => {
   try {
     // REMAINING WORK
     // First of all there will be multiple meter info -- file
-    // Tarrif slabs are hardcoded
 
-    // TARIFF SLABS VALUES (FOR NOW HARDCODED)
-    const tariffSlabs = {
-      peak: 48.0,
-      offPeak: 41.68,
+    // TARIFF SLABS VALUES 
+    residentailTariffValues = await Tariff.find();
+    
+    let tariffSlabs = {
+      peak: 0,
+      offPeak: 0,
     };
+
+    // Iterate over the tariff values and update the tariffSlabs object
+    residentailTariffValues.forEach((tariff) => {
+      if (tariff.name === "peakValue") {
+        tariffSlabs["peak"] = tariff.value;
+      } else if (tariff.name === "offPeakValue") {
+        tariffSlabs["offPeak"] = tariff.value;
+      }
+    });
 
     // FETCHING THE FIXED SETTING VALUES
     const fixedSettings = await FixedSetting.find();
@@ -177,13 +188,16 @@ const addMeterInfo = async (req, res) => {
       // UPDATING THE ONCE UPLOAD ARRAY READINGS DATA WITH THE CURRENT READING. IT MEANS THAT PUSH THE CURRENT READING AT THE END OF THE ONCEUPLOADBILLDATA ARRAY.
       const previousReadingsArrayOfMeter = previousMeterInfo.previousReadings;
       // Remove the first entry
-      previousReadingsArrayOfMeter.shift()
+      previousReadingsArrayOfMeter.shift();
       // Add the new entry at the end
-      previousReadingsArrayOfMeter.push({ "previous_peak": present_peak_reading, "previous_off_peak": present_off_peak_reading });
+      previousReadingsArrayOfMeter.push({
+        previous_peak: present_peak_reading,
+        previous_off_peak: present_off_peak_reading,
+      });
       // Update the document in the database
       await UploadOnceBillData.updateOne(
         { _id: previousMeterInfo._id }, // Match the document by ID or other criteria
-        { $set: { "previousReadings": previousReadingsArrayOfMeter } } // Update the array
+        { $set: { previousReadings: previousReadingsArrayOfMeter } } // Update the array
       );
     }
     res.status(200).json({ message: "Meter info added successfully" });

@@ -9,6 +9,7 @@ const meterInfoRoute = require("./routes/MeterInfo");
 const userInfoRoute = require("./routes/UserInfo");
 const uploadOnceBillData = require("./routes/UploadOnceBillData");
 const templateBillData = require("./routes/TemplateBillData");
+const tariff = require("./routes/Tariff");
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use("/api/meter-info", meterInfoRoute); // Meter info routes
 app.use("/api/user-info", userInfoRoute); // User info routes
 app.use("/api/upload-once-bill-data", uploadOnceBillData); // Meter info routes
 app.use("/api/get-bill-template-data", templateBillData); // Meter info routes
+app.use("/api/resid-tariff-values", tariff); // Meter info routes
 
 // Defining a basic route
 app.get('/', (req, res) => {
