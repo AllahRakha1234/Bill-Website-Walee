@@ -21,9 +21,9 @@ const addUploadOnceBillData = async (req, res) => {
         }
 
         for (const incomingData of incomingDataArray) {
-            const { meterId, ...readings } = incomingData;
+            const { userId, ...readings } = incomingData;
 
-            if (!meterId) {
+            if (!userId) {
                 return res.status(400).json({ message: "Meter ID is required for each object" });
             }
 
@@ -39,21 +39,21 @@ const addUploadOnceBillData = async (req, res) => {
             }
 
             if (previousReadings.length === 0) {
-                return res.status(400).json({ message: `Previous readings data is missing or invalid for meterId ${meterId}` });
+                return res.status(400).json({ message: `Previous readings data is missing or invalid for userId ${userId}` });
             }
 
             // Construct the formatted data
             const formattedData = {
-                meterId,
+                userId,
                 previousReadings,
             };
 
-            // Check if the record with the given meterId exists
-            const existingData = await UploadOnceBillData.findOne({ meterId });
+            // Check if the record with the given userId exists
+            const existingData = await UploadOnceBillData.findOne({ userId });
 
             if (existingData) {
                 // Update existing record
-                await UploadOnceBillData.updateOne({ meterId }, { $set: formattedData });
+                await UploadOnceBillData.updateOne({ userId }, { $set: formattedData });
             } else {
                 // Insert a new record
                 const uploadOnceBillData = new UploadOnceBillData(formattedData);

@@ -3,9 +3,8 @@ const TemplateBillData = require("../models/TemplateBillData");
 // Get all template bill data
 const getTemplateBillData = async (req, res) => {
   try {
-    const meterId = req.params.meterId; // Use req.params to get meterId from route
-    // console.log("meterId:", meterId);
-    const templateBillData = await TemplateBillData.find({ meterNo: meterId });
+    const userId = req.params.referenceNo; // Use req.params to get referenceNo(userId) from route
+    const templateBillData = await TemplateBillData.find({ userId: userId });
     // console.log("templateBillData:", templateBillData);
     res.status(200).json(templateBillData);
   } catch (error) {

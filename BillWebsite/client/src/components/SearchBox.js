@@ -33,20 +33,23 @@ const SearchBox = () => {
       <div className="text-2xl font-semibold mb-3">
         <h2>Walee Bill</h2>
       </div>
-      <div className="border border-gray-400 w-[40%] flex flex-col">
+      <div className="border border-gray-400 w-[35%] flex flex-col">
         {/* SEARCH BOX HEADER */}
         <div className="text-lg font-semibold mb-2 bg-slate-300 p-2">
           Search Your Electricity Bill
         </div>
         {/* INPUT FIELD FOR USER INPUT*/}
         <div className="flex flex-row p-2">
+          <div>
+            <h3 className="font-semibold mt-3">NUST/RESIDENT/</h3>
+          </div>
           <div className="px-2 pt-1">
             <input
               type="text"
               value={referenceNo}
               onChange={(e) => setReferenceNo(e.target.value)}
               placeholder="Enter your consumer ID"
-              className="border border-gray-300 p-2 rounded w-96"
+              className="border border-gray-300 p-2 rounded w-48"
             />
           </div>
         </div>

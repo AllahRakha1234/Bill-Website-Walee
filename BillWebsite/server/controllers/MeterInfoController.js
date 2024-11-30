@@ -1,4 +1,5 @@
 const Tariff = require("../models/Tariff");
+const UserInfo = require("../models/UserInfo");
 const MeterInfo = require("../models/MeterInfo");
 const FixedSetting = require("../models/FixedSetting");
 const TemplateBillData = require("../models/TemplateBillData");
@@ -27,7 +28,6 @@ const getAllMeterInfo = async (req, res) => {
 
 // FUNCTION TO CALCULATE TEMPLATE BILL DATA
 const calculateTemplateBillData = async (
-  meterId,
   previousPeakReading,
   previousOffPeakReading,
   present_peak_reading,
@@ -35,7 +35,6 @@ const calculateTemplateBillData = async (
   totalUnitsForFpaCalc,
   tariffSlabs
 ) => {
-  const meterNo = meterId;
   // BELOW ADDRESS SECTION
   const peakUnits = present_peak_reading - previousPeakReading;
   const offPeakUnits = present_off_peak_reading - previousOffPeakReading;
@@ -77,7 +76,6 @@ const calculateTemplateBillData = async (
   const fpaRate = fixedSettingsGlobal["FPA Rate"];
 
   return {
-    meterNo,
     previousReadingPeak: Math.round(previousReadingPeak),
     previousReadingOffPeak: Math.round(previousReadingOffPeak),
     presentReadingPeak: Math.round(presentReadingPeak),
@@ -132,7 +130,7 @@ const addMeterInfo = async (req, res) => {
     // LOOPING OVER ALL THE METER INFOs (There will be a list of current readings of meter infos)
     for (let i = 0; i < meterInfoArray.length; i++) {
       // Destructuring Present Meter Info
-      const meterId = meterInfoArray[i].meterId;
+      const userId = meterInfoArray[i].userId;
       const present_peak_reading = meterInfoArray[i].present_peak_reading;
       const present_off_peak_reading =
         meterInfoArray[i].present_off_peak_reading;
@@ -142,7 +140,7 @@ const addMeterInfo = async (req, res) => {
 
       // Finding the previous meter info
       const previousMeterInfo = await UploadOnceBillData.findOne({
-        meterId: meterId,
+        userId: userId,
       });
 
       if (previousMeterInfo?.previousReadings?.length) {
@@ -165,7 +163,6 @@ const addMeterInfo = async (req, res) => {
 
         // Calling the function to calculate the template bill data
         templateBillData = await calculateTemplateBillData(
-          meterId,
           previousPeakReading,
           previousOffPeakReading,
           present_peak_reading,
@@ -174,8 +171,23 @@ const addMeterInfo = async (req, res) => {
           tariffSlabs
         );
       } else {
-        console.error("No previous readings found for the specified meterId");
+        console.error("No previous readings found for the specified userId");
       }
+
+      // Adding remaining fields to template bill data
+      const userData = await UserInfo.find({userId: userId});
+      const remainingTemplateBillData = [
+        { key: "userId", value: userData[0].userId },
+        { key: "name", value: userData[0].name },
+        { key: "location", value: userData[0].location },
+        { key: "tariffCategory", value: userData[0].tariffCategory },
+        { key: "phase", value: userData[0].phase },
+        { key: "meterType", value: userData[0].meterType }
+      ]
+
+      remainingTemplateBillData.forEach((field)=>{
+        templateBillData[field.key] = field.value
+      })
 
       // Saving the Meter Info
       const meterInfo = new MeterInfo(meterInfoArray[i]);

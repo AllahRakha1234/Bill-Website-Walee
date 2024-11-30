@@ -12,16 +12,22 @@ const DownloadBillPage = () => {
 
   // UseEffect to handle Bill Data
   useEffect(() => {
-    // Retrieve the MeterNo and Bill Details from local storage
+    // Retrieve the userId and Bill Details from local storage
     const storedData = JSON.parse(localStorage.getItem("billDetails")) || [];
-    // console.log("storedMeterNo:", storedMeterNo);
-    // console.log("storedBillData:", storedData);
 
     if (storedData.length > 0){
       const currentBillDetails = storedData[storedData.length -1];// Last Entry Details Means Current Month Details
       const updatedBillData = {
+      aboveAddressSection:{
+        userId: currentBillDetails.userId, // Will use for Consumer ID 
+        name: currentBillDetails.name,
+        location: currentBillDetails.location,
+        tariffCategory: currentBillDetails.tariffCategory,
+        phase: currentBillDetails.phase,
+        meterType: currentBillDetails.meterType
+      },
       belowAddressSection: {
-        meterNo: currentBillDetails.meterNo,
+        meterNo: currentBillDetails.location,
         previousReadingPeak: currentBillDetails.previousReadingPeak,
         previousReadingOffPeak: currentBillDetails.previousReadingOffPeak,
         presentReadingPeak: currentBillDetails.presentReadingPeak,

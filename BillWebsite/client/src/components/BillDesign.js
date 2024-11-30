@@ -1,23 +1,35 @@
 import React, { useState, useEffect } from "react";
 
 const BillDesign = ({ billDetails }) => {
-
-
-  const lpSurchargeCalc = (totalElecBill, totalGovtCharges, waterBill, rate) => {
-    const result = (Number(totalElecBill) + Number(totalGovtCharges) + Number(waterBill)) * Number(rate);
-    return Math.round(result);  // Round to the nearest integer
+  const lpSurchargeCalc = (
+    totalElecBill,
+    totalGovtCharges,
+    waterBill,
+    rate
+  ) => {
+    const result =
+      (Number(totalElecBill) + Number(totalGovtCharges) + Number(waterBill)) *
+      Number(rate);
+    return Math.round(result); // Round to the nearest integer
   };
-  
 
   // Electicity Charges Data
   const electricityBill = {
-    "TOTAL UNITS CONSUMED": billDetails?.belowAddressSection?.peakUnits + billDetails?.belowAddressSection?.peakOffUnits,
+    "TOTAL UNITS CONSUMED":
+      billDetails?.belowAddressSection?.peakUnits +
+      billDetails?.belowAddressSection?.peakOffUnits,
     "COST OF ELECTRICTY": billDetails?.electricityCharges?.costOfElectricity,
-    "GST": billDetails?.electricityCharges?.gst,
+    GST: billDetails?.electricityCharges?.gst,
     "Qtr Tex": billDetails?.electricityCharges?.qtrTex,
-    "FUEL PRICE ADJUSTMENT": billDetails?.electricityCharges?.fuelPriceAdjustment,
+    "FUEL PRICE ADJUSTMENT":
+      billDetails?.electricityCharges?.fuelPriceAdjustment,
     "Fixed Charged": billDetails?.electricityCharges?.fixedCharges,
-    "TOTAL": (billDetails?.electricityCharges?.costOfElectricity) + (billDetails?.electricityCharges?.gst) + (billDetails?.electricityCharges?.qtrTex) + (billDetails?.electricityCharges?.fuelPriceAdjustment) + (billDetails?.electricityCharges?.fixedCharges),
+    TOTAL:
+      billDetails?.electricityCharges?.costOfElectricity +
+      billDetails?.electricityCharges?.gst +
+      billDetails?.electricityCharges?.qtrTex +
+      billDetails?.electricityCharges?.fuelPriceAdjustment +
+      billDetails?.electricityCharges?.fixedCharges,
     "DEFERRED AMOUNT": null, // No value provided
     "OUTSTANDING INSTALLMENT": null,
     "PROG IT PAID F-Y": null,
@@ -38,7 +50,10 @@ const BillDesign = ({ billDetails }) => {
     "ED ON FPA": null,
     "FC SURCHARGE": billDetails?.govtCharges?.fcSurcharge,
     "TR SURCHARGE": null,
-    "TOTAL": (billDetails?.govtCharges?.ptvFee) + (billDetails?.govtCharges?.meterRent) + (billDetails?.govtCharges?.fcSurcharge),
+    TOTAL:
+      billDetails?.govtCharges?.ptvFee +
+      billDetails?.govtCharges?.meterRent +
+      billDetails?.govtCharges?.fcSurcharge,
   };
 
   // Arrears - Bill Data
@@ -46,13 +61,29 @@ const BillDesign = ({ billDetails }) => {
     "CURRENT BILL": govtCharges["TOTAL"] + electricityBill["TOTAL"],
     "Water BILL": billDetails?.arrears?.waterBill,
     "PM RELIEF AMOUNT": null, // assuming no value provided
-    "INSTALMENT": 0,
-    "PAYABLE WITHIN DUE DATE": govtCharges["TOTAL"] + electricityBill["TOTAL"] + billDetails?.arrears?.waterBill,
+    INSTALMENT: 0,
+    "PAYABLE WITHIN DUE DATE":
+      govtCharges["TOTAL"] +
+      electricityBill["TOTAL"] +
+      billDetails?.arrears?.waterBill,
     // "L.P. SURCHAGE": Math.round((govtCharges["TOTAL"] + electricityBill["TOTAL"] + billDetails?.arrears?.waterBill) * billDetails?.lpSurchargeRate),
-    "L.P. SURCHAGE": lpSurchargeCalc(electricityBill["TOTAL"], govtCharges["TOTAL"], billDetails?.arrears?.waterBill,  billDetails?.lpSurchargeRate),
-    "PAYABLE AFTER DUE DATE": Math.round((govtCharges["TOTAL"] + electricityBill["TOTAL"] + billDetails?.arrears?.waterBill) * billDetails?.lpSurchargeRate) + (govtCharges["TOTAL"] + electricityBill["TOTAL"] + billDetails?.arrears?.waterBill),
+    "L.P. SURCHAGE": lpSurchargeCalc(
+      electricityBill["TOTAL"],
+      govtCharges["TOTAL"],
+      billDetails?.arrears?.waterBill,
+      billDetails?.lpSurchargeRate
+    ),
+    "PAYABLE AFTER DUE DATE":
+      Math.round(
+        (govtCharges["TOTAL"] +
+          electricityBill["TOTAL"] +
+          billDetails?.arrears?.waterBill) *
+          billDetails?.lpSurchargeRate
+      ) +
+      (govtCharges["TOTAL"] +
+        electricityBill["TOTAL"] +
+        billDetails?.arrears?.waterBill),
   };
-
 
   // RETURN JSX
   return (
@@ -136,7 +167,9 @@ const BillDesign = ({ billDetails }) => {
           {/* Div 2 */}
           <div className="text-center text-sm font-semibold border-b-2 border-black">
             <div className="grid grid-flow-col grid-cols-12">
-              <div className="col-span-6 border-r-2 border-black">3 phase</div>
+              <div className="col-span-6 border-r-2 border-black">
+                phase {billDetails?.aboveAddressSection?.phase}
+              </div>
 
               <div className="col-span-2 border-r-2 border-black"></div>
 
@@ -156,7 +189,9 @@ const BillDesign = ({ billDetails }) => {
           {/* Div 4 */}
           <div className="text-center text-sm font-semibold border-b-2 border-black">
             <div className="grid grid-flow-col grid-cols-12">
-              <div className="col-span-3 border-r-2 border-black">Domistic</div>
+              <div className="col-span-3 border-r-2 border-black">
+                {billDetails?.aboveAddressSection?.tariffCategory || "-"}
+              </div>
 
               <div className="col-span-3 border-r-2 border-black"></div>
 
@@ -226,7 +261,7 @@ const BillDesign = ({ billDetails }) => {
           </div>
           {/* Div 2 */}
           <div className="uppercase pl-2 text-start text-sm text-[#1301ff] font-semibold border-r-2 border-b-2 border-black">
-            -
+            NUST/RESIDENT/{billDetails?.aboveAddressSection?.userId}
           </div>
         </div>
 
@@ -282,10 +317,11 @@ const BillDesign = ({ billDetails }) => {
               NAME & ADDRESS.
             </div>
             <div className="text-[#1301ff] border-b pl-1 text-left text-sm font-bold ">
-              Name
+              {billDetails?.aboveAddressSection?.name || "-"}
             </div>
             <div className="text-[#1301ff] border-b pl-1 text-left text-sm font-bold ">
-              Appartment #
+              {/* Appartment # */}
+              {billDetails?.aboveAddressSection?.location || "-"}
             </div>
             <div className="text-[#002060] uppercase border-b pl-1 text-left text-sm font-bold ">
               HQ NUST, SECTOR H-12
@@ -328,12 +364,12 @@ const BillDesign = ({ billDetails }) => {
           </div>
 
           {/* EXPLAINATION OF LOWER PART - 4 COLS == METER No PREVIOUS PRESENT MF UNITS STATUS */}
-          {billDetails?.belowAddressSection ? (<div className="grid grid-cols-8 ">
+          <div className="grid grid-cols-8 ">
             {/* Left 4 Cols */}
             <div className="col-span-4 border-r-2 border-black">
               <div className="grid grid-flow-col grid-cols-8">
                 <div className="col-span-3 border-r-2 border-black flex items-center justify-center font-semibold text-sm text-[#CC0000] whitespace-nowrap min-w-[113px] h-[99px]">
-                  {billDetails.belowAddressSection.meterNo}
+                  {billDetails?.belowAddressSection?.meterNo || "-"}
                 </div>
                 <div className="col-span-5">
                   <div className="grid grid-flow-row grid-cols-12">
@@ -343,7 +379,7 @@ const BillDesign = ({ billDetails }) => {
                           Peak
                         </div>
                         <div className="col-span-7 font-semibold flex items-center justify-center">
-                          {billDetails.belowAddressSection.previousReadingPeak}
+                          {billDetails?.belowAddressSection?.previousReadingPeak || "-"}
                         </div>
                       </div>
                     </div>
@@ -353,7 +389,9 @@ const BillDesign = ({ billDetails }) => {
                           Off Peak
                         </div>
                         <div className="col-span-7 font-semibold flex items-center justify-center">
-                          {billDetails.belowAddressSection.previousReadingOffPeak}
+                          {
+                            billDetails?.belowAddressSection?.previousReadingOffPeak || "-"
+                          }
                         </div>
                       </div>
                     </div>
@@ -366,29 +404,28 @@ const BillDesign = ({ billDetails }) => {
               <div className="grid grid-flow-col grid-cols-12">
                 <div className="col-span-3 border-r-2 border-black text-center font-semibold ">
                   <div className="border-b-2 border-black font-semibold h-[42px] flex items-center justify-center">
-                    {billDetails.belowAddressSection.presentReadingPeak}
+                    {billDetails?.belowAddressSection?.presentReadingPeak || "-"}
                   </div>
                   <div className="font-semibold h-[57px] flex items-center justify-center">
-                    {billDetails.belowAddressSection.presentReadingOffPeak}
+                    {billDetails?.belowAddressSection?.presentReadingOffPeak ||
+                      "-"}
                   </div>
                 </div>
                 <div className="bg-[#FFFF00] col-span-3 border-r-2 border-black text-center font-semibold flex items-center justify-center">
-                  {billDetails.belowAddressSection.mfValue}
+                  {billDetails?.belowAddressSection?.mfValue || "-"}
                 </div>
                 <div className="col-span-2 border-r-2 border-black text-center font-semibold">
                   <div className="border-b-2 border-black font-semibold h-[42px] flex items-center justify-center">
-                    {billDetails.belowAddressSection.peakUnits}
+                    {billDetails?.belowAddressSection?.peakUnits || "-"}
                   </div>
                   <div className="font-semibold h-[57px] flex items-center justify-center">
-                    {billDetails.belowAddressSection.peakOffUnits}
+                    {billDetails?.belowAddressSection?.peakOffUnits || "-"}
                   </div>
                 </div>
                 <div className="col-span-5 text-center font-semibold"></div>
               </div>
             </div>
-          </div>): (
-        <p>Loading Below Address Section Bill Details...</p>
-      )}
+          </div>
         </div>
 
         {/* Right Side */}
@@ -469,7 +506,7 @@ const BillDesign = ({ billDetails }) => {
                           : ""
                       }`}
                     >
-                      {electricityBill[key]}
+                      {electricityBill[key] || "-"}
                     </div>
                   </React.Fragment>
                 );
@@ -549,7 +586,7 @@ const BillDesign = ({ billDetails }) => {
                         : "bg-[#92D050]"
                     }`}
                   >
-                    {govtCharges[key]}
+                    {govtCharges[key] || "-"}
                   </div>
                 </React.Fragment>
               );
@@ -592,7 +629,7 @@ const BillDesign = ({ billDetails }) => {
                       key === "L.P. SURCHAGE" ? "row-span-2" : ""
                     }`}
                   >
-                    {arrearsDetails[key]}
+                    {arrearsDetails[key] || "-"}
                   </div>
                 </React.Fragment>
               );
@@ -612,7 +649,7 @@ const BillDesign = ({ billDetails }) => {
             </div>
             <div className="col-span-2 border-b-2 border-black text-center text-sm font-semibold">
               <div className="border-b-2 border-black">Rate</div>
-              <div className="bg-[#92D050]">{billDetails?.fpaRate}</div>
+              <div className="bg-[#92D050]">{billDetails?.fpaRate || "-"}</div>
             </div>
           </div>
           {/* Contact Billing Department for any inquiries */}

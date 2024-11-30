@@ -3,11 +3,33 @@ const mongoose = require('mongoose');
 
 // Define the electricity bill schema for digital meters
 const billSchema = new mongoose.Schema({
-  // BELOW ADDRESS SECTION :: (UNITS PEAK AND OFFPEAK = PRESENT READING - PREVIOUS READING)
-  meterNo: {
+
+  // ABOVE ADDRESS SECTION FIELD :: (Dates, phase, tariff etc)
+  userId: {
     type: Number,
     required: true,
   },
+  name: {
+    type: String,
+    required: true
+  },
+  location: {
+    type: String,
+    required: true
+  },
+  tariffCategory: {
+    type: String,
+    required: true
+  },
+  phase: {
+    type: Number,
+    required: true
+  },
+  meterType: {
+    type: String,
+    required: true
+  },
+  // BELOW ADDRESS SECTION :: (UNITS PEAK AND OFFPEAK = PRESENT READING - PREVIOUS READING)
   previousReadingPeak: {
     type: Number,
     required: true,

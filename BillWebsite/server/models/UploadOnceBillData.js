@@ -12,7 +12,7 @@ const previousReadingSchema = new mongoose.Schema({
 });
 
 const uploadOnceBillDataSchema = new mongoose.Schema({
-  meterId: {
+  userId: {
     type: Number,
     required: true
   },
