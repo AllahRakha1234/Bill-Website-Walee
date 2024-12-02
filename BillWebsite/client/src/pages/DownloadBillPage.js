@@ -52,7 +52,11 @@ const DownloadBillPage = () => {
         waterBill: currentBillDetails.waterBill,
       },
       lpSurchargeRate: currentBillDetails.lpSurchargeRate,
-      fpaRate: currentBillDetails.fpaRate
+      fpaRate: currentBillDetails.fpaRate,
+      tariffValueSection:{
+        peakValue: currentBillDetails.tariffPeakValue,
+        offPeakValue: currentBillDetails.tariffOffPeakValue
+      }
       // Add more sections here if needed
     };
     setBillDetails(updatedBillData);

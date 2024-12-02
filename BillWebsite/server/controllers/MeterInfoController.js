@@ -101,9 +101,9 @@ const addMeterInfo = async (req, res) => {
     // REMAINING WORK
     // First of all there will be multiple meter info -- file
 
-    // TARIFF SLABS VALUES 
+    // TARIFF SLABS VALUES
     residentailTariffValues = await Tariff.find();
-    
+
     let tariffSlabs = {
       peak: 0,
       offPeak: 0,
@@ -126,6 +126,8 @@ const addMeterInfo = async (req, res) => {
 
     // DESTRUCTURING THE METER INFO ARRAY
     const meterInfoArray = req.body;
+
+    // console.log("meterInfoArray: ", meterInfoArray)
 
     // LOOPING OVER ALL THE METER INFOs (There will be a list of current readings of meter infos)
     for (let i = 0; i < meterInfoArray.length; i++) {
@@ -175,19 +177,21 @@ const addMeterInfo = async (req, res) => {
       }
 
       // Adding remaining fields to template bill data
-      const userData = await UserInfo.find({userId: userId});
+      const userData = await UserInfo.find({ userId: userId });
       const remainingTemplateBillData = [
         { key: "userId", value: userData[0].userId },
         { key: "name", value: userData[0].name },
         { key: "location", value: userData[0].location },
         { key: "tariffCategory", value: userData[0].tariffCategory },
         { key: "phase", value: userData[0].phase },
-        { key: "meterType", value: userData[0].meterType }
-      ]
+        { key: "meterType", value: userData[0].meterType },
+        { key: "tariffPeakValue", value: tariffSlabs["peak"] },
+        { key: "tariffOffPeakValue", value: tariffSlabs["offPeak"] },
+      ];
 
-      remainingTemplateBillData.forEach((field)=>{
-        templateBillData[field.key] = field.value
-      })
+      remainingTemplateBillData.forEach((field) => {
+        templateBillData[field.key] = field.value;
+      });
 
       // Saving the Meter Info
       const meterInfo = new MeterInfo(meterInfoArray[i]);

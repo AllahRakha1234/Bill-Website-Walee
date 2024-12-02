@@ -154,7 +154,10 @@ const BillDesign = ({ billDetails }) => {
           {/* Div 2 */}
           <div className="text-center text-sm font-semibold border-b-2 border-black">
             <div className="grid grid-flow-col grid-cols-12">
-              <div className="col-span-6 border-r-2 border-black">3 phase</div>
+              <div className="col-span-6 border-r-2 border-black">
+                {" "}
+                {billDetails?.aboveAddressSection?.phase} phase
+              </div>
 
               <div className="col-span-2 border-r-2 border-black"></div>
 
@@ -174,7 +177,10 @@ const BillDesign = ({ billDetails }) => {
           {/* Div 4 */}
           <div className="text-center text-sm font-semibold border-b-2 border-black">
             <div className="grid grid-flow-col grid-cols-12">
-              <div className="col-span-3 border-r-2 border-black">Domistic</div>
+              <div className="col-span-3 border-r-2 border-black">
+                {" "}
+                {billDetails?.aboveAddressSection?.tariffCategory || "-"}
+              </div>
 
               <div className="col-span-3 border-r-2 border-black"></div>
 
@@ -189,7 +195,7 @@ const BillDesign = ({ billDetails }) => {
           <div className="text-center text-sm text-[#1301ff] font-semibold border-b-2 border-black">
             <div className="grid grid-flow-col grid-cols-12">
               <div className="col-span-8 border-r-2 border-black">
-                Bill Duraction
+                Bill Duration
               </div>
 
               <div className="uppercase col-span-4">DUE DATE</div>
@@ -244,7 +250,7 @@ const BillDesign = ({ billDetails }) => {
           </div>
           {/* Div 2 */}
           <div className="uppercase pl-2 text-start text-sm text-[#1301ff] font-semibold border-r-2 border-b-2 border-black">
-            -
+            NUST/RESIDENT/{billDetails?.aboveAddressSection?.userId}
           </div>
         </div>
 
@@ -300,10 +306,10 @@ const BillDesign = ({ billDetails }) => {
               NAME & ADDRESS.
             </div>
             <div className="text-[#1301ff] border-b pl-1 text-left text-sm font-bold ">
-              Name
+              {billDetails?.aboveAddressSection?.name || "-"}
             </div>
             <div className="text-[#1301ff] border-b pl-1 text-left text-sm font-bold ">
-              Appartment #
+              {billDetails?.aboveAddressSection?.location || "-"}
             </div>
             <div className="text-[#002060] uppercase border-b pl-1 text-left text-sm font-bold ">
               HQ NUST, SECTOR H-12
@@ -346,75 +352,70 @@ const BillDesign = ({ billDetails }) => {
           </div>
 
           {/* EXPLAINATION OF LOWER PART - 4 COLS == METER No PREVIOUS PRESENT MF UNITS STATUS */}
-          {billDetails?.belowAddressSection ? (
-            <div className="grid grid-cols-8 ">
-              {/* Left 4 Cols */}
-              <div className="col-span-4 border-r-2 border-black">
-                <div className="grid grid-flow-col grid-cols-8">
-                  <div className="col-span-3 border-r-2 border-black flex items-center justify-center font-semibold text-[#CC0000] whitespace-nowrap min-w-[113px] h-[99px]">
-                    609641
-                  </div>
-                  <div className="col-span-5">
-                    <div className="grid grid-flow-row grid-cols-12">
-                      <div className="col-span-12 border-b-2 border-black">
-                        <div className="grid grid-flow-col grid-cols-12 h-[40px]">
-                          <div className="col-span-5 border-r-2 border-black font-bold flex items-center justify-center">
-                            Peak
-                          </div>
-                          <div className="col-span-7 font-semibold flex items-center justify-center">
-                            {
-                              billDetails.belowAddressSection
-                                .previousReadingPeak
-                            }
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-span-12">
-                        <div className="grid grid-flow-col grid-cols-12 h-[57px]">
-                          <div className="col-span-5 border-r-2 border-black font-bold flex items-center justify-center">
-                            Off Peak
-                          </div>
-                          <div className="col-span-7 font-semibold flex items-center justify-center">
-                            {
-                              billDetails.belowAddressSection
-                                .previousReadingOffPeak
-                            }
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+
+          <div className="grid grid-cols-8 ">
+            {/* Left 4 Cols */}
+            <div className="col-span-4 border-r-2 border-black">
+              <div className="grid grid-flow-col grid-cols-8">
+                <div className="col-span-3 border-r-2 border-black flex items-center justify-center font-semibold text-[#CC0000] whitespace-nowrap min-w-[113px] h-[99px]">
+                  {billDetails?.belowAddressSection?.meterNo || "-"}
                 </div>
-              </div>
-              {/* Right 4 Cols */}
-              <div className="col-span-4">
-                <div className="grid grid-flow-col grid-cols-12">
-                  <div className="col-span-3 border-r-2 border-black text-center font-semibold ">
-                    <div className="border-b-2 border-black font-semibold h-[42px] flex items-center justify-center">
-                      {billDetails.belowAddressSection.presentReadingPeak}
+                <div className="col-span-5">
+                  <div className="grid grid-flow-row grid-cols-12">
+                    <div className="col-span-12 border-b-2 border-black">
+                      <div className="grid grid-flow-col grid-cols-12 h-[40px]">
+                        <div className="col-span-5 border-r-2 border-black font-bold flex items-center justify-center">
+                          Peak
+                        </div>
+                        <div className="col-span-7 font-semibold flex items-center justify-center">
+                          {billDetails?.belowAddressSection
+                            ?.previousReadingPeak || "-"}
+                        </div>
+                      </div>
                     </div>
-                    <div className="font-semibold h-[57px] flex items-center justify-center">
-                      {billDetails.belowAddressSection.presentReadingOffPeak}
+                    <div className="col-span-12">
+                      <div className="grid grid-flow-col grid-cols-12 h-[57px]">
+                        <div className="col-span-5 border-r-2 border-black font-bold flex items-center justify-center">
+                          Off Peak
+                        </div>
+                        <div className="col-span-7 font-semibold flex items-center justify-center">
+                          {billDetails?.belowAddressSection
+                            ?.previousReadingOffPeak || "-"}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div className="bg-[#FFFF00] col-span-3 border-r-2 border-black text-center font-semibold flex items-center justify-center">
-                    {billDetails.belowAddressSection.mfValue}
-                  </div>
-                  <div className="col-span-2 border-r-2 border-black text-center font-semibold">
-                    <div className="border-b-2 border-black font-semibold h-[42px] flex items-center justify-center">
-                      {billDetails.belowAddressSection.peakUnits}
-                    </div>
-                    <div className="font-semibold h-[57px] flex items-center justify-center">
-                      {billDetails.belowAddressSection.peakOffUnits}
-                    </div>
-                  </div>
-                  <div className="col-span-5 text-center font-semibold"></div>
                 </div>
               </div>
             </div>
-          ) : (
-            <p>Loading Below Address Section Bill Details...</p>
-          )}
+            {/* Right 4 Cols */}
+            <div className="col-span-4">
+              <div className="grid grid-flow-col grid-cols-12">
+                <div className="col-span-3 border-r-2 border-black text-center font-semibold ">
+                  <div className="border-b-2 border-black font-semibold h-[42px] flex items-center justify-center">
+                    {billDetails?.belowAddressSection?.presentReadingPeak ||
+                      "-"}
+                  </div>
+                  <div className="font-semibold h-[57px] flex items-center justify-center">
+                    {billDetails?.belowAddressSection?.presentReadingOffPeak ||
+                      "-"}
+                  </div>
+                </div>
+                <div className="bg-[#FFFF00] col-span-3 border-r-2 border-black text-center font-semibold flex items-center justify-center">
+                  {billDetails?.belowAddressSection?.mfValue || "-"}
+                </div>
+                <div className="col-span-2 border-r-2 border-black text-center font-semibold">
+                  <div className="border-b-2 border-black font-semibold h-[42px] flex items-center justify-center">
+                    {billDetails?.belowAddressSection?.peakUnits || "-"}
+                  </div>
+                  <div className="font-semibold h-[57px] flex items-center justify-center">
+                    {billDetails?.belowAddressSection?.peakOffUnits || "-"}
+                  </div>
+                </div>
+                <div className="col-span-5 text-center font-semibold"></div>
+              </div>
+            </div>
+          </div>
         </div>
         {/* Right Side */}
         <div className="col-span-4">
@@ -494,7 +495,7 @@ const BillDesign = ({ billDetails }) => {
                           : ""
                       }`}
                     >
-                      {electricityBill[key]}
+                      {electricityBill[key] || "-"}
                     </div>
                   </React.Fragment>
                 );
@@ -538,9 +539,11 @@ const BillDesign = ({ billDetails }) => {
                   RS kWh
                 </div>
                 <div className="grid grid-flow-row">
-                  <div className="row-span-2 pl-1 border-b">48.00</div>
+                  <div className="row-span-2 pl-1 border-b">
+                    {billDetails?.tariffValueSection?.peakValue || "-"}
+                  </div>
                   <div className="row-span-2 pl-1 border-b-2 border-black">
-                    41.68
+                    {billDetails?.tariffValueSection?.offPeakValue || "-"}
                   </div>
                   <div className="pl-1 border-b">-</div>
                   <div className="pl-1 border-b-2 border-black">-</div>
@@ -574,7 +577,7 @@ const BillDesign = ({ billDetails }) => {
                         : "bg-[#92D050]"
                     }`}
                   >
-                    {govtCharges[key]}
+                    {govtCharges[key] || "-"}
                   </div>
                 </React.Fragment>
               );
@@ -620,7 +623,7 @@ const BillDesign = ({ billDetails }) => {
                       key === "L.P. SURCHAGE" ? "row-span-2" : ""
                     }`}
                   >
-                    {arrearsDetails[key]}
+                    {arrearsDetails[key] || "-"}
                   </div>
                 </React.Fragment>
               );
@@ -640,7 +643,7 @@ const BillDesign = ({ billDetails }) => {
             </div>
             <div className="col-span-2 border-b-2 border-black text-center text-sm font-semibold">
               <div className="border-b-2 border-black">Rate</div>
-              <div className="bg-[#92D050]">{billDetails?.fpaRate}</div>
+              <div className="bg-[#92D050]">{billDetails?.fpaRate || "-"}</div>
             </div>
           </div>
           {/* Contact Billing Department for any inquiries */}

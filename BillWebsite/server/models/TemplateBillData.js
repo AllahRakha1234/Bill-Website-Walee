@@ -96,6 +96,15 @@ const billSchema = new mongoose.Schema({
   fpaRate:{
     type: Number,
     required: true,
+  },
+  // TARIFF VALUES SECTION :: (RS kWh)
+  tariffPeakValue:{
+    type: Number,
+    required: true,
+  },
+  tariffOffPeakValue:{
+    type: Number,
+    required: true,
   }
 });
 

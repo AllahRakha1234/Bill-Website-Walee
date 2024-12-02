@@ -168,7 +168,7 @@ const BillDesign = ({ billDetails }) => {
           <div className="text-center text-sm font-semibold border-b-2 border-black">
             <div className="grid grid-flow-col grid-cols-12">
               <div className="col-span-6 border-r-2 border-black">
-                phase {billDetails?.aboveAddressSection?.phase}
+                {billDetails?.aboveAddressSection?.phase} phase
               </div>
 
               <div className="col-span-2 border-r-2 border-black"></div>
@@ -206,7 +206,7 @@ const BillDesign = ({ billDetails }) => {
           <div className="text-center text-sm text-[#1301ff] font-semibold border-b-2 border-black">
             <div className="grid grid-flow-col grid-cols-12">
               <div className="col-span-8 border-r-2 border-black">
-                Bill Duraction
+                Bill Duration
               </div>
 
               <div className="uppercase col-span-4">DUE DATE</div>
@@ -550,9 +550,9 @@ const BillDesign = ({ billDetails }) => {
                   RS kWh
                 </div>
                 <div className="grid grid-flow-row">
-                  <div className="row-span-2 pl-1 border-b">48.00</div>
+                  <div className="row-span-2 pl-1 border-b">{billDetails?.tariffValueSection?.peakValue || "-"}</div>
                   <div className="row-span-2 pl-1 border-b-2 border-black">
-                    41.68
+                    {billDetails?.tariffValueSection?.offPeakValue || "-"}
                   </div>
                   <div className="pl-1 border-b">-</div>
                   <div className="pl-1 border-b-2 border-black">-</div>

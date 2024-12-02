@@ -39,17 +39,23 @@ const SearchBox = () => {
           Search Your Electricity Bill
         </div>
         {/* INPUT FIELD FOR USER INPUT*/}
-        <div className="flex flex-row p-2">
+        <div className="flex flex-row items-center justify-center p-2">
           <div>
-            <h3 className="font-semibold mt-3">NUST/RESIDENT/</h3>
+            <h3 className="font-semibold text-blue-800">NUST/RESIDENT/</h3>
           </div>
           <div className="px-2 pt-1">
             <input
-              type="text"
+              type="number"
               value={referenceNo}
-              onChange={(e) => setReferenceNo(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                // Allow only positive numbers
+                if (value === "" || /^[1-9]+$/.test(value)) {
+                  setReferenceNo(value);
+                }
+              }}
               placeholder="Enter your consumer ID"
-              className="border border-gray-300 p-2 rounded w-48"
+              className="border border-gray-300 p-2 rounded w-56 h-8"
             />
           </div>
         </div>

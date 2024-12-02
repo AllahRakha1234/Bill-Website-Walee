@@ -5,7 +5,8 @@ import * as XLSX from "xlsx"; // Import the xlsx library
 import { useNavigate } from "react-router-dom";
 import FixedSetting from "../components/AdminPageComponents/FixedSetting";
 import UploadData from "../components/AdminPageComponents/UploadData";
-import TariffSetting from './../components/AdminPageComponents/TariffSetting';
+import TariffSetting from "./../components/AdminPageComponents/TariffSetting";
+import DateSetting from './../components/AdminPageComponents/DateSetting';
 
 const AdminPage = () => {
   const [fileData, setFileData] = useState([]);
@@ -178,7 +179,7 @@ const AdminPage = () => {
               </div>
             )}
           </div>
-          {/* New Option - Upload Data */}
+          {/* New Option - Once Upload Data */}
           <button
             className={`text-left p-2 rounded-md mb-2 ${
               activeOption === "Once Upload Data" ? "bg-indigo-500" : ""
@@ -216,6 +217,19 @@ const AdminPage = () => {
           >
             Fixed Setting
           </button>
+
+          {/* New Option - Date Setting */}
+          <button
+            className={`text-left p-2 rounded-md mb-2 ${
+              activeOption === "Date Setting" ? "bg-indigo-500" : ""
+            }`}
+            onClick={() => {
+              setActiveOption("Date Setting");
+              setActiveSubOption(null);
+            }}
+          >
+            Date Setting
+          </button>
         </div>
       </div>
 
@@ -240,7 +254,7 @@ const AdminPage = () => {
         {(activeSubOption === "Residential" ||
           activeSubOption === "Industrial" ||
           activeSubOption === "Commercial") && (
-         <TariffSetting activeSubOption={activeSubOption} />
+          <TariffSetting activeSubOption={activeSubOption} />
         )}
         {(activeSubOption === "Residential Protected" ||
           activeSubOption === "Industrial Protected" ||
@@ -286,6 +300,7 @@ const AdminPage = () => {
           </div>
         )}
         {activeOption === "Fixed Setting" && <FixedSetting />}
+        {activeOption === "Date Setting" && <DateSetting />}
       </div>
     </div>
   );
