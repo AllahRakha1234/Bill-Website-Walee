@@ -10,6 +10,7 @@ const userInfoRoute = require("./routes/UserInfo");
 const uploadOnceBillData = require("./routes/UploadOnceBillData");
 const templateBillData = require("./routes/TemplateBillData");
 const tariff = require("./routes/Tariff");
+const dateSetting = require("./routes/DateSetting");
 
 const app = express();
 
@@ -29,9 +30,10 @@ connectDB();
 app.use("/api/fixed-settings", fixedSettingsRoute); // Fixed settings routes
 app.use("/api/meter-info", meterInfoRoute); // Meter info routes
 app.use("/api/user-info", userInfoRoute); // User info routes
-app.use("/api/upload-once-bill-data", uploadOnceBillData); // Meter info routes
-app.use("/api/get-bill-template-data", templateBillData); // Meter info routes
-app.use("/api/resid-tariff-values", tariff); // Meter info routes
+app.use("/api/upload-once-bill-data", uploadOnceBillData); // Upload Once data routes
+app.use("/api/get-bill-template-data", templateBillData); // Bill Template routes
+app.use("/api/resid-tariff-values", tariff); // Tariff routes
+app.use("/api/date-setting", dateSetting); // Date setting routes
 
 // Defining a basic route
 app.get('/', (req, res) => {

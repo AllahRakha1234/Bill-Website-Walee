@@ -1,57 +1,77 @@
-import React, { useState } from "react";
-import dayjs from "dayjs"; // Install this package for easier date formatting and parsing
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import dayjs from "dayjs";
 
 const DateSetting = () => {
-  const [dateSetting, setDateSetting] = useState([
-    { key: "billMonthDate", value: "Aug-2024" },
-    { key: "billDueDate", value: "12-08-2024" },
-    { key: "billDurationStartDate", value: "02-07-2024" },
-    { key: "billDurationEndDate", value: "02-08-2024" },
-    { key: "billFPADate", value: "Jun-2024" },
-  ]);
+  const [dateSetting, setDateSetting] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const apiUrl = "http://localhost:3001/api/date-setting";
 
-  // Helper to convert custom formats to appropriate formats for input fields
-  const formatDateForInput = (date, isMonthPicker) => {
-    const parsedDate = isMonthPicker
-      ? dayjs(date, "MMM-YYYY")
-      : dayjs(date, "DD-MM-YYYY");
+  // Fetch date settings from the backend
+  useEffect(() => {
+    const fetchDateSettings = async () => {
+      try {
+        const response = await axios.get(apiUrl);
+        const fetchedSettings = response.data.dateSettings;
+        // console.log("fetchedSettings: ", fetchedSettings); // Debugging log
+        setDateSetting(fetchedSettings);
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to fetch date settings");
+        setLoading(false);
+      }
+    };
 
-    // Check if the date is valid, if not return an empty string
-    return parsedDate.isValid()
-      ? parsedDate.format(isMonthPicker ? "YYYY-MM" : "YYYY-MM-DD")
-      : ""; // Empty string for invalid date
-  };
+    fetchDateSettings();
+  }, []);
 
-  // Helper to format 'YYYY-MM' or 'YYYY-MM-DD' back to the desired custom format
-  const formatDateForDisplay = (date, format) => {
-    const parsedDate = dayjs(date);
-    if (!parsedDate.isValid()) return ""; // Return empty if invalid date
-    if (format === "MMM-YYYY") {
-      return parsedDate.format("MMM-YYYY");
-    }
-    return parsedDate.format("DD-MM-YYYY");
-  };
-
-  // Update the dateSetting state on input change
+  // Handle input change
   const handleUpdateDateSetting = (key, newValue) => {
-    // Convert to the correct format for the input change
-    const formattedDate = key === "billMonthDate" || key === "billFPADate"
-      ? dayjs(newValue, "YYYY-MM").format("MMM-YYYY")
-      : dayjs(newValue, "YYYY-MM-DD").format("DD-MM-YYYY");
-
     setDateSetting((prevSettings) =>
       prevSettings.map((setting) =>
-        setting.key === key
-          ? {
-              ...setting,
-              value: formattedDate,
-            }
-          : setting
+        setting.key === key ? { ...setting, value: newValue } : setting
       )
     );
   };
 
-  console.log("dateSetting: ", dateSetting);
+  // Convert values to the correct format for the backend
+  const prepareDateSettingsForBackend = () => {
+    return dateSetting.map((setting) => {
+      if (setting.key === "billMonthDate" || setting.key === "billFPADate") {
+        // Convert YYYY-MM to MMM-YYYY
+        return {
+          key: setting.key,
+          value: dayjs(setting.value, "YYYY-MM").isValid()
+            ? dayjs(setting.value, "YYYY-MM").format("MMM-YYYY")
+            : "",
+        };
+      }
+      return setting; // Keep other formats unchanged
+    });
+  };
+
+  // Save updated date settings to the backend
+  const saveDateSettings = async () => {
+    try {
+      const updatedSettings = prepareDateSettingsForBackend();
+      console.log("dateSetting inside update function: ", updatedSettings); // Debugging log
+      await axios.put(apiUrl, { dateSettings: updatedSettings });
+      alert("Date settings updated successfully");
+      window.location.reload(); // Reload the page to fetch updated values
+    } catch (err) {
+      setError("Failed to update date settings");
+    }
+  };
+
+  // Render loading or error state
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500">{error}</div>;
+  }
 
   return (
     <div className="bg-white shadow-md rounded-lg p-8 w-[90%] md:w-[50%]">
@@ -68,12 +88,21 @@ const DateSetting = () => {
               {item.key}
             </label>
             <input
-              type={item.key === "billMonthDate" || item.key === "billFPADate" ? "month" : "date"} // Use "month" input type for billMonthDate
+              type={
+                item.key === "billMonthDate" || item.key === "billFPADate"
+                  ? "month"
+                  : "date"
+              }
               id={item.key}
-              value={formatDateForInput(
-                item.value,
-                item.key === "billMonthDate" || item.key === "billFPADate" 
-              )}
+              value={
+                item.key === "billMonthDate" || item.key === "billFPADate"
+                  ? dayjs(item.value, "MMM-YYYY").isValid()
+                    ? dayjs(item.value, "MMM-YYYY").format("YYYY-MM")
+                    : ""
+                  : dayjs(item.value, "DD-MM-YYYY").isValid()
+                  ? dayjs(item.value, "DD-MM-YYYY").format("YYYY-MM-DD")
+                  : ""
+              }
               onChange={(e) =>
                 handleUpdateDateSetting(item.key, e.target.value)
               }
@@ -83,6 +112,7 @@ const DateSetting = () => {
         ))}
       </div>
       <button
+        onClick={saveDateSettings}
         className="w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400"
       >
         Save Settings
