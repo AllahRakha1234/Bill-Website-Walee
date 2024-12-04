@@ -4,6 +4,7 @@ const MeterInfo = require("../models/MeterInfo");
 const FixedSetting = require("../models/FixedSetting");
 const TemplateBillData = require("../models/TemplateBillData");
 const UploadOnceBillData = require("../models/UploadOnceBillData");
+const OnceDataId = require("../models/OnceDataId");
 const {
   calculateElectricCost,
   calculateGST,
@@ -124,6 +125,32 @@ const addMeterInfo = async (req, res) => {
       fixedSettingsGlobal[fixedSettings[i].name] = fixedSettings[i].value;
     }
 
+    // GENERATING THE MONTH-YEAR ID AND STORING IN THE ONCEDATAID MODEL
+    const date = new Date(); // Create a Date object for the current date
+    // Array of abbreviated month names
+    const shortMonthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    // Get the abbreviated month and year
+    const shortMonth = shortMonthNames[date.getMonth()]; // Get the first 3 letters of the month
+    const year = date.getFullYear(); // Get the year
+    const formattedDate = `${shortMonth}-${year}`;
+    // Getting the month-year ID from the model to check if it exists or not
+    const monthYearId = await OnceDataId.findOne({
+      monthYearId: formattedDate,
+    });
+
     // DESTRUCTURING THE METER INFO ARRAY
     const meterInfoArray = req.body;
 
@@ -202,20 +229,30 @@ const addMeterInfo = async (req, res) => {
       await billTemplateData.save();
 
       // UPDATING THE ONCE UPLOAD ARRAY READINGS DATA WITH THE CURRENT READING. IT MEANS THAT PUSH THE CURRENT READING AT THE END OF THE ONCEUPLOADBILLDATA ARRAY.
-      const previousReadingsArrayOfMeter = previousMeterInfo.previousReadings;
-      // Remove the first entry
-      previousReadingsArrayOfMeter.shift();
-      // Add the new entry at the end
-      previousReadingsArrayOfMeter.push({
-        previous_peak: present_peak_reading,
-        previous_off_peak: present_off_peak_reading,
-      });
-      // Update the document in the database
-      await UploadOnceBillData.updateOne(
-        { _id: previousMeterInfo._id }, // Match the document by ID or other criteria
-        { $set: { previousReadings: previousReadingsArrayOfMeter } } // Update the array
-      );
+      if (!monthYearId) {
+        const previousReadingsArrayOfMeter = previousMeterInfo.previousReadings;
+        // Remove the first entry
+        previousReadingsArrayOfMeter.shift();
+        // Add the new entry at the end
+        previousReadingsArrayOfMeter.push({
+          previous_peak: present_peak_reading,
+          previous_off_peak: present_off_peak_reading,
+        });
+        // Update the document in the database
+        await UploadOnceBillData.updateOne(
+          { _id: previousMeterInfo._id }, // Match the document by ID or other criteria
+          { $set: { previousReadings: previousReadingsArrayOfMeter } } // Update the array
+        );
+      }
     }
+    // If the month-year ID does not exist, replace the existing one
+    if (!monthYearId) {
+      const newMonthYearId = new OnceDataId({
+        monthYearId: formattedDate,
+      });
+      await newMonthYearId.save();
+    }
+    // Return a success message
     res.status(200).json({ message: "Meter info added successfully" });
   } catch (error) {
     console.log("Error adding meter info:", error);

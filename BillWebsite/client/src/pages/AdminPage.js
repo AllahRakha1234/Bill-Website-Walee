@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import FixedSetting from "../components/AdminPageComponents/FixedSetting";
 import UploadData from "../components/AdminPageComponents/UploadData";
 import TariffSetting from "./../components/AdminPageComponents/TariffSetting";
-import DateSetting from './../components/AdminPageComponents/DateSetting';
+import DateSetting from "./../components/AdminPageComponents/DateSetting";
 
 const AdminPage = () => {
   const [fileData, setFileData] = useState([]);
@@ -179,31 +179,6 @@ const AdminPage = () => {
               </div>
             )}
           </div>
-          {/* New Option - Once Upload Data */}
-          <button
-            className={`text-left p-2 rounded-md mb-2 ${
-              activeOption === "Once Upload Data" ? "bg-indigo-500" : ""
-            }`}
-            onClick={() => {
-              setActiveOption("Once Upload Data");
-              setActiveSubOption(null);
-            }}
-          >
-            Once Upload Data
-          </button>
-
-          {/* New Option - Monthly Upload Data */}
-          <button
-            className={`text-left p-2 rounded-md mb-2 ${
-              activeOption === "Monthly Upload Data" ? "bg-indigo-500" : ""
-            }`}
-            onClick={() => {
-              setActiveOption("Monthly Upload Data");
-              setActiveSubOption(null);
-            }}
-          >
-            Monthly Upload Data
-          </button>
 
           {/* New Option - Fixed Setting */}
           <button
@@ -229,6 +204,32 @@ const AdminPage = () => {
             }}
           >
             Date Setting
+          </button>
+
+          {/* New Option - Once Upload Data */}
+          <button
+            className={`text-left p-2 rounded-md mb-2 ${
+              activeOption === "Once Upload Data" ? "bg-indigo-500" : ""
+            }`}
+            onClick={() => {
+              setActiveOption("Once Upload Data");
+              setActiveSubOption(null);
+            }}
+          >
+            Once Upload Data
+          </button>
+
+          {/* New Option - Monthly Upload Data */}
+          <button
+            className={`text-left p-2 rounded-md mb-2 ${
+              activeOption === "Monthly Upload Data" ? "bg-indigo-500" : ""
+            }`}
+            onClick={() => {
+              setActiveOption("Monthly Upload Data");
+              setActiveSubOption(null);
+            }}
+          >
+            Monthly Upload Data
           </button>
         </div>
       </div>
