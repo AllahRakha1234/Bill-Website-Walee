@@ -146,7 +146,6 @@ const addMeterInfo = async (req, res) => {
     const shortMonth = shortMonthNames[date.getMonth()]; // Get the first 3 letters of the month
     const year = date.getFullYear(); // Get the year
     const formattedDate = `${shortMonth}-${year}`;
-    console.log("formattedDate: ", formattedDate);
     // Getting the month-year ID from the model to check if it exists or not
     const monthYearId = await OnceDataId.findOne({
       monthYearId: formattedDate,
@@ -154,14 +153,9 @@ const addMeterInfo = async (req, res) => {
 
     const monthYearId1 = await OnceDataId.findOne({});
 
-    console.log("month year id: ", monthYearId)
-    console.log("month year id 1: ", monthYearId1)
-
 
     // DESTRUCTURING THE METER INFO ARRAY
     const meterInfoArray = req.body;
-
-    // console.log("meterInfoArray: ", meterInfoArray)
 
     // LOOPING OVER ALL THE METER INFOs (There will be a list of current readings of meter infos)
     for (let i = 0; i < meterInfoArray.length; i++) {
@@ -182,7 +176,6 @@ const addMeterInfo = async (req, res) => {
       if (previousMeterInfo?.previousReadings?.length) {
         const previousReadingIndex =
           previousMeterInfo.previousReadings.length - (monthYearId ? 2 : 1); // Setting this index according to the meterinfo upload date
-          console.log("previousReadingIndex: ", previousReadingIndex);
         const previousPeakReading =
           previousMeterInfo.previousReadings[previousReadingIndex]
             .previous_peak;
@@ -191,10 +184,7 @@ const addMeterInfo = async (req, res) => {
             .previous_off_peak;
         // Finding totalUnits value for FPA calculation :: (For August Required May Units)
         const tempIndex = previousMeterInfo.previousReadings.length;
-        console.log("tempIndex: ", tempIndex);
-        console.log("monthYearId: ", monthYearId);
         if (!monthYearId) {
-          console.log("inside of if condition")
           totalUnitsForFpaCalc =
             (previousMeterInfo.previousReadings[tempIndex - 3].previous_peak -
             previousMeterInfo.previousReadings[tempIndex - 4].previous_peak) +
@@ -202,7 +192,6 @@ const addMeterInfo = async (req, res) => {
               .previous_off_peak -
               previousMeterInfo.previousReadings[tempIndex - 4]
                 .previous_off_peak);
-        console.log("totalUnitsForFpaCalc: ", totalUnitsForFpaCalc);
 
         } else {
           totalUnitsForFpaCalc =
@@ -212,7 +201,6 @@ const addMeterInfo = async (req, res) => {
               .previous_off_peak -
               previousMeterInfo.previousReadings[tempIndex - 5]
                 .previous_off_peak);
-        console.log("totalUnitsForFpaCalc inside else: ", totalUnitsForFpaCalc);
 
         }
 
