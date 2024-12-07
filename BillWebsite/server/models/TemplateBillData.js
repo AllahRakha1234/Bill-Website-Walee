@@ -105,6 +105,28 @@ const billSchema = new mongoose.Schema({
   tariffOffPeakValue:{
     type: Number,
     required: true,
+  },
+  // DATE SECTION :: (DATE OF BILLING, DUE DATE)
+  // DATE SECTION :: (DATE OF BILLING, DUE DATE, ETC.)
+  billMonthDate: {
+    type: String,
+    required: true,
+  },
+  billDueDate: {
+    type: String,
+    required: true,
+  },
+  billDurationStartDate: {
+    type: String,
+    required: true,
+  },
+  billDurationEndDate: {
+    type: String,
+    required: true,
+  },
+  billFPADate: {
+    type: String,
+    required: true,
   }
 });
 

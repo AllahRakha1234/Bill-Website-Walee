@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 const BillDesign = ({ billDetails }) => {
+  // LP Surcharge Calculation
   const lpSurchargeCalc = (
     totalElecBill,
     totalGovtCharges,
@@ -11,6 +12,15 @@ const BillDesign = ({ billDetails }) => {
       (Number(totalElecBill) + Number(totalGovtCharges) + Number(waterBill)) *
       Number(rate);
     return Math.round(result); // Round to the nearest integer
+  };
+
+  // Utility function to format date
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return `${date.getDate()}-${date.toLocaleString("default", {
+      month: "short",
+    })}-${date.getFullYear()}`;
   };
 
   // Electicity Charges Data
@@ -173,7 +183,9 @@ const BillDesign = ({ billDetails }) => {
 
               <div className="col-span-2 border-r-2 border-black"></div>
 
-              <div className="col-span-4">Aug-2024</div>
+              <div className="col-span-4">
+                {billDetails?.aboveAddressSection?.billMonthDate || ""}
+              </div>
             </div>
           </div>
           {/* Div 3*/}
@@ -216,14 +228,16 @@ const BillDesign = ({ billDetails }) => {
           <div className="text-center text-sm font-semibold border-b-2 border-black">
             <div className="grid grid-flow-col grid-cols-12">
               <div className="col-span-4 border-r-2 border-black">
-                02-07-2024
+                {formatDate(billDetails?.aboveAddressSection?.billDurationStartDate) || ""}
               </div>
 
               <div className="col-span-4 border-r-2 border-black">
-                02-08-2024
+                {formatDate(billDetails?.aboveAddressSection?.billDurationEndDate) || ""}
               </div>
 
-              <div className="col-span-4"></div>
+              <div className="col-span-4">
+                {formatDate(billDetails?.aboveAddressSection?.billDueDate) || ""}
+              </div>
             </div>
           </div>
           {/* Div 3 */}
@@ -260,8 +274,8 @@ const BillDesign = ({ billDetails }) => {
             CONSUMER ID
           </div>
           {/* Div 2 */}
-          <div className="uppercase pl-2 text-start text-sm text-[#1301ff] font-semibold border-r-2 border-b-2 border-black">
-            NUST/RESIDENT/{billDetails?.aboveAddressSection?.userId}
+          <div className="uppercase pl-2 text-start text-sm font-semibold border-r-2 border-b-2 border-black">
+            NUST/RESIDENT/{billDetails?.aboveAddressSection?.userId || "-"}
           </div>
         </div>
 
@@ -379,7 +393,8 @@ const BillDesign = ({ billDetails }) => {
                           Peak
                         </div>
                         <div className="col-span-7 font-semibold flex items-center justify-center">
-                          {billDetails?.belowAddressSection?.previousReadingPeak || "-"}
+                          {billDetails?.belowAddressSection
+                            ?.previousReadingPeak || "-"}
                         </div>
                       </div>
                     </div>
@@ -389,9 +404,8 @@ const BillDesign = ({ billDetails }) => {
                           Off Peak
                         </div>
                         <div className="col-span-7 font-semibold flex items-center justify-center">
-                          {
-                            billDetails?.belowAddressSection?.previousReadingOffPeak || "-"
-                          }
+                          {billDetails?.belowAddressSection
+                            ?.previousReadingOffPeak || "-"}
                         </div>
                       </div>
                     </div>
@@ -404,7 +418,8 @@ const BillDesign = ({ billDetails }) => {
               <div className="grid grid-flow-col grid-cols-12">
                 <div className="col-span-3 border-r-2 border-black text-center font-semibold ">
                   <div className="border-b-2 border-black font-semibold h-[42px] flex items-center justify-center">
-                    {billDetails?.belowAddressSection?.presentReadingPeak || "-"}
+                    {billDetails?.belowAddressSection?.presentReadingPeak ||
+                      "-"}
                   </div>
                   <div className="font-semibold h-[57px] flex items-center justify-center">
                     {billDetails?.belowAddressSection?.presentReadingOffPeak ||
@@ -550,7 +565,9 @@ const BillDesign = ({ billDetails }) => {
                   RS kWh
                 </div>
                 <div className="grid grid-flow-row">
-                  <div className="row-span-2 pl-1 border-b">{billDetails?.tariffValueSection?.peakValue || "-"}</div>
+                  <div className="row-span-2 pl-1 border-b">
+                    {billDetails?.tariffValueSection?.peakValue || "-"}
+                  </div>
                   <div className="row-span-2 pl-1 border-b-2 border-black">
                     {billDetails?.tariffValueSection?.offPeakValue || "-"}
                   </div>
@@ -645,7 +662,7 @@ const BillDesign = ({ billDetails }) => {
             </div>
             <div className="col-span-2 border-b-2 border-r-2 border-black text-center text-sm font-semibold">
               <div className="border-b-2 border-black">Month</div>
-              <div className="">Jun-24 Rs.</div>
+              <div className="">{billDetails?.billFPADate || "-"}</div>
             </div>
             <div className="col-span-2 border-b-2 border-black text-center text-sm font-semibold">
               <div className="border-b-2 border-black">Rate</div>

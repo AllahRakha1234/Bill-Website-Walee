@@ -5,6 +5,7 @@ const FixedSetting = require("../models/FixedSetting");
 const TemplateBillData = require("../models/TemplateBillData");
 const UploadOnceBillData = require("../models/UploadOnceBillData");
 const OnceDataId = require("../models/OnceDataId");
+const DateSetting = require("../models/DateSetting");
 const {
   calculateElectricCost,
   calculateGST,
@@ -125,6 +126,14 @@ const addMeterInfo = async (req, res) => {
       fixedSettingsGlobal[fixedSettings[i].name] = fixedSettings[i].value;
     }
 
+    // FETCHING THE DATE SETTING VALUES FOR FRONTEND
+    const dateSettingsValues = await DateSetting.find({})
+    const dateSettingData = dateSettingsValues[0].dateSettings.reduce((acc, obj) => {
+      acc[obj.key] = obj.value;
+      return acc;
+    }, {}); // Convert the array to an object :: {} => initial value of accumulator and obj => current object
+    
+
     // GENERATING THE MONTH-YEAR ID AND STORING IN THE ONCEDATAID MODEL
     const date = new Date(); // Create a Date object for the current date
     // Array of abbreviated month names
@@ -228,6 +237,11 @@ const addMeterInfo = async (req, res) => {
         { key: "meterType", value: userData[0].meterType },
         { key: "tariffPeakValue", value: tariffSlabs["peak"] },
         { key: "tariffOffPeakValue", value: tariffSlabs["offPeak"] },
+        { key: "billMonthDate", value: dateSettingData["billMonthDate"] },
+        { key: "billDueDate", value: dateSettingData["billDueDate"] },
+        { key: "billDurationStartDate", value: dateSettingData["billDurationStartDate"] },
+        { key: "billDurationEndDate", value: dateSettingData["billDurationEndDate"] },
+        { key: "billFPADate", value: dateSettingData["billFPADate"] },
       ];
 
       remainingTemplateBillData.forEach((field) => {

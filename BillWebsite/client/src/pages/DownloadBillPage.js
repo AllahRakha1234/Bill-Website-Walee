@@ -24,7 +24,11 @@ const DownloadBillPage = () => {
         location: currentBillDetails.location,
         tariffCategory: currentBillDetails.tariffCategory,
         phase: currentBillDetails.phase,
-        meterType: currentBillDetails.meterType
+        meterType: currentBillDetails.meterType,
+        billMonthDate: currentBillDetails.billMonthDate,
+        billDurationStartDate: currentBillDetails.billDurationStartDate,
+        billDurationEndDate: currentBillDetails.billDurationEndDate,
+        billDueDate: currentBillDetails.billDueDate,
       },
       belowAddressSection: {
         meterNo: currentBillDetails.location,
@@ -53,6 +57,7 @@ const DownloadBillPage = () => {
       },
       lpSurchargeRate: currentBillDetails.lpSurchargeRate,
       fpaRate: currentBillDetails.fpaRate,
+      billFPADate: currentBillDetails.billFPADate,
       tariffValueSection:{
         peakValue: currentBillDetails.tariffPeakValue,
         offPeakValue: currentBillDetails.tariffOffPeakValue
