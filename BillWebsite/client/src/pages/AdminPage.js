@@ -7,14 +7,17 @@ import FixedSetting from "../components/AdminPageComponents/FixedSetting";
 import UploadData from "../components/AdminPageComponents/UploadData";
 import TariffSetting from "./../components/AdminPageComponents/TariffSetting";
 import DateSetting from "./../components/AdminPageComponents/DateSetting";
+import UsersData from "./../components/AdminPageComponents/UsersData";
+import ProtectedTariffSetting from "./../components/AdminPageComponents/ProtectedTariffSetting";
 
 const AdminPage = () => {
   const [fileData, setFileData] = useState([]);
-  const [activeOption, setActiveOption] = useState(""); // Set the default active option to be shown on the page when the admin page opens like "Once Upload Data"
+  const [activeOption, setActiveOption] = useState("welcome"); // Set the default active option to be shown on the page when the admin page opens like "Once Upload Data"
   const [activeSubOption, setActiveSubOption] = useState(null);
   const [onceOrMonthlyOption, setOnceOrMonthlyOption] = useState("");
   const navigate = useNavigate();
 
+  // HANDLE FILE UPLOAD FUNCTION
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
 
@@ -52,6 +55,7 @@ const AdminPage = () => {
     }
   };
 
+  // HANDLE SAVE FILE FUNCTION
   const handleSave = async () => {
     if (fileData.length > 0) {
       try {
@@ -66,6 +70,15 @@ const AdminPage = () => {
           console.log("Inside Monthly Upload Data");
           response = await axios.post(
             "http://localhost:3001/api/upload-once-bill-data",
+            fileData
+          );
+        } else if (
+          activeOption === "Users Data" &&
+          activeSubOption === "Upload Users Data"
+        ) {
+          console.log("Inside Users Upload Data");
+          response = await axios.post(
+            "http://localhost:3001/api/user-info",
             fileData
           );
         }
@@ -134,6 +147,7 @@ const AdminPage = () => {
               </div>
             )}
           </div>
+
           {/* Protected Terrif Section */}
           <div className="relative mb-2">
             <button
@@ -231,11 +245,53 @@ const AdminPage = () => {
           >
             Monthly Upload Data
           </button>
+
+          {/* Users Data Section */}
+          <div className="relative mb-2">
+            <button
+              className={`text-left p-2 rounded-md w-full ${
+                activeOption === "Users Data" ? "bg-indigo-500" : ""
+              }`}
+              onClick={() => setActiveOption("Users Data")}
+            >
+              Users Data
+            </button>
+            {activeOption === "Users Data" && (
+              <div className="pl-4">
+                <button
+                  className={`text-left p-2 rounded-md mb-2 w-full ${
+                    activeSubOption === "View Users Data" ? "bg-indigo-400" : ""
+                  }`}
+                  onClick={() => setActiveSubOption("View Users Data")}
+                >
+                  View Data
+                </button>
+                <button
+                  className={`text-left p-2 rounded-md mb-2 w-full ${
+                    activeSubOption === "Upload Users Data"
+                      ? "bg-indigo-400"
+                      : ""
+                  }`}
+                  onClick={() => setActiveSubOption("Upload Users Data")}
+                >
+                  Upload Data
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* MAIN CONTENT PORTION */}
       <div className="w-3/4 h-full flex flex-col justify-center items-center bg-gray-100">
+        {activeOption === "welcome" && (
+          <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-4 mb-36">
+            <h1 className="text-3xl font-bold text-center text-indigo-600">
+            Welcome to Admin Section
+          </h1>
+          </div>
+        )}
+
         {/* Once Upload Data Section */}
         {activeOption === "Once Upload Data" && (
           <UploadData
@@ -252,56 +308,34 @@ const AdminPage = () => {
           />
         )}
 
+        {/* Tariff Section */}
         {(activeSubOption === "Residential" ||
           activeSubOption === "Industrial" ||
           activeSubOption === "Commercial") && (
           <TariffSetting activeSubOption={activeSubOption} />
         )}
+
+        {/* Protected Tariff Section */}
         {(activeSubOption === "Residential Protected" ||
           activeSubOption === "Industrial Protected" ||
           activeSubOption === "Commercial Protected") && (
-          <div className="bg-white shadow-md rounded-lg p-8 w-[90%] md:w-[50%]">
-            <h1 className="text-3xl font-bold text-center mb-6 text-indigo-600">
-              {activeSubOption} Protected Tariff Section
-            </h1>
-            <form>
-              <div className="mb-4">
-                <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="tariff-rate"
-                >
-                  Tariff Rate
-                </label>
-                <input
-                  type="text"
-                  id="tariff-rate"
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="tariff-description"
-                >
-                  Description
-                </label>
-                <input
-                  type="text"
-                  id="tariff-description"
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-              >
-                Update
-              </button>
-            </form>
-          </div>
+          <ProtectedTariffSetting activeOption={activeOption} />
         )}
+
+        {/* Fixed Setting Section */}
         {activeOption === "Fixed Setting" && <FixedSetting />}
+
+        {/* Date Setting Section */}
         {activeOption === "Date Setting" && <DateSetting />}
+
+        {/* User Data Section */}
+        {activeSubOption === "View Users Data" && <UsersData />}
+        {activeSubOption === "Upload Users Data" && (
+          <UploadData
+            handleFileUpload={handleFileUpload}
+            handleSave={handleSave}
+          />
+        )}
       </div>
     </div>
   );
