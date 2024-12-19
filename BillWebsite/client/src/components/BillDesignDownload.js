@@ -1,6 +1,6 @@
 import React from "react";
 
-const BillDesign = ({ billDetails }) => {
+const BillDesign = ({ billDetails, formatDate }) => {
   // Electricity Charges Data
   const electricityBill = {
     "TOTAL UNITS CONSUMED":
@@ -161,7 +161,7 @@ const BillDesign = ({ billDetails }) => {
 
               <div className="col-span-2 border-r-2 border-black"></div>
 
-              <div className="col-span-4">Aug-2024</div>
+              <div className="col-span-4">{billDetails?.aboveAddressSection?.billMonthDate || ""}</div>
             </div>
           </div>
           {/* Div 3*/}
@@ -205,14 +205,14 @@ const BillDesign = ({ billDetails }) => {
           <div className="text-center text-sm font-semibold border-b-2 border-black">
             <div className="grid grid-flow-col grid-cols-12">
               <div className="col-span-4 border-r-2 border-black">
-                02-07-2024
+                {formatDate(billDetails?.aboveAddressSection?.billDurationStartDate) || "-"}
               </div>
 
               <div className="col-span-4 border-r-2 border-black">
-                02-08-2024
+              {formatDate(billDetails?.aboveAddressSection?.billDurationEndDate) || "-"}
               </div>
 
-              <div className="col-span-4"></div>
+              <div className="col-span-4"> {formatDate(billDetails?.aboveAddressSection?.billDueDate) || "-"}</div>
             </div>
           </div>
           {/* Div 3 */}

@@ -50,9 +50,11 @@ const SearchBox = () => {
               onChange={(e) => {
                 const value = e.target.value;
                 // Allow only positive numbers
-                if (value === "" || /^[1-9]+$/.test(value)) {
-                  setReferenceNo(value);
-                }
+                // if (value === "" || /^[1-9]+$/.test(value)) {
+                //   setReferenceNo(value);
+                // }
+                setReferenceNo(value);
+
               }}
               placeholder="Enter your consumer ID"
               className="border border-gray-300 p-2 rounded w-56 h-8"

@@ -10,12 +10,70 @@ import DateSetting from "./../components/AdminPageComponents/DateSetting";
 import UsersData from "./../components/AdminPageComponents/UsersData";
 import ProtectedTariffSetting from "./../components/AdminPageComponents/ProtectedTariffSetting";
 
+// VALIDATION FUNCTION
+const validateColumns = (fileData, expectedColumns) => {
+  const fileColumns = Object.keys(fileData[0]); // Get column names from the first row
+
+  const missingColumns = expectedColumns.filter(
+    (col) => !fileColumns.includes(col)
+  );
+  const extraColumns = fileColumns.filter(
+    (col) => !expectedColumns.includes(col)
+  );
+
+  return { missingColumns, extraColumns };
+};
+
+// MAIN ADMINPAGE
 const AdminPage = () => {
+  // USESTATES AND OTHER
   const [fileData, setFileData] = useState([]);
   const [activeOption, setActiveOption] = useState("welcome"); // Set the default active option to be shown on the page when the admin page opens like "Once Upload Data"
   const [activeSubOption, setActiveSubOption] = useState(null);
   const [onceOrMonthlyOption, setOnceOrMonthlyOption] = useState("");
   const navigate = useNavigate();
+
+  // EXPECTED COLUMN NAMES OF THE FILE UPLOAD
+  const expectedUserColumns = [
+    "userId",
+    "name",
+    "location",
+    "tariffCategory",
+    "phase",
+    "meterType",
+  ];
+  const expectedMonthlyUploadColumns = [
+    "userId",
+    "present_peak_reading",
+    "present_off_peak_reading",
+  ];
+  const expectedOnceUploadColumns = [
+    "userId",
+    "previous_peak_1",
+    "previous_off_peak_1",
+    "previous_peak_2",
+    "previous_off_peak_2",
+    "previous_peak_3",
+    "previous_off_peak_3",
+    "previous_peak_4",
+    "previous_off_peak_4",
+    "previous_peak_5",
+    "previous_off_peak_5",
+    "previous_peak_6",
+    "previous_off_peak_6",
+    "previous_peak_7",
+    "previous_off_peak_7",
+    "previous_peak_8",
+    "previous_off_peak_8",
+    "previous_peak_9",
+    "previous_off_peak_9",
+    "previous_peak_10",
+    "previous_off_peak_10",
+    "previous_peak_11",
+    "previous_off_peak_11",
+    "previous_peak_12",
+    "previous_off_peak_12",
+  ];
 
   // HANDLE FILE UPLOAD FUNCTION
   const handleFileUpload = (e) => {
@@ -58,6 +116,29 @@ const AdminPage = () => {
   // HANDLE SAVE FILE FUNCTION
   const handleSave = async () => {
     if (fileData.length > 0) {
+      //VALIDATING DATA BEFORE SENDING TO BACKEND
+      let expectedColumns = [];
+      // Determine expected columns based on file type
+      if (activeOption === "Users Data") {
+        expectedColumns = expectedUserColumns;
+      } else if (activeOption === "Once Upload Data") {
+        expectedColumns = expectedOnceUploadColumns;
+      } else if (activeOption === "Monthly Upload Data") {
+        expectedColumns = expectedMonthlyUploadColumns;
+      }
+
+      // Validate columns before saving
+      const validation = validateColumns(fileData, expectedColumns);
+      if (validation.missingColumns.length || validation.extraColumns.length) {
+        alert(
+          `Column mismatch! Missing: ${validation.missingColumns.join(
+            ", "
+          )}, Extra: ${validation.extraColumns.join(", ")}`
+        );
+        return;
+      }
+
+      // SENDING DATA TO BACKEND
       try {
         // Send the data to the backend using axios
         let response = null;
@@ -287,8 +368,8 @@ const AdminPage = () => {
         {activeOption === "welcome" && (
           <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-4 mb-36">
             <h1 className="text-3xl font-bold text-center text-indigo-600">
-            Welcome to Admin Section
-          </h1>
+              Welcome to Admin Section
+            </h1>
           </div>
         )}
 
@@ -297,6 +378,7 @@ const AdminPage = () => {
           <UploadData
             handleFileUpload={handleFileUpload}
             handleSave={handleSave}
+            title={"Once Upload Data Section"}
           />
         )}
 
@@ -305,6 +387,7 @@ const AdminPage = () => {
           <UploadData
             handleFileUpload={handleFileUpload}
             handleSave={handleSave}
+            title={"Monthly Upload Data Section"}
           />
         )}
 

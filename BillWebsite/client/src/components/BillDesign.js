@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const BillDesign = ({ billDetails }) => {
+const BillDesign = ({ billDetails, formatDate }) => {
   // LP Surcharge Calculation
   const lpSurchargeCalc = (
     totalElecBill,
@@ -14,14 +14,6 @@ const BillDesign = ({ billDetails }) => {
     return Math.round(result); // Round to the nearest integer
   };
 
-  // Utility function to format date
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return `${date.getDate()}-${date.toLocaleString("default", {
-      month: "short",
-    })}-${date.getFullYear()}`;
-  };
 
   // Electicity Charges Data
   const electricityBill = {
@@ -228,11 +220,11 @@ const BillDesign = ({ billDetails }) => {
           <div className="text-center text-sm font-semibold border-b-2 border-black">
             <div className="grid grid-flow-col grid-cols-12">
               <div className="col-span-4 border-r-2 border-black">
-                {formatDate(billDetails?.aboveAddressSection?.billDurationStartDate) || ""}
+                {formatDate(billDetails?.aboveAddressSection?.billDurationStartDate) || "-"}
               </div>
 
               <div className="col-span-4 border-r-2 border-black">
-                {formatDate(billDetails?.aboveAddressSection?.billDurationEndDate) || ""}
+                {formatDate(billDetails?.aboveAddressSection?.billDurationEndDate) || "-"}
               </div>
 
               <div className="col-span-4">
