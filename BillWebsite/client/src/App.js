@@ -18,7 +18,7 @@ function App() {
           <Route path="/print" element={<DownloadBillPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/admin" element={<AdminPage />} />
-          <Route path="/billdesign" element={<BillDesign />} />
+          {/* <Route path="/billdesign" element={<BillDesign />} /> */}
           <Route path="*" element={<NoPage />} /> {/* This handles all other routes */}
         </Routes>
       </Layout>
