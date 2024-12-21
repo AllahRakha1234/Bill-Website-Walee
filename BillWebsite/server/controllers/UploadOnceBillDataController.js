@@ -21,25 +21,30 @@ const addUploadOnceBillData = async (req, res) => {
         }
 
         for (const incomingData of incomingDataArray) {
-            const { userId, ...readings } = incomingData;
+            const { userId, previousReadings } = incomingData;
 
             if (!userId) {
-                return res.status(400).json({ message: "Meter ID is required for each object" });
+                return res.status(400).json({ message: "User ID is required for each object" });
             }
 
-            // Transform flat readings into the schema's `previousReadings` array format
-            const previousReadings = [];
-            for (let i = 1; i <= 12; i++) {
-                if (readings[`previous_peak_${i}`] !== undefined && readings[`previous_off_peak_${i}`] !== undefined) {
-                    previousReadings.push({
-                        previous_peak: readings[`previous_peak_${i}`],
-                        previous_off_peak: readings[`previous_off_peak_${i}`],
+            if (!Array.isArray(previousReadings) || previousReadings.length === 0) {
+                return res.status(400).json({ message: `Previous readings data is missing or invalid for userId ${userId}` });
+            }
+
+            // Validate each reading in previousReadings
+            for (const reading of previousReadings) {
+                const { previous_peak, previous_off_peak, month, payment, bill } = reading;
+                if (
+                    typeof previous_peak !== "number" ||
+                    typeof previous_off_peak !== "number" ||
+                    typeof payment !== "number" ||
+                    typeof bill !== "number" ||
+                    typeof month !== "string"
+                ) {
+                    return res.status(400).json({
+                        message: `Invalid data format in previousReadings for userId ${userId}. All fields are required and must have the correct data type.`,
                     });
                 }
-            }
-
-            if (previousReadings.length === 0) {
-                return res.status(400).json({ message: `Previous readings data is missing or invalid for userId ${userId}` });
             }
 
             // Construct the formatted data
