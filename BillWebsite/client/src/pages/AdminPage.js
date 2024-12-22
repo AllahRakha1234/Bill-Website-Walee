@@ -71,97 +71,99 @@ const AdminPage = () => {
   ];
 
   // HANDLE FILE UPLOAD FUNCTION
-  // const handleFileUpload = (e) => {
-  //   const file = e.target.files[0];
-
-  //   if (file) {
-  //     const fileType = file.name.split(".").pop().toLowerCase();
-  //     const validFileTypes = ["csv", "xlsx"]; // Allowed file types
-
-  //     if (!validFileTypes.includes(fileType)) {
-  //       alert("Invalid file type! Please upload a CSV or Excel (.xlsx) file.");
-  //       return;
-  //     }
-
-  //     if (fileType === "csv") {
-  //       Papa.parse(file, {
-  //         header: true,
-  //         complete: (result) => {
-  //           setFileData(result.data);
-  //         },
-  //         error: (error) => {
-  //           console.error("Error parsing CSV:", error);
-  //         },
-  //       });
-  //     } else if (fileType === "xlsx") {
-  //       const reader = new FileReader();
-  //       reader.onload = (e) => {
-  //         const data = new Uint8Array(e.target.result);
-  //         const workbook = XLSX.read(data, { type: "array" });
-  //         const sheetName = workbook.SheetNames[0];
-  //         const worksheet = workbook.Sheets[sheetName];
-  //         const parsedData = XLSX.utils.sheet_to_json(worksheet);
-  //         setFileData(parsedData);
-  //       };
-  //       reader.readAsArrayBuffer(file);
-  //     }
-  //   }
-  // };
-
-  // HANDLE FILE UPLOAD FUNCTION
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
-  
+
     if (file) {
       const fileType = file.name.split(".").pop().toLowerCase();
       const validFileTypes = ["csv", "xlsx"]; // Allowed file types
-  
+
       if (!validFileTypes.includes(fileType)) {
         alert("Invalid file type! Please upload a CSV or Excel (.xlsx) file.");
         return;
       }
-  
+
+      if (fileType === "csv") {
+        Papa.parse(file, {
+          header: true,
+          complete: (result) => {
+            setFileData(result.data);
+          },
+          error: (error) => {
+            console.error("Error parsing CSV:", error);
+          },
+        });
+      } else if (fileType === "xlsx") {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: "array" });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          const parsedData = XLSX.utils.sheet_to_json(worksheet);
+          setFileData(parsedData);
+        };
+        reader.readAsArrayBuffer(file);
+      }
+    }
+  };
+
+  // HANDLE FILE UPLOAD FUNCTION
+  const handleOnceUploadFileUpload = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const fileType = file.name.split(".").pop().toLowerCase();
+      const validFileTypes = ["csv", "xlsx"]; // Allowed file types
+
+      if (!validFileTypes.includes(fileType)) {
+        alert("Invalid file type! Please upload a CSV or Excel (.xlsx) file.");
+        return;
+      }
+
       // Common regex pattern for validating "MMM-YY" format
       const monthYearIdPattern = /^[A-Za-z]{3}-\d{2}$/;
-  
+
       const processMeterInfo = (rows, currentMonthYearId) => {
         const meterInfoArray = rows.map((row) => ({
           userId: parseInt(row[0], 10) || 0, // User ID is in the first column
           present_peak_reading: parseFloat(row[1]) || 0.0, // Peak reading is in the second column
           present_off_peak_reading: parseFloat(row[2]) || 0.0, // Off-peak reading is in the third column
         }));
-  
+
         setFileData({
           currentMonthYearId,
           meterInfoArray,
         });
-  
+
         console.log("Processed Meter Info Array:", meterInfoArray);
       };
-  
+
       if (fileType === "csv") {
         Papa.parse(file, {
           header: false, // Parse without header to handle data uniformly
           skipEmptyLines: true, // Skip empty rows
           complete: (result) => {
             const parsedData = result.data;
-            console.log("Parsed CSV data:", parsedData);
-  
+
             // Extract "Month-Year" from the first row and second column
             let currentMonthYearId = parsedData[0][1]?.trim() || "";
-  
+
             // Remove extra quotation marks if present
             currentMonthYearId = currentMonthYearId.replace(/^"|"$/g, "");
-  
-            if (!currentMonthYearId || !monthYearIdPattern.test(currentMonthYearId)) {
+
+            if (
+              !currentMonthYearId ||
+              !monthYearIdPattern.test(currentMonthYearId)
+            ) {
               alert(
                 'Invalid "Month-Year" format! Please provide the value in the format "MMM-YY" (e.g., "Dec-24").'
               );
               return;
             }
-  
+
             console.log("Current Month-Year ID:", currentMonthYearId);
-  
+
             // Process remaining rows starting from the second row
             processMeterInfo(parsedData.slice(2), currentMonthYearId);
           },
@@ -178,37 +180,39 @@ const AdminPage = () => {
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
           const parsedData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); // Parse as an array of arrays
-  
-          console.log("Parsed Excel data:", parsedData);
-  
+
           // Extract "Month-Year" from the first row and second column
           let currentMonthYearId = parsedData[0][1]?.trim() || "";
-  
+
           // Remove extra quotation marks if present
           currentMonthYearId = currentMonthYearId.replace(/^"|"$/g, "");
-  
-          if (!currentMonthYearId || !monthYearIdPattern.test(currentMonthYearId)) {
+
+          if (
+            !currentMonthYearId ||
+            !monthYearIdPattern.test(currentMonthYearId)
+          ) {
             alert(
               'Invalid "Month-Year" format! Please provide the value in the format "MMM-YY" (e.g., "Dec-24").'
             );
             return;
           }
-  
+
           console.log("Current Month-Year ID:", currentMonthYearId);
-  
+
           // Process remaining rows starting from the second row
           processMeterInfo(parsedData.slice(2), currentMonthYearId);
         };
-  
+
         reader.readAsArrayBuffer(file);
       }
     }
   };
-  
 
   // HANDLE SAVE FILE FUNCTION
   const handleSave = async () => {
-    if (fileData.meterInfoArray && fileData.meterInfoArray.length > 0) {
+    if (
+      (fileData.meterInfoArray && fileData.meterInfoArray.length) > 0  ) 
+      {
       // VALIDATING MONTHLY UPLOAD DATA MONTH FIELD
 
       //VALIDATING DATA BEFORE SENDING TO BACKEND
@@ -218,19 +222,25 @@ const AdminPage = () => {
         expectedColumns = expectedUserColumns;
       } else if (activeOption === "Once Upload Data") {
         expectedColumns = expectedOnceUploadColumns;
-      } 
+      }
       // Validate columns before saving
-      const validation = validateColumns(
-        fileData.meterInfoArray,
-        expectedColumns
-      );
-      if (validation.missingColumns.length || validation.extraColumns.length) {
-        alert(
-          `Column mismatch! Missing: ${validation.missingColumns.join(
-            ", "
-          )}, Extra: ${validation.extraColumns.join(", ")}`
+      if (activeOption != "Monthly Upload Data") {
+        const validation = validateColumns(
+          fileData,
+          expectedColumns
         );
-        return;
+
+        if (
+          validation.missingColumns.length ||
+          validation.extraColumns.length
+        ) {
+          alert(
+            `Column mismatch! Missing: ${validation.missingColumns.join(
+              ", "
+            )}, Extra: ${validation.extraColumns.join(", ")}`
+          );
+          return;
+        }
       }
 
       // SENDING DATA TO BACKEND
@@ -480,7 +490,7 @@ const AdminPage = () => {
         {/* Monthly Upload Data Section */}
         {activeOption === "Monthly Upload Data" && (
           <UploadData
-            handleFileUpload={handleFileUpload}
+            handleFileUpload={handleOnceUploadFileUpload}
             handleSave={handleSave}
             title={"Monthly Upload Data Section"}
           />
