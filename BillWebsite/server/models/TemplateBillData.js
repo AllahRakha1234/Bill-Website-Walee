@@ -106,7 +106,6 @@ const billSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  // DATE SECTION :: (DATE OF BILLING, DUE DATE)
   // DATE SECTION :: (DATE OF BILLING, DUE DATE, ETC.)
   billMonthDate: {
     type: String,
@@ -127,7 +126,28 @@ const billSchema = new mongoose.Schema({
   billFPADate: {
     type: String,
     required: true,
-  }
+  },
+  // FIELDS LIKE MONTH, UNITS, BILL, PAYMENTS FOR LAST 12 MONTHS
+  months: {
+    type: [String],  // Array of month-year strings (e.g., 'Jan-2024', 'Feb-2024', etc.)
+    required: true,
+    default: [],
+  },
+  units: {
+    type: [Number],  // Array of units for each month (difference between present and previous readings)
+    required: true,
+    default: [],
+  },
+  payments: {
+    type: [Number],  // Array of payment amounts for each month
+    required: true,
+    default: [],
+  },
+  bills: {
+    type: [Number],  // Array of bill amounts for each month
+    required: true,
+    default: [],
+  },
 });
 
 // Create the electricity bill model
