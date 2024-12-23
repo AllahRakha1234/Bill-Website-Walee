@@ -53,6 +53,12 @@ const DownloadBillPage = () => {
             currentBillDetails.presentReadingOffPeak -
             currentBillDetails.previousReadingOffPeak,
         },
+        rightSideOfAddressSection:{
+          months: currentBillDetails.months,
+          units: currentBillDetails.units,
+          payments: currentBillDetails.payments,
+          bills: currentBillDetails.bills,
+        },
         electricityCharges: {
           costOfElectricity: currentBillDetails.costOfElectricity,
           gst: currentBillDetails.gst,

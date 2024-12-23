@@ -36,6 +36,11 @@ const getLastMonthYearId = async () => {
   // Find the first user in the collection
   const firstDocPreviousReadingsArray = uploadOnceBillData[0].previousReadings;
   // Return the lastMonthYearId of Last Entry
+  console.log(
+    "last month in function: ",
+    firstDocPreviousReadingsArray[firstDocPreviousReadingsArray.length - 1]
+      .month
+  );
   return firstDocPreviousReadingsArray[firstDocPreviousReadingsArray.length - 1]
     .month;
 };
@@ -152,11 +157,11 @@ const addMeterInfo = async (req, res) => {
     const lastMonthYearId = await getLastMonthYearId();
 
     // DESTRUCTURING THE METER INFO ARRAY
-    console.log("req.body: ", req.body);
+    // console.log("req.body: ", req.body);
     const { currentMonthYearId, meterInfoArray } = req.body;
 
-    console.log("Cureeent:", currentMonthYearId);
-    console.log("meterInfoArray:::", meterInfoArray);
+    // console.log("Cureeent:", currentMonthYearId);
+    // console.log("meterInfoArray:::", meterInfoArray);
 
     // LOOPING OVER ALL THE METER INFOs (There will be a list of current readings of meter infos)
     for (let i = 0; i < meterInfoArray.length; i++) {
@@ -222,6 +227,34 @@ const addMeterInfo = async (req, res) => {
 
       // Adding remaining fields to template bill data
       const userData = await UserInfo.find({ userId: userId });
+      // Extracting units from readings for last 12 months
+      const unitsArray = [];
+      const readingsArray = previousMeterInfo.previousReadings;
+      for (let i = 1; i < readingsArray.length; i++) {
+        const peakUnits =
+          readingsArray[i].previous_peak - readingsArray[i - 1].previous_peak;
+        const offPeakUnits =
+          readingsArray[i].previous_off_peak -
+          readingsArray[i - 1].previous_off_peak;
+        unitsArray.push(peakUnits + offPeakUnits);
+      }
+
+      // Adding last 12 months' payment and bill data
+      // const last12Months = readingsArray.slice(-12);
+      const last12Months =
+        lastMonthYearId != currentMonthYearId
+          ? readingsArray.slice(-12) // Get the last 12 elements
+          : readingsArray.slice(0, 12); // Get the first 12 elements
+
+      const months = last12Months.map((reading) => reading.month);
+      const payments = last12Months.map((reading) => reading.payment);
+      const bills = last12Months.map((reading) => reading.bill);
+
+      // console.log("units:", unitsArray);
+      // console.log("months:", months);
+      // console.log("payments:", payments);
+      // console.log("bills:", bills);
+
       const remainingTemplateBillData = [
         { key: "userId", value: userData[0].userId },
         { key: "name", value: userData[0].name },
@@ -242,6 +275,10 @@ const addMeterInfo = async (req, res) => {
           value: dateSettingData["billDurationEndDate"],
         },
         { key: "billFPADate", value: dateSettingData["billFPADate"] },
+        { key: "months", value: months },
+        { key: "units", value: unitsArray },
+        { key: "payments", value: payments },
+        { key: "bills", value: bills },
       ];
 
       remainingTemplateBillData.forEach((field) => {
@@ -257,8 +294,15 @@ const addMeterInfo = async (req, res) => {
       await billTemplateData.save();
 
       // UPDATING THE ONCE UPLOAD ARRAY READINGS DATA WITH THE CURRENT READING. IT MEANS THAT PUSH THE CURRENT READING AT THE END OF THE ONCEUPLOADBILLDATA ARRAY.
+      console.log("lastMonthYearId: ", lastMonthYearId);
+      console.log("currentMonthYearId: ", currentMonthYearId);
+
       if (lastMonthYearId != currentMonthYearId) {
         const previousReadingsArrayOfMeter = previousMeterInfo.previousReadings;
+        console.log(
+          "previousReadingsArrayOfMeter: ",
+          previousReadingsArrayOfMeter
+        );
         // Remove the first entry
         previousReadingsArrayOfMeter.shift();
         // Add the new entry at the end
@@ -270,6 +314,10 @@ const addMeterInfo = async (req, res) => {
           bill: 0,
         });
         // Update the document in the database
+        console.log(
+          "firpreviousReadingsArrayOfMeterst: ",
+          previousReadingsArrayOfMeter
+        );
         await UploadOnceBillData.updateOne(
           { _id: previousMeterInfo._id }, // Match the document by ID or other criteria
           { $set: { previousReadings: previousReadingsArrayOfMeter } } // Update the array

@@ -440,7 +440,7 @@ const BillDesign = ({ billDetails, formatDate }) => {
           <div className="grid grid-flow-col grid-cols-8">
             {/* Month Values */}
             <div className="uppercase text-center text-sm text-[#1301ff] font-semibold col-span-2 border-b-2 border-r-2 border-black">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m, index) => {
+              {billDetails?.rightSideOfAddressSection?.months?.map((m, index) => {
                 return (
                   <div className="border-b" key={index} id={index}>
                     {m}
@@ -450,7 +450,7 @@ const BillDesign = ({ billDetails, formatDate }) => {
             </div>
             {/* Units Values */}
             <div className="uppercase text-center text-sm text-[#1301ff] font-semibold col-span-2 border-b-2 border-r-2 border-black">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m, index) => {
+              {billDetails?.rightSideOfAddressSection?.units?.map((m, index) => {
                 return (
                   <div className="border-b" key={index} id={index}>
                     {m}
@@ -460,7 +460,7 @@ const BillDesign = ({ billDetails, formatDate }) => {
             </div>
             {/* Bill Values */}
             <div className="text-[#1301ff] text-sm text-center font-semibold col-span-2 border-b-2 border-r-2 border-black">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m, index) => {
+              {billDetails?.rightSideOfAddressSection?.bills?.map((m, index) => {
                 return (
                   <div className="border-b" key={index} id={index}>
                     {m}
@@ -470,7 +470,7 @@ const BillDesign = ({ billDetails, formatDate }) => {
             </div>
             {/* Payment Values */}
             <div className="uppercase text-center text-sm text-[#1301ff] font-semibold col-span-2 border-b-2 border-black">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m, index) => {
+              {billDetails?.rightSideOfAddressSection?.payments?.map((m, index) => {
                 return (
                   <div className="border-b" key={index} id={index}>
                     {m}
