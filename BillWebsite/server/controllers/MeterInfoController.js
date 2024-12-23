@@ -155,6 +155,9 @@ const addMeterInfo = async (req, res) => {
     console.log("req.body: ", req.body);
     const { currentMonthYearId, meterInfoArray } = req.body;
 
+    console.log("Cureeent:", currentMonthYearId);
+    console.log("meterInfoArray:::", meterInfoArray);
+
     // LOOPING OVER ALL THE METER INFOs (There will be a list of current readings of meter infos)
     for (let i = 0; i < meterInfoArray.length; i++) {
       // Destructuring Present Meter Info
@@ -212,6 +215,9 @@ const addMeterInfo = async (req, res) => {
         );
       } else {
         console.error("No previous readings found for the specified userId");
+        return res.status(400).json({
+          message: `No previous readings found for the specified userId: ${userId}`,
+        });
       }
 
       // Adding remaining fields to template bill data
