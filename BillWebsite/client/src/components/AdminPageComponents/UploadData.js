@@ -1,7 +1,6 @@
 import React from "react";
 
 const UploadData = ({handleFileUpload, handleSave, title}) => {
-  console.log("title: ", title)
   return (
     <div className="bg-white shadow-md rounded-lg p-8 w-[90%] md:w-[50%]">
       <h1 className="text-3xl font-bold text-center mb-6 text-indigo-600">

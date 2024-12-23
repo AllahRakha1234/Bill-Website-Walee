@@ -1,27 +1,42 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const previousReadingSchema = new mongoose.Schema({
   previous_peak: {
     type: Number,
-    required: true
+    required: true,
   },
   previous_off_peak: {
     type: Number,
-    required: true
-  }
+    required: true,
+  },
+  month: {
+    type: String,
+    required: true,
+  },
+  payment: {
+    type: Number,
+    required: true,
+  },
+  bill: {
+    type: Number,
+    required: true,
+  },
 });
 
 const uploadOnceBillDataSchema = new mongoose.Schema({
   userId: {
     type: Number,
-    required: true
+    required: true,
   },
   previousReadings: {
     type: [previousReadingSchema],
     required: true,
-    default: []
-  }
+    default: [],
+  },
 });
 
-const UploadOnceBillData = mongoose.model('UploadOnceBillData', uploadOnceBillDataSchema);
+const UploadOnceBillData = mongoose.model(
+  "UploadOnceBillData",
+  uploadOnceBillDataSchema
+);
 module.exports = UploadOnceBillData;

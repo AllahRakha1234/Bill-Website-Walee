@@ -17,7 +17,7 @@ const {
 // FIXED SETTINGS VALUES - GLOBAL VARIABLES
 let fixedSettingsGlobal = {};
 
-// Fetch all meter info
+// CONTROLLER FUNCTION TO FETCH ALL METER INFO DATA
 const getAllMeterInfo = async (req, res) => {
   try {
     const meterInfo = await MeterInfo.find();
@@ -26,6 +26,18 @@ const getAllMeterInfo = async (req, res) => {
     console.log("Error fetching meter info:", error);
     res.status(500).json({ message: "Failed to fetch meter info" });
   }
+};
+
+// FUNCTION TO GET LAST MONTH-YEAR ENTRY FROM ONCE UPLOAD DATA
+const getLastMonthYearId = async () => {
+  // Fetch all data from the database
+  const uploadOnceBillData = await UploadOnceBillData.find();
+
+  // Find the first user in the collection
+  const firstDocPreviousReadingsArray = uploadOnceBillData[0].previousReadings;
+  // Return the lastMonthYearId of Last Entry
+  return firstDocPreviousReadingsArray[firstDocPreviousReadingsArray.length - 1]
+    .month;
 };
 
 // FUNCTION TO CALCULATE TEMPLATE BILL DATA
@@ -97,7 +109,7 @@ const calculateTemplateBillData = async (
   };
 };
 
-// ADD METER INFO CONTROLLER FUNCTION
+// CONTROLLER FUNCTION TO ADD METER INFO
 const addMeterInfo = async (req, res) => {
   try {
     // REMAINING WORK
@@ -127,44 +139,24 @@ const addMeterInfo = async (req, res) => {
     }
 
     // FETCHING THE DATE SETTING VALUES FOR FRONTEND
-    const dateSettingsValues = await DateSetting.find({})
-    const dateSettingData = dateSettingsValues[0].dateSettings.reduce((acc, obj) => {
-      acc[obj.key] = obj.value;
-      return acc;
-    }, {}); // Convert the array to an object :: {} => initial value of accumulator and obj => current object
-    
+    const dateSettingsValues = await DateSetting.find({});
+    const dateSettingData = dateSettingsValues[0].dateSettings.reduce(
+      (acc, obj) => {
+        acc[obj.key] = obj.value;
+        return acc;
+      },
+      {}
+    ); // Convert the array to an object :: {} => initial value of accumulator and obj => current object
 
-    // GENERATING THE MONTH-YEAR ID AND STORING IN THE ONCEDATAID MODEL
-    const date = new Date(); // Create a Date object for the current date
-    // Array of abbreviated month names
-    const shortMonthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    // Get the abbreviated month and year
-    const shortMonth = shortMonthNames[date.getMonth()]; // Get the first 3 letters of the month
-    const year = date.getFullYear(); // Get the year
-    const formattedDate = `${shortMonth}-${year}`;
-    // Getting the month-year ID from the model to check if it exists or not
-    const monthYearId = await OnceDataId.findOne({
-      monthYearId: formattedDate,
-    });
-
-    const monthYearId1 = await OnceDataId.findOne({});
-
+    // GETTING THE MONTH-YEAR ID AND STORING IN THE ONCE UPLOAD DATA MODEL
+    const lastMonthYearId = await getLastMonthYearId();
 
     // DESTRUCTURING THE METER INFO ARRAY
-    const meterInfoArray = req.body;
+    console.log("req.body: ", req.body);
+    const { currentMonthYearId, meterInfoArray } = req.body;
+
+    console.log("Cureeent:", currentMonthYearId);
+    console.log("meterInfoArray:::", meterInfoArray);
 
     // LOOPING OVER ALL THE METER INFOs (There will be a list of current readings of meter infos)
     for (let i = 0; i < meterInfoArray.length; i++) {
@@ -184,7 +176,8 @@ const addMeterInfo = async (req, res) => {
 
       if (previousMeterInfo?.previousReadings?.length) {
         const previousReadingIndex =
-          previousMeterInfo.previousReadings.length - (monthYearId ? 2 : 1); // Setting this index according to the meterinfo upload date
+          previousMeterInfo.previousReadings.length -
+          (lastMonthYearId == currentMonthYearId ? 2 : 1); // Setting this index according to the meterinfo upload date
         const previousPeakReading =
           previousMeterInfo.previousReadings[previousReadingIndex]
             .previous_peak;
@@ -193,24 +186,22 @@ const addMeterInfo = async (req, res) => {
             .previous_off_peak;
         // Finding totalUnits value for FPA calculation :: (For August Required May Units)
         const tempIndex = previousMeterInfo.previousReadings.length;
-        if (!monthYearId) {
+        if (lastMonthYearId != currentMonthYearId) {
           totalUnitsForFpaCalc =
-            (previousMeterInfo.previousReadings[tempIndex - 3].previous_peak -
-            previousMeterInfo.previousReadings[tempIndex - 4].previous_peak) +
+            previousMeterInfo.previousReadings[tempIndex - 3].previous_peak -
+            previousMeterInfo.previousReadings[tempIndex - 4].previous_peak +
             (previousMeterInfo.previousReadings[tempIndex - 3]
               .previous_off_peak -
               previousMeterInfo.previousReadings[tempIndex - 4]
                 .previous_off_peak);
-
         } else {
           totalUnitsForFpaCalc =
-            (previousMeterInfo.previousReadings[tempIndex - 4].previous_peak -
-            previousMeterInfo.previousReadings[tempIndex - 5].previous_peak) +
+            previousMeterInfo.previousReadings[tempIndex - 4].previous_peak -
+            previousMeterInfo.previousReadings[tempIndex - 5].previous_peak +
             (previousMeterInfo.previousReadings[tempIndex - 4]
               .previous_off_peak -
               previousMeterInfo.previousReadings[tempIndex - 5]
                 .previous_off_peak);
-
         }
 
         // Calling the function to calculate the template bill data
@@ -224,6 +215,9 @@ const addMeterInfo = async (req, res) => {
         );
       } else {
         console.error("No previous readings found for the specified userId");
+        return res.status(400).json({
+          message: `No previous readings found for the specified userId: ${userId}`,
+        });
       }
 
       // Adding remaining fields to template bill data
@@ -239,8 +233,14 @@ const addMeterInfo = async (req, res) => {
         { key: "tariffOffPeakValue", value: tariffSlabs["offPeak"] },
         { key: "billMonthDate", value: dateSettingData["billMonthDate"] },
         { key: "billDueDate", value: dateSettingData["billDueDate"] },
-        { key: "billDurationStartDate", value: dateSettingData["billDurationStartDate"] },
-        { key: "billDurationEndDate", value: dateSettingData["billDurationEndDate"] },
+        {
+          key: "billDurationStartDate",
+          value: dateSettingData["billDurationStartDate"],
+        },
+        {
+          key: "billDurationEndDate",
+          value: dateSettingData["billDurationEndDate"],
+        },
         { key: "billFPADate", value: dateSettingData["billFPADate"] },
       ];
 
@@ -257,7 +257,7 @@ const addMeterInfo = async (req, res) => {
       await billTemplateData.save();
 
       // UPDATING THE ONCE UPLOAD ARRAY READINGS DATA WITH THE CURRENT READING. IT MEANS THAT PUSH THE CURRENT READING AT THE END OF THE ONCEUPLOADBILLDATA ARRAY.
-      if (!monthYearId) {
+      if (lastMonthYearId != currentMonthYearId) {
         const previousReadingsArrayOfMeter = previousMeterInfo.previousReadings;
         // Remove the first entry
         previousReadingsArrayOfMeter.shift();
@@ -265,20 +265,32 @@ const addMeterInfo = async (req, res) => {
         previousReadingsArrayOfMeter.push({
           previous_peak: present_peak_reading,
           previous_off_peak: present_off_peak_reading,
+          month: currentMonthYearId,
+          payment: 0,
+          bill: 0,
         });
         // Update the document in the database
         await UploadOnceBillData.updateOne(
           { _id: previousMeterInfo._id }, // Match the document by ID or other criteria
           { $set: { previousReadings: previousReadingsArrayOfMeter } } // Update the array
         );
+      } else {
+        // IF THE CURRENTMONTHYEARID == LASTMONTHYEARID, THEN JUST UPDATE THE LAST OBJECT OF ONCEUPLOADBILLDATA
+        const previousReadingsArrayOfMeter = previousMeterInfo.previousReadings;
+        const lastOnceUploadBillDataObject =
+          previousReadingsArrayOfMeter[previousReadingsArrayOfMeter.length - 1];
+
+        // Update the last object in the array with the new values
+        lastOnceUploadBillDataObject.previous_peak = present_peak_reading;
+        lastOnceUploadBillDataObject.previous_off_peak =
+          present_off_peak_reading;
+        lastOnceUploadBillDataObject.month = currentMonthYearId;
+        lastOnceUploadBillDataObject.payment = 0; // Assuming payment is 0
+        lastOnceUploadBillDataObject.bill = 0; // Assuming bill is 0
+
+        // Save the updated document by calling .save() on the instance of the document
+        await previousMeterInfo.save();
       }
-    }
-    // If the month-year ID does not exist, replace the existing one
-    if (!monthYearId) {
-      const newMonthYearId = new OnceDataId({
-        monthYearId: formattedDate,
-      });
-      await newMonthYearId.save();
     }
     // Return a success message
     res.status(200).json({ message: "Meter info added successfully" });
