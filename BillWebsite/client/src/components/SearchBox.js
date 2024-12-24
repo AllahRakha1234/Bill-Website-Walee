@@ -31,12 +31,12 @@ const SearchBox = () => {
   return (
     <div className="container mx-auto flex items-center justify-center flex-col mt-10">
       <div className="text-2xl font-semibold mb-3">
-        <h2>Walee Bill</h2>
+        <h2>NUST Bill</h2>
       </div>
       <div className="border border-gray-400 w-[35%] flex flex-col">
         {/* SEARCH BOX HEADER */}
         <div className="text-lg font-semibold mb-2 bg-slate-300 p-2">
-          Search Your Electricity Bill
+          Search Electricity Bill
         </div>
         {/* INPUT FIELD FOR USER INPUT*/}
         <div className="flex flex-row items-center justify-center p-2">
@@ -56,7 +56,7 @@ const SearchBox = () => {
                 setReferenceNo(value);
 
               }}
-              placeholder="Enter your consumer ID"
+              placeholder="Enter consumer ID"
               className="border border-gray-300 p-2 rounded w-56 h-8"
             />
           </div>
