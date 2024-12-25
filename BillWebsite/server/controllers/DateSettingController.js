@@ -31,7 +31,7 @@ const getDateSetting = async (req, res) => {
 const updateDateSetting = async (req, res) => {
   const { dateSettings } = req.body; // Correctly destructure `dateSettings` from the request body
 
-  console.log("dateSettings inside update function: ", dateSettings); // To check the incoming data
+  // console.log("dateSettings inside update function: ", dateSettings); // To check the incoming data
 
   try {
     // Find the existing date settings

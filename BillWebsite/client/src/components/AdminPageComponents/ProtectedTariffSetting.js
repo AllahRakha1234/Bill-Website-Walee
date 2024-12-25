@@ -4,7 +4,7 @@ const ProtectedTariffSetting = ({activeSubOption}) => {
   return (
     <div className="bg-white shadow-md rounded-lg p-8 w-[90%] md:w-[50%]">
       <h1 className="text-3xl font-bold text-center mb-6 text-indigo-600">
-        {activeSubOption} Protected Tariff Section
+        Protected Tariff Section
       </h1>
       <form>
         <div className="mb-4">

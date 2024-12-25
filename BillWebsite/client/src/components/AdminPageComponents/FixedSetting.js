@@ -57,11 +57,11 @@ const FixedSetting = () => {
 
   // RETURN JSX
   return (
-    <div className="bg-white shadow-md rounded-lg p-8 w-[90%] md:w-[50%]">
+    <div className="bg-white shadow-md rounded-lg p-8 w-[90%] md:w-[60%]">
       <h1 className="text-3xl font-bold text-center mb-6 text-indigo-600">
-        Fixed Setting Section
+        Fixed Charges Section
       </h1>
-      <div className="grid grid-cols-10 gap-2">
+      <div className="grid grid-cols-12 gap-2">
         {fixedSettings?.map((item) => (
           <div key={item.name} className="mb-4 col-span-3">
             <label

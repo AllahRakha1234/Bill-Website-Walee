@@ -19,7 +19,7 @@ const TariffSetting = ({ activeSubOption }) => {
   const handleSaveSettings = async () => {
     try {
       // Prepare data to send to backend
-      const residentailTariffValues= tariffSettings.map(({ name, value }) => ({
+      const residentailTariffValues = tariffSettings.map(({ name, value }) => ({
         name,
         value,
       }));
@@ -62,7 +62,7 @@ const TariffSetting = ({ activeSubOption }) => {
   return (
     <div className="bg-white shadow-md rounded-lg p-8 w-[90%] md:w-[50%]">
       <h1 className="text-3xl font-bold text-center mb-6 text-indigo-600">
-      {activeSubOption} Tariff Section
+        Tariff Section
       </h1>
       <div className="grid grid-cols-10 gap-2">
         {tariffSettings?.map((item) => (

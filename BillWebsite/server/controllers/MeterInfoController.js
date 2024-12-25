@@ -4,7 +4,6 @@ const MeterInfo = require("../models/MeterInfo");
 const FixedSetting = require("../models/FixedSetting");
 const TemplateBillData = require("../models/TemplateBillData");
 const UploadOnceBillData = require("../models/UploadOnceBillData");
-const OnceDataId = require("../models/OnceDataId");
 const DateSetting = require("../models/DateSetting");
 const {
   calculateElectricCost,
@@ -230,25 +229,33 @@ const addMeterInfo = async (req, res) => {
       // Extracting units from readings for last 12 months
       const unitsArray = [];
       const readingsArray = previousMeterInfo.previousReadings;
-      for (let i = 1; i < readingsArray.length; i++) {
+      const previous13ReadingsArray =
+        lastMonthYearId != currentMonthYearId
+          ? readingsArray.slice(-13) // Get the last 13 elements
+          : readingsArray.slice(0, 13); // Get the first 13 elements
+      // console.log("previous13ReadingsArray: ", previous13ReadingsArray)
+      for (let i = 1; i < previous13ReadingsArray.length; i++) {
         const peakUnits =
-          readingsArray[i].previous_peak - readingsArray[i - 1].previous_peak;
+          previous13ReadingsArray[i].previous_peak -
+          previous13ReadingsArray[i - 1].previous_peak;
         const offPeakUnits =
-          readingsArray[i].previous_off_peak -
-          readingsArray[i - 1].previous_off_peak;
+          previous13ReadingsArray[i].previous_off_peak -
+          previous13ReadingsArray[i - 1].previous_off_peak;
         unitsArray.push(peakUnits + offPeakUnits);
       }
 
+      // console.log("Units Array: ", unitsArray);
+
       // Adding last 12 months' payment and bill data
       // const last12Months = readingsArray.slice(-12);
-      const last12Months =
+      const previous12MonthsData =
         lastMonthYearId != currentMonthYearId
           ? readingsArray.slice(-12) // Get the last 12 elements
-          : readingsArray.slice(0, 12); // Get the first 12 elements
+          : readingsArray.slice(1, 13); // Get the first 12 elements
 
-      const months = last12Months.map((reading) => reading.month);
-      const payments = last12Months.map((reading) => reading.payment);
-      const bills = last12Months.map((reading) => reading.bill);
+      const months = previous12MonthsData.map((reading) => reading.month);
+      const payments = previous12MonthsData.map((reading) => reading.payment);
+      const bills = previous12MonthsData.map((reading) => reading.bill);
 
       // console.log("units:", unitsArray);
       // console.log("months:", months);
@@ -294,15 +301,11 @@ const addMeterInfo = async (req, res) => {
       await billTemplateData.save();
 
       // UPDATING THE ONCE UPLOAD ARRAY READINGS DATA WITH THE CURRENT READING. IT MEANS THAT PUSH THE CURRENT READING AT THE END OF THE ONCEUPLOADBILLDATA ARRAY.
-      console.log("lastMonthYearId: ", lastMonthYearId);
-      console.log("currentMonthYearId: ", currentMonthYearId);
+      // console.log("lastMonthYearId: ", lastMonthYearId);
+      // console.log("currentMonthYearId: ", currentMonthYearId);
 
       if (lastMonthYearId != currentMonthYearId) {
         const previousReadingsArrayOfMeter = previousMeterInfo.previousReadings;
-        console.log(
-          "previousReadingsArrayOfMeter: ",
-          previousReadingsArrayOfMeter
-        );
         // Remove the first entry
         previousReadingsArrayOfMeter.shift();
         // Add the new entry at the end
@@ -314,10 +317,7 @@ const addMeterInfo = async (req, res) => {
           bill: 0,
         });
         // Update the document in the database
-        console.log(
-          "firpreviousReadingsArrayOfMeterst: ",
-          previousReadingsArrayOfMeter
-        );
+
         await UploadOnceBillData.updateOne(
           { _id: previousMeterInfo._id }, // Match the document by ID or other criteria
           { $set: { previousReadings: previousReadingsArrayOfMeter } } // Update the array

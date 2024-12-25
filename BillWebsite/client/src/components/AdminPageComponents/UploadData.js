@@ -1,6 +1,6 @@
 import React from "react";
 
-const UploadData = ({handleFileUpload, handleSave, title}) => {
+const UploadData = ({handleFileUpload, handleSave, title, activeOption}) => {
   return (
     <div className="bg-white shadow-md rounded-lg p-8 w-[90%] md:w-[50%]">
       <h1 className="text-3xl font-bold text-center mb-6 text-indigo-600">
@@ -28,8 +28,8 @@ const UploadData = ({handleFileUpload, handleSave, title}) => {
         {/* Download Sample Button */}
         <div className="mt-6">
           <a
-            href="/SampleFile.csv" // Link to the file in public folder
-            download="SampleFile.csv"
+            href={activeOption == "Users Data" ? "/UsersUploadData.xlsx" : "/OnceConfigureData.xlsx"} // Link to the file in public folder
+            download={activeOption == "Users Data" ? "UsersUploadData.xlsx" : "OnceConfigureData.xlsx"}
             className="bg-indigo-500  text-white px-4 py-2 rounded-md hover:bg-indigo-600"
           >
             Download Sample File
