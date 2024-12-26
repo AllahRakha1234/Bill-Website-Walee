@@ -3,6 +3,7 @@ const express = require('express');
 const connectDB = require('./conn'); // Import the MongoDB connection function
 require('dotenv').config(); // Load environment variables
 const cors = require("cors");
+
 // Import routes
 const fixedSettingsRoute = require("./routes/FixedSettings");
 const meterInfoRoute = require("./routes/MeterInfo");
@@ -19,7 +20,6 @@ app.use(cors({
   origin: ["http://localhost:3000", "https://bill-website-walee.vercel.app/"] // Include frontend's Vercel domain
 }));
 
-
 // Middleware to parse JSON bodies
 app.use(express.json());
 
@@ -30,14 +30,13 @@ const PORT = process.env.PORT || 3001;
 connectDB();
 
 // Define routes
-app.use("/api/fixed-settings", fixedSettingsRoute); // Fixed settings routes
-app.use("/api/meter-info", meterInfoRoute); // Meter info routes
-app.use("/api/user-info", userInfoRoute); // User info routes
-app.use("/api/upload-once-bill-data", uploadOnceBillData); // Upload Once data routes
-// app.use("/api/update-current-month-once-bill-data", updateCurrentMonthOnceBillData);
-app.use("/api/get-bill-template-data", templateBillData); // Bill Template routes
-app.use("/api/resid-tariff-values", tariff); // Tariff routes
-app.use("/api/date-setting", dateSetting); // Date setting routes
+app.use("/api/fixed-settings", fixedSettingsRoute); 
+app.use("/api/meter-info", meterInfoRoute); 
+app.use("/api/user-info", userInfoRoute); 
+app.use("/api/upload-once-bill-data", uploadOnceBillData); 
+app.use("/api/get-bill-template-data", templateBillData); 
+app.use("/api/resid-tariff-values", tariff); 
+app.use("/api/date-setting", dateSetting); 
 
 // Defining a basic route
 app.get('/', (req, res) => {
