@@ -1,15 +1,16 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": ".", 
-        "use": "@vercel/node"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/api/(.*)",
-        "dest": "/api/$1" 
-      }
-    ]
-  }
+  "version": 3,
+  "builds": [
+    {
+      "src": ".",
+      "use": "@vercel/node",
+      "command": "npm run build" // Or "yarn build" if you use yarn
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    }
+  ]
+}
