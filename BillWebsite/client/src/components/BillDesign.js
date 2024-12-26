@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const BillDesign = ({ billDetails, formatDate }) => {
   // LP Surcharge Calculation
@@ -13,7 +14,6 @@ const BillDesign = ({ billDetails, formatDate }) => {
       Number(rate);
     return Math.round(result); // Round to the nearest integer
   };
-
 
   // Electicity Charges Data
   const electricityBill = {
@@ -86,6 +86,56 @@ const BillDesign = ({ billDetails, formatDate }) => {
         electricityBill["TOTAL"] +
         billDetails?.arrears?.waterBill),
   };
+
+  // Data to send back for the current user and month -- Configuraion Data
+  const data = {
+    userId: billDetails?.aboveAddressSection?.userId,
+    month: billDetails?.aboveAddressSection?.billMonthDate,
+    payment: arrearsDetails["PAYABLE WITHIN DUE DATE"],
+    bill: arrearsDetails["PAYABLE WITHIN DUE DATE"],
+    previous_peak:billDetails?.belowAddressSection?.presentReadingPeak,
+    previous_off_peak:billDetails?.belowAddressSection?.presentReadingOffPeak,
+  };
+
+  // Send data to backend when the component mounts
+  // useEffect(() => {
+  //   const sendBillData = async () => {
+  //     try {
+  //       const response = await axios.put("http://localhost:3001/api/upload-once-bill-data", data);
+  //       console.log("Response.data.message: ", response.data.message);
+  //     } catch (error) {
+  //       console.error("Error sending data:", error);
+  //     }
+  //   };
+  //   sendBillData();
+  // }, [data]);
+
+  useEffect(() => {
+    const sendBillData = async () => {
+      try {
+        if (
+          data.userId &&
+          data.month &&
+          typeof data.payment === "number" &&
+          typeof data.bill === "number"
+        ) {
+          const response = await axios.put(
+            "http://localhost:3001/api/upload-once-bill-data",
+            data
+          );
+          console.log("Response.data.message: ", response.data.message);
+        } else {
+          console.warn(
+            "Data is not fully prepared yet, skipping the API call."
+          );
+        }
+      } catch (error) {
+        console.error("Error sending data:", error);
+      }
+    };
+
+    sendBillData();
+  }, [data]);
 
   // RETURN JSX
   return (
@@ -220,15 +270,20 @@ const BillDesign = ({ billDetails, formatDate }) => {
           <div className="text-center text-sm font-semibold border-b-2 border-black">
             <div className="grid grid-flow-col grid-cols-12">
               <div className="col-span-4 border-r-2 border-black">
-                {formatDate(billDetails?.aboveAddressSection?.billDurationStartDate) || "-"}
+                {formatDate(
+                  billDetails?.aboveAddressSection?.billDurationStartDate
+                ) || "-"}
               </div>
 
               <div className="col-span-4 border-r-2 border-black">
-                {formatDate(billDetails?.aboveAddressSection?.billDurationEndDate) || "-"}
+                {formatDate(
+                  billDetails?.aboveAddressSection?.billDurationEndDate
+                ) || "-"}
               </div>
 
               <div className="col-span-4">
-                {formatDate(billDetails?.aboveAddressSection?.billDueDate) || ""}
+                {formatDate(billDetails?.aboveAddressSection?.billDueDate) ||
+                  ""}
               </div>
             </div>
           </div>
@@ -440,43 +495,51 @@ const BillDesign = ({ billDetails, formatDate }) => {
           <div className="grid grid-flow-col grid-cols-8">
             {/* Month Values */}
             <div className="uppercase text-center text-sm text-[#1301ff] font-semibold col-span-2 border-b-2 border-r-2 border-black">
-              {billDetails?.rightSideOfAddressSection?.months?.map((m, index) => {
-                return (
-                  <div className="border-b" key={index} id={index}>
-                    {m}
-                  </div>
-                );
-              })}
+              {billDetails?.rightSideOfAddressSection?.months?.map(
+                (m, index) => {
+                  return (
+                    <div className="border-b" key={index} id={index}>
+                      {m}
+                    </div>
+                  );
+                }
+              )}
             </div>
             {/* Units Values */}
             <div className="uppercase text-center text-sm text-[#1301ff] font-semibold col-span-2 border-b-2 border-r-2 border-black">
-              {billDetails?.rightSideOfAddressSection?.units?.map((m, index) => {
-                return (
-                  <div className="border-b" key={index} id={index}>
-                    {m}
-                  </div>
-                );
-              })}
+              {billDetails?.rightSideOfAddressSection?.units?.map(
+                (m, index) => {
+                  return (
+                    <div className="border-b" key={index} id={index}>
+                      {m}
+                    </div>
+                  );
+                }
+              )}
             </div>
             {/* Bill Values */}
             <div className="text-[#1301ff] text-sm text-center font-semibold col-span-2 border-b-2 border-r-2 border-black">
-              {billDetails?.rightSideOfAddressSection?.bills?.map((m, index) => {
-                return (
-                  <div className="border-b" key={index} id={index}>
-                    {m}
-                  </div>
-                );
-              })}
+              {billDetails?.rightSideOfAddressSection?.bills?.map(
+                (m, index) => {
+                  return (
+                    <div className="border-b" key={index} id={index}>
+                      {m}
+                    </div>
+                  );
+                }
+              )}
             </div>
             {/* Payment Values */}
             <div className="uppercase text-center text-sm text-[#1301ff] font-semibold col-span-2 border-b-2 border-black">
-              {billDetails?.rightSideOfAddressSection?.payments?.map((m, index) => {
-                return (
-                  <div className="border-b" key={index} id={index}>
-                    {m}
-                  </div>
-                );
-              })}
+              {billDetails?.rightSideOfAddressSection?.payments?.map(
+                (m, index) => {
+                  return (
+                    <div className="border-b" key={index} id={index}>
+                      {m}
+                    </div>
+                  );
+                }
+              )}
             </div>
           </div>
         </div>

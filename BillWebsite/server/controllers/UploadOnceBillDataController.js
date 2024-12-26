@@ -73,9 +73,74 @@ const addUploadOnceBillData = async (req, res) => {
     }
 };
 
+// Update current month data for a specific user
+const updateCurrentMonthOnceBillData = async (req, res) => {
+    try {
+        const { userId, month, payment, bill, previous_peak, previous_off_peak } = req.body;
+
+        // Validate input
+        if (!userId || typeof userId !== "number") {
+            return res.status(400).json({ message: "Valid userId is required." });
+        }
+        if (!month || typeof month !== "string") {
+            return res.status(400).json({ message: "Valid month is required." });
+        }
+        if (typeof payment !== "number" || typeof bill !== "number") {
+            return res.status(400).json({
+                message: "Valid payment and bill amounts are required.",
+            });
+        }
+
+        // Find existing record by userId
+        const existingData = await UploadOnceBillData.findOne({ userId });
+
+        if (!existingData) {
+            return res
+                .status(404)
+                .json({ message: `No data found for userId: ${userId}` });
+        }
+
+        // Check if the month already exists in previousReadings
+        const existingReading = existingData.previousReadings.find(
+            (reading) => reading.month === month
+        );
+
+        if (existingReading) {
+            // Update the existing reading
+            existingReading.payment = payment;
+            existingReading.bill = bill;
+            existingReading.previous_peak = previous_peak;
+            existingReading.previous_off_peak = previous_off_peak;
+        } else {
+            // If the month is not found, add a new reading
+            existingData.previousReadings.push({
+                month,
+                payment,
+                bill,
+                previous_peak,
+                previous_off_peak
+            });
+        }
+
+        // Save the updated record
+        await existingData.save();
+
+        return res.status(200).json({
+            message: "Data updated successfully",
+            updatedData: existingData,
+        });
+    } catch (error) {
+        console.error("Error updating current month data:", error);
+        return res
+            .status(500)
+            .json({ message: "Failed to update current month data" });
+    }
+};
+
 
 
 module.exports = {
     getAllUploadOnceBillData,
-    addUploadOnceBillData
+    addUploadOnceBillData,
+    updateCurrentMonthOnceBillData
 };

@@ -127,7 +127,7 @@ const DownloadBillPage = () => {
 
   // RETURN JSX
   return (
-    <div className="flex items-center flex-col">
+    <div className="flex items-center flex-col mt-10">
       {isLoading && (
         <div className="fixed inset-0 bg-white z-50 flex justify-center items-center">
           <div className="loader"></div>
