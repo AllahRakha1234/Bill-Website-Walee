@@ -20,7 +20,7 @@ const SearchBox = () => {
       }
     } catch (error) {
       if (error.response?.status === 404) {
-        alert("Reference No does not exist.");
+        alert("Consumber ID does not exist.");
       } else {
         alert("Error occurred while searching for Meter ID.");
       }
@@ -29,7 +29,7 @@ const SearchBox = () => {
 
   // RETURN JSX
   return (
-    <div className="container mx-auto flex items-center justify-center flex-col mt-10">
+    <div className="container mx-auto flex items-center justify-center flex-col mt-20">
       <div className="text-2xl font-semibold mb-3">
         <h2>NUST Bill</h2>
       </div>

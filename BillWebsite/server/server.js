@@ -31,6 +31,7 @@ app.use("/api/fixed-settings", fixedSettingsRoute); // Fixed settings routes
 app.use("/api/meter-info", meterInfoRoute); // Meter info routes
 app.use("/api/user-info", userInfoRoute); // User info routes
 app.use("/api/upload-once-bill-data", uploadOnceBillData); // Upload Once data routes
+// app.use("/api/update-current-month-once-bill-data", updateCurrentMonthOnceBillData);
 app.use("/api/get-bill-template-data", templateBillData); // Bill Template routes
 app.use("/api/resid-tariff-values", tariff); // Tariff routes
 app.use("/api/date-setting", dateSetting); // Date setting routes
