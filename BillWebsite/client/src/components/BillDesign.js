@@ -93,8 +93,8 @@ const BillDesign = ({ billDetails, formatDate }) => {
     month: billDetails?.aboveAddressSection?.billMonthDate,
     payment: arrearsDetails["PAYABLE WITHIN DUE DATE"],
     bill: arrearsDetails["PAYABLE WITHIN DUE DATE"],
-    previous_peak:billDetails?.belowAddressSection?.presentReadingPeak,
-    previous_off_peak:billDetails?.belowAddressSection?.presentReadingOffPeak,
+    previous_peak: billDetails?.belowAddressSection?.presentReadingPeak,
+    previous_off_peak: billDetails?.belowAddressSection?.presentReadingOffPeak,
   };
 
   // Send data to backend when the component mounts
