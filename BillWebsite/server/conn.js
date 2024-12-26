@@ -5,8 +5,6 @@ require('dotenv').config();
 // Define the MongoDB connection URL (replace with your own database URL)
 const MONGO_URL = process.env.MONGO_URL;
 
-console.log("URL: ", MONGO_URL)
-
 // Function to connect to the database
 const connectDB = async () => {
     try {

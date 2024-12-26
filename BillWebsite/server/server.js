@@ -15,7 +15,10 @@ const dateSetting = require("./routes/DateSetting");
 const app = express();
 
 // Allow requests from the frontend
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors({
+  origin: ["http://localhost:3000", "https://bill-website-walee.vercel.app/"] // Include frontend's Vercel domain
+}));
+
 
 // Middleware to parse JSON bodies
 app.use(express.json());
