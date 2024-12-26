@@ -3,7 +3,7 @@ const router = express.Router();
 const {
     getTariffSettings,
     updateTariffSettings,
-} = require("../controllers/tariffController");
+} = require("../controllers/TariffController");
 
 // Routes for tariffs
 router.get("/", getTariffSettings);
