@@ -4,10 +4,10 @@ const FixedSetting = require("../models/FixedSetting");
 const getFixedSettings = async (req, res) => {
     try {
         const settings = await FixedSetting.find();
-
+        console.log(settings,"log 1")
         if (settings.length === 0) {
             // Initialize default settings in DB if they don't exist
-            const defaultSettings = [
+            const defaultSettings = [   
                 { name: "TV Fee", value: 35 },
                 { name: "Meter Rent", value: 25 },
                 { name: "Water Bill", value: 250 },
