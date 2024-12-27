@@ -36,7 +36,7 @@ const UsersData = () => {
         Users Data Section
       </h1>
       {/* USERS DATA DISPLAY SECTION */}
-      {usersData.length > 0 ? (
+      {usersData?.length > 0 ? (
         <table className="w-full text-left border-collapse border border-gray-300">
           <thead>
             <tr className="bg-indigo-100">
