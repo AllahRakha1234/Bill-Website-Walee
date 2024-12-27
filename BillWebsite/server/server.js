@@ -17,7 +17,7 @@ const app = express();
 
 // Allow requests from the frontend
 app.use(cors({
-  origin: ["http://localhost:3000", "https://vercel.com/allah-rakhas-projects/bill-website-walee"] // Include frontend's Vercel domain
+  origin: ["http://localhost:3000", "https://bill-website-walee.vercel.app/"] // Include frontend's Vercel domain
 }));
 
 // Middleware to parse JSON bodies
