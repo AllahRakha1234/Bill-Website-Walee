@@ -21,9 +21,3 @@ const getTemplateBillData = async (req, res) => {
 module.exports = {
   getTemplateBillData,
 };
-
-// Adding a new template bill data to db
-
-const addTemplateBillData = async (req, res) => {
-  
-};
