@@ -120,7 +120,7 @@ const BillDesign = ({ billDetails, formatDate }) => {
           typeof data.bill === "number"
         ) {
           const response = await axios.put(
-            "http://localhost:3001/api/upload-once-bill-data",
+            `${process.env.REACT_APP_SERVER_URL}/api/upload-once-bill-data`,
             data
           );
           console.log("Response.data.message: ", response.data.message);
