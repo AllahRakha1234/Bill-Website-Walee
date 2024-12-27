@@ -22,6 +22,7 @@ const FixedSetting = () => {
         value,
       }));
 
+      
       // Send data to backend API
       const response = await axios.put(
         "http://localhost:3001/api/fixed-settings",
