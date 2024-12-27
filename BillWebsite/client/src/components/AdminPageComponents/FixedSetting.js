@@ -20,6 +20,7 @@ const FixedSetting = () => {
         name,
         value,
       }));
+      console.log("Saving settings with data:", dataToSend);
 
       const response = await axios.put(
         `${process.env.REACT_APP_SERVER_URL}/api/fixed-settings`,
@@ -27,11 +28,14 @@ const FixedSetting = () => {
       );
 
       if (response.status === 200) {
+        console.log("Settings saved successfully, server response:", response.data);
         alert("Settings saved successfully!");
         window.location.reload();
+      } else {
+        console.warn("Unexpected response status:", response.status);
       }
     } catch (error) {
-      console.error("Error saving settings:", error);
+      console.error("Error saving settings:", error.response || error.message || error);
       alert("Failed to save settings. Please try again.");
     }
   };
@@ -39,12 +43,17 @@ const FixedSetting = () => {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
+        console.log("Fetching settings from the server...");
         const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/fixed-settings`);
+
         if (response.status === 200) {
+          console.log("Settings fetched successfully:", response.data);
           setFixedSettings(response.data.settings);
+        } else {
+          console.warn("Unexpected response status:", response.status);
         }
       } catch (error) {
-        console.error("Error fetching settings:", error);
+        console.error("Error fetching settings:", error.response || error.message || error);
         alert("Failed to fetch settings. Please try again.");
       } finally {
         setLoading(false); // Stop loading once data is fetched
