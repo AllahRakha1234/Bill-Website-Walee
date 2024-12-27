@@ -27,6 +27,7 @@ const SearchBox = () => {
     }
   };
 
+
   // RETURN JSX
   return (
     <div className="container mx-auto flex items-center justify-center flex-col mt-20">

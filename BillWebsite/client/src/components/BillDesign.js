@@ -98,18 +98,6 @@ const BillDesign = ({ billDetails, formatDate }) => {
   };
 
   // Send data to backend when the component mounts
-  // useEffect(() => {
-  //   const sendBillData = async () => {
-  //     try {
-  //       const response = await axios.put("http://localhost:3001/api/upload-once-bill-data", data);
-  //       console.log("Response.data.message: ", response.data.message);
-  //     } catch (error) {
-  //       console.error("Error sending data:", error);
-  //     }
-  //   };
-  //   sendBillData();
-  // }, [data]);
-
   useEffect(() => {
     const sendBillData = async () => {
       try {
@@ -123,7 +111,7 @@ const BillDesign = ({ billDetails, formatDate }) => {
             `${process.env.REACT_APP_SERVER_URL}/api/upload-once-bill-data`,
             data
           );
-          console.log("Response.data.message: ", response.data.message);
+          // console.log("Response.data.message: ", response.data.message);
         } else {
           console.warn(
             "Data is not fully prepared yet, skipping the API call."
