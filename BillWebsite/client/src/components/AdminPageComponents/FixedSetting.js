@@ -45,7 +45,7 @@ const FixedSetting = () => {
       try {
         console.log("Fetching settings from the server...");
         const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/fixed-settings`);
-
+        console.log(response);
         if (response.status === 200) {
           console.log("Settings fetched successfully:", response.data);
           setFixedSettings(response.data.settings);
