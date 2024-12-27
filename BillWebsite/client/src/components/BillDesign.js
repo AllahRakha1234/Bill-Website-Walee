@@ -112,11 +112,7 @@ const BillDesign = ({ billDetails, formatDate }) => {
             data
           );
           // console.log("Response.data.message: ", response.data.message);
-        } else {
-          console.warn(
-            "Data is not fully prepared yet, skipping the API call."
-          );
-        }
+        } 
       } catch (error) {
         console.error("Error sending data:", error);
       }
