@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Loading from "../Loading";
 
 const TariffSetting = ({ activeSubOption }) => {
   const [tariffSettings, setTariffSettings] = useState([]);
+  const [loading, setLoading] = useState(true); // Track loading state
 
   // Update a specific setting's value in local state
   const handleUpdateSetting = (name, newValue) => {
@@ -26,7 +28,7 @@ const TariffSetting = ({ activeSubOption }) => {
 
       // Send data to backend API
       const response = await axios.put(
-        "http://localhost:3001/api/resid-tariff-values",
+        `${process.env.REACT_APP_SERVER_URL}/api/resid-tariff-values`,
         { residentailTariffValues: residentailTariffValues }
       );
 
@@ -46,7 +48,7 @@ const TariffSetting = ({ activeSubOption }) => {
     const fetchSettings = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/api/resid-tariff-values"
+          `${process.env.REACT_APP_SERVER_URL}/api/resid-tariff-values`
         );
         if (response.status === 200) {
           setTariffSettings(response.data.residentailTariffValues);
@@ -54,10 +56,18 @@ const TariffSetting = ({ activeSubOption }) => {
       } catch (error) {
         console.error("Error fetching settings:", error);
         alert("Failed to fetch settings. Please try again.");
+      }finally{
+        setLoading(false)
       }
     };
     fetchSettings();
   }, []); // Removed tariffSettings from dependency array to prevent re-fetching
+
+  // RETURN LOADING
+  if (loading) {
+    return <Loading />; // Show loading spinner while data is being fetched
+  }
+
   // RETURN JSX
   return (
     <div className="bg-white shadow-md rounded-lg p-8 w-[90%] md:w-[50%]">

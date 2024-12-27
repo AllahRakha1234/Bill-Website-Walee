@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import UploadData from "./UploadData";
+import Loading from "../Loading"; // Ensure the Loading component is properly imported
 
 const UsersData = () => {
   const [usersData, setUsersData] = useState([]);
+  const [loading, setLoading] = useState(true); // Track loading state
 
   useEffect(() => {
     const fetchUsersData = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/api/user-info");
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/user-info`);
         if (response.status === 200) {
           setUsersData(response.data.userInfo);
         } else {
@@ -17,10 +18,17 @@ const UsersData = () => {
       } catch (error) {
         console.error("Error fetching users data:", error);
         setUsersData([]);
+      } finally {
+        setLoading(false); // Stop loading once data is fetched
       }
     };
     fetchUsersData();
   }, []);
+
+  // Show loading spinner while data is being fetched
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="bg-white shadow-md rounded-lg p-4 w-[90%] md:w-[80%] mx-auto">

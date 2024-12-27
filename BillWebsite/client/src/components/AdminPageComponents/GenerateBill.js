@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
 import UploadData from "./UploadData";
+import Loading from '../Loading';
 
 const GenerateBill = ({ handleMonthlyUploadFileUpload, handleSave }) => {
   const [dateSetting, setDateSetting] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const apiUrl = "http://localhost:3001/api/date-setting";
+  const apiUrl = `${process.env.REACT_APP_SERVER_URL}/api/date-setting`
 
   // Fetch date settings from the backend
   useEffect(() => {
@@ -95,7 +96,7 @@ const GenerateBill = ({ handleMonthlyUploadFileUpload, handleSave }) => {
 
   // Render loading or error state
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading/>;
   }
 
   if (error) {

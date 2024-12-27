@@ -498,7 +498,7 @@ const AdminPage = () => {
         // }
         if (activeOption === "Generate Bill") {
           response = await axios.post(
-            "http://localhost:3001/api/meter-info",
+            `${process.env.REACT_APP_SERVER_URL}/api/meter-info`,
             fileData
           );
         } else if (
@@ -508,7 +508,7 @@ const AdminPage = () => {
         ) {
           console.log("Inside Monthly Upload Data");
           response = await axios.post(
-            "http://localhost:3001/api/upload-once-bill-data",
+            `${process.env.REACT_APP_SERVER_URL}/api/upload-once-bill-data`,
             fileData
           );
         } else if (
@@ -517,7 +517,7 @@ const AdminPage = () => {
         ) {
           console.log("Inside Users Upload Data");
           response = await axios.post(
-            "http://localhost:3001/api/user-info",
+             `${process.env.REACT_APP_SERVER_URL}/api/user-info`,
             fileData
           );
         }

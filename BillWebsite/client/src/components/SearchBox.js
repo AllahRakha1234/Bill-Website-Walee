@@ -11,7 +11,7 @@ const SearchBox = () => {
   const handleSearchBtnClick = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3001/api/get-bill-template-data/${referenceNo}`
+        `${process.env.REACT_APP_SERVER_URL}/api/get-bill-template-data/${referenceNo}`
       );
       if (response.status === 200) {
         localStorage.setItem("referenceNo", JSON.stringify(referenceNo));

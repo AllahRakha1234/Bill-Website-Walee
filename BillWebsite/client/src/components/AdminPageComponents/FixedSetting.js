@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Loading from "../Loading";
 
 const FixedSetting = () => {
   const [fixedSettings, setFixedSettings] = useState([]);
+  const [loading, setLoading] = useState(true); // Track loading state
 
-  // Update a specific setting's value in local state
   const handleUpdateSetting = (name, newValue) => {
     setFixedSettings((prevSettings) =>
       prevSettings.map((setting) =>
@@ -13,23 +14,18 @@ const FixedSetting = () => {
     );
   };
 
-  // Function to save updated settings to the backend
   const handleSaveSettings = async () => {
     try {
-      // Prepare data to send to backend
       const dataToSend = fixedSettings.map(({ name, value }) => ({
         name,
         value,
       }));
 
-      
-      // Send data to backend API
       const response = await axios.put(
-        "http://localhost:3001/api/fixed-settings",
+        `${process.env.REACT_APP_SERVER_URL}/api/fixed-settings`,
         { settings: dataToSend }
       );
 
-      // Confirm save to the user
       if (response.status === 200) {
         alert("Settings saved successfully!");
         window.location.reload();
@@ -40,23 +36,28 @@ const FixedSetting = () => {
     }
   };
 
-  // Function to fetch settings from the backend
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const response = await axios.get("https://nust-bill-system-server.vercel.app/api/fixed-settings");
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/fixed-settings`);
         if (response.status === 200) {
           setFixedSettings(response.data.settings);
         }
       } catch (error) {
         console.error("Error fetching settings:", error);
         alert("Failed to fetch settings. Please try again.");
+      } finally {
+        setLoading(false); // Stop loading once data is fetched
       }
     };
     fetchSettings();
-  }, []); // Removed fixedSettings from dependency array to prevent re-fetching
+  }, []);
 
-  // RETURN JSX
+  // RETURN LOADING
+  if (loading) {
+    return <Loading />; // Show loading spinner while data is being fetched
+  }
+
   return (
     <div className="bg-white shadow-md rounded-lg p-8 w-[90%] md:w-[60%]">
       <h1 className="text-3xl font-bold text-center mb-6 text-indigo-600">
