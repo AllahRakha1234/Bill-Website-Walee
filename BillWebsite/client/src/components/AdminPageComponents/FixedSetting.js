@@ -44,7 +44,7 @@ const FixedSetting = () => {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/api/fixed-settings");
+        const response = await axios.get("https://nust-bill-system-server.vercel.app/api/fixed-settings");
         if (response.status === 200) {
           setFixedSettings(response.data.settings);
         }
