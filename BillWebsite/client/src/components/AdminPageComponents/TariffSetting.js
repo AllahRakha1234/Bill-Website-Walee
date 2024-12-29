@@ -19,6 +19,13 @@ const TariffSetting = ({ activeSubOption }) => {
 
   // Function to save updated settings to the backend
   const handleSaveSettings = async () => {
+    // Validate values before saving
+    const invalidSettings = tariffSettings.filter(({ value }) => value <= 0);
+
+    if (invalidSettings.length > 0) {
+      alert("All values must be greater than 0.");
+      return; // Stop execution if there are invalid values
+    }
     try {
       // Prepare data to send to backend
       const residentailTariffValues = tariffSettings.map(({ name, value }) => ({
@@ -56,8 +63,8 @@ const TariffSetting = ({ activeSubOption }) => {
       } catch (error) {
         console.error("Error fetching settings:", error);
         alert("Failed to fetch settings. Please try again.");
-      }finally{
-        setLoading(false)
+      } finally {
+        setLoading(false);
       }
     };
     fetchSettings();
