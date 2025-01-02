@@ -88,7 +88,7 @@ const TariffSetting = ({ activeSubOption }) => {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor={item.name}
             >
-              {item.name == "peakValue" ? "Peak Value" : "Off Peak Value"}
+              {item.name === "peakValue" ? "Peak Value" : "Off Peak Value"}
             </label>
             <input
               type="number"

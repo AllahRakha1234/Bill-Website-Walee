@@ -27,6 +27,12 @@ const SearchBox = () => {
     }
   };
 
+  // HANDLE ENTER KEY PRESS
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearchBtnClick();
+    }
+  };
 
   // RETURN JSX
   return (
@@ -55,8 +61,8 @@ const SearchBox = () => {
                 //   setReferenceNo(value);
                 // }
                 setReferenceNo(value);
-
               }}
+              onKeyDown={handleKeyDown} // Add keydown event listener
               placeholder="Enter consumer ID"
               className="border border-gray-300 p-2 rounded w-56 h-8"
             />
