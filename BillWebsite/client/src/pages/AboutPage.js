@@ -17,8 +17,6 @@ const AboutPage = () => {
           <li>Influencer Insights</li>
           <li>Social Listening</li>
           <li>Social Commerce</li>
-          <li>Payment Gateway</li>
-          <li>Mobility Marketing</li>
         </ul>
 
       
