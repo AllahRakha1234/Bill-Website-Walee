@@ -15,8 +15,6 @@ const AboutPage = () => {
         <ul className="list-disc list-inside text-gray-600 mb-6">
           <li>Automated Influencer Marketing</li>
           <li>Influencer Insights</li>
-          <li>Social Listening</li>
-          <li>Social Commerce</li>
         </ul>
 
       
