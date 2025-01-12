@@ -23,7 +23,7 @@ const signUp = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create the user
-    const newUser = new User({ email, password: hashedPassword });
+    const newUser = new AdminLogin({ email, password: hashedPassword });
     await newUser.save();
 
     // Send response
