@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import AboutPage from './pages/AboutPage';
 import DownloadBillPage from './pages/DownloadBillPage';
 import BillDesign from './components/BillDesign';
+import AdminLoginPage from './pages/AdminLoginPage';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/print" element={<DownloadBillPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route path="/adminlogin" element={<AdminLoginPage />} />
           <Route path="*" element={<NoPage />} /> {/* This handles all other routes */}
         </Routes>
       </Layout>

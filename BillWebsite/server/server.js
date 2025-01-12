@@ -12,6 +12,7 @@ const uploadOnceBillData = require("./routes/UploadOnceBillData");
 const templateBillData = require("./routes/TemplateBillData");
 const tariff = require("./routes/Tariff");
 const dateSetting = require("./routes/DateSetting");
+const adminLogin = require("./routes/AdminLogin");
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use("/api/upload-once-bill-data", uploadOnceBillData);
 app.use("/api/get-bill-template-data", templateBillData); 
 app.use("/api/resid-tariff-values", tariff); 
 app.use("/api/date-setting", dateSetting); 
+app.use("/api/admin-login", adminLogin); 
 
 // Defining a basic route
 app.get('/', (req, res) => {
