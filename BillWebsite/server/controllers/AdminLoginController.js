@@ -9,7 +9,8 @@ const SECRET_KEY = process.env.SECRET_KEY || 'your_secret_key';
 // Register a new user (Signup)
 const signUp = async (req, res) => {
   const { email, password } = req.body;
-  
+  console.log("req.body: ", req.body)
+  console.log("secret_key: ", secret_key)
   try {
     // Check if user already exists
     const userExists = await AdminLogin.findOne({ email });
