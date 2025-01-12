@@ -1,8 +1,7 @@
-// models/User.js
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-const userSchema = new mongoose.Schema({
+const adminLoginSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, 'Email is required'],
@@ -14,8 +13,8 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// Hash the password before saving the user
-userSchema.pre('save', async function (next) {
+// Hash the password before saving the admin user
+adminLoginSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   
   try {
@@ -28,8 +27,8 @@ userSchema.pre('save', async function (next) {
 });
 
 // Method to compare entered password with hashed password
-userSchema.methods.comparePassword = async function (password) {
+adminLoginSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('AdminLoginSchema', adminLoginSchema);

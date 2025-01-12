@@ -9,11 +9,9 @@ const SECRET_KEY = process.env.SECRET_KEY || 'your_secret_key';
 // Register a new user (Signup)
 const signUp = async (req, res) => {
   const { email, password } = req.body;
-  console.log("req.body: ", req.body)
   try {
     // Check if user already exists
     const userExists = await AdminLogin.findOne({ email });
-    console.log("userExists: ", userExists)
     if (userExists) {
       return res.status(400).json({ message: 'User already exists' });
     }
@@ -39,7 +37,7 @@ const login = async (req, res) => {
 
   try {
     // Find the user by email
-    const user = await User.findOne({ email });
+    const user = await AdminLogin.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -63,7 +61,7 @@ const changePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;
 
   try {
-    const user = await User.findById(req.user.id); // Assuming req.user is populated via middleware
+    const user = await AdminLogin.findById(req.user.id); // Assuming req.user is populated via middleware
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
