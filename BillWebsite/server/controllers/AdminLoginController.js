@@ -1,7 +1,7 @@
 // controllers/authController.js
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const AdminLogin = require('../models/AdminLogin'); // Assuming User model is used for login, signup, etc.
+const AdminLogin = require('../models/AdminLogin');
 
 // Secret Key
 const SECRET_KEY = process.env.SECRET_KEY || 'your_secret_key'; 
@@ -10,10 +10,10 @@ const SECRET_KEY = process.env.SECRET_KEY || 'your_secret_key';
 const signUp = async (req, res) => {
   const { email, password } = req.body;
   console.log("req.body: ", req.body)
-  console.log("secret_key: ", secret_key)
   try {
     // Check if user already exists
     const userExists = await AdminLogin.findOne({ email });
+    console.log("userExists: ", userExists)
     if (userExists) {
       return res.status(400).json({ message: 'User already exists' });
     }
