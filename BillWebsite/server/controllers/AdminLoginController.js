@@ -44,7 +44,7 @@ const login = async (req, res) => {
 
     console.log("password: ", password)
     // Use the comparePassword method from the model
-    const isMatch = await user.comparePassword(password);
+    const isMatch = await bcrypt.compare(password, user.password);
     console.log("user.password: ", user.password)
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
