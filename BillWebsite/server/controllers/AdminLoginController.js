@@ -56,27 +56,31 @@ const login = async (req, res) => {
 
 // Change Password
 const changePassword = async (req, res) => {
-  const { currentPassword, newPassword } = req.body;
-
-  try {
-    const user = await AdminLogin.findById(req.user.id); // Assuming req.user is populated via middleware
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const { currentPassword, newPassword } = req.body;
+  
+    try {
+      const user = await AdminLogin.findById(req.user.id); // Assuming req.user is populated via middleware
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      // Check current password
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(401).json({ message: "Current password is incorrect" });
+      }
+  
+      // Set new password
+      user.password = newPassword;
+  
+      // Save the updated user (triggers pre-save middleware)
+      await user.save();
+      res.status(200).json({ message: "Password updated successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error });
     }
-
-    // Check current password
-    const isMatch = await bcrypt.compare(currentPassword, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Current password is incorrect" });
-    }
-
-    // Save the updated user
-    await user.save();
-    res.status(200).json({ message: "Password updated successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
-};
+  };
+  
 
 module.exports = { signUp, login, changePassword };
