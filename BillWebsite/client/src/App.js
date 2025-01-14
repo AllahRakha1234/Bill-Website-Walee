@@ -18,12 +18,12 @@ function App() {
           <Route path="/" element={<SearchBox />} />
           <Route path="/print" element={<DownloadBillPage />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin" element={<AdminLoginPage />} />
           <Route path="/adminlogin" element={<AdminLoginPage />} />
           <Route path="*" element={<NoPage />} /> {/* This handles all other routes */}
         </Routes>
       </Layout>
-    </Router>
+    </Router> 
   );
 }
 

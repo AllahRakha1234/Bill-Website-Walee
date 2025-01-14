@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const AdminLoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate(); // Hook for navigation
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -26,9 +28,16 @@ const AdminLoginPage = () => {
     }
 
     try {
-      const response = await axios.post('/api/login', { email, password });
+      const response = await axios.post('https://nust-bill-system-server.vercel.app/api/admin-login/login', { email, password });
       console.log(response.data);
-      // Handle successful login
+      
+      // Assuming the response includes a success flag or similar
+      if (response.data.success) {
+        // Redirect to the Admin page
+        navigate('/admin');
+      } else {
+        alert('Invalid login credentials. Please try again.');
+      }
     } catch (error) {
       console.error(error);
       alert('Login failed. Please try again.');
