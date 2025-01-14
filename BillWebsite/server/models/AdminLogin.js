@@ -15,18 +15,16 @@ const adminLoginSchema = new mongoose.Schema({
 
 // Hash the password before saving the admin user
 adminLoginSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next();
-    
-    try {
-      console.log("Original password before hashing:", this.password);
-      const salt = await bcrypt.genSalt(10);
-      this.password = await bcrypt.hash(this.password, salt);
-      console.log("Hashed password:", this.password);
-      next();
-    } catch (error) {
-      next(error);
-    }
-  });
+  if (!this.isModified('password')) return next();  // Only hash if password is modified
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
   
 
 // Method to compare entered password with hashed password
