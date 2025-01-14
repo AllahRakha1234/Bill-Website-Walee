@@ -7,7 +7,7 @@ const AdminLogin = require("../models/AdminLogin");
 const SECRET_KEY = process.env.SECRET_KEY || "your_secret_key";
 
 // Register a new user (Signup)
-const signup = async (req, res) => {
+const signUp = async (req, res) => {
     const { email, password } = req.body;
     
     try {
