@@ -32,7 +32,7 @@ const Navbar = () => {
             About
           </Link>
           <Link
-            to="/admin"
+            to="/adminlogin"
             className="text-xl font-semibold mr-5 hover:text-blue-500"
           >
             Admin

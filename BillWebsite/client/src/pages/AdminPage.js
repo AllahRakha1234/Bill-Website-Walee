@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Papa from "papaparse";
 import axios from "axios";
 import * as XLSX from "xlsx"; // Import the xlsx library
+import { useNavigate } from 'react-router-dom';
 // import { useNavigate } from "react-router-dom";
 import FixedSetting from "../components/AdminPageComponents/FixedSetting";
 import UploadData from "../components/AdminPageComponents/UploadData";
@@ -9,7 +10,14 @@ import TariffSetting from "./../components/AdminPageComponents/TariffSetting";
 import UsersData from "./../components/AdminPageComponents/UsersData";
 import ProtectedTariffSetting from "./../components/AdminPageComponents/ProtectedTariffSetting";
 import GenerateBill from "./../components/AdminPageComponents/GenerateBill";
-import { FiUser, FiFileText, FiUsers, FiSettings, FiUpload, FiEye } from "react-icons/fi";
+import {
+  FiUser,
+  FiFileText,
+  FiUsers,
+  FiSettings,
+  FiUpload,
+  FiEye,
+} from "react-icons/fi";
 import { MdOutlinePriceChange } from "react-icons/md";
 import { BiShieldQuarter } from "react-icons/bi";
 import { RiPriceTag3Line } from "react-icons/ri";
@@ -37,6 +45,7 @@ const AdminPage = () => {
   const [activeOption, setActiveOption] = useState("welcome"); // Set the default active option to be shown on the page when the admin page opens like "Once Upload Data"
   const [activeSubOption, setActiveSubOption] = useState(null);
   const [configurationSubOption, setConfigurationSubOption] = useState(null);
+  const navigate = useNavigate()
 
   // EXPECTED COLUMN NAMES OF THE FILE UPLOAD
   const expectedUserColumns = [
@@ -517,7 +526,7 @@ const AdminPage = () => {
         ) {
           console.log("Inside Users Upload Data");
           response = await axios.post(
-             `${process.env.REACT_APP_SERVER_URL}/api/user-info`,
+            `${process.env.REACT_APP_SERVER_URL}/api/user-info`,
             fileData
           );
         }
@@ -603,7 +612,8 @@ const AdminPage = () => {
                   }`}
                   onClick={() => setActiveSubOption("View Users Data")}
                 >
-                  <FiEye className="mt-1 mr-1" />View Data
+                  <FiEye className="mt-1 mr-1" />
+                  View Data
                 </button>
                 <button
                   className={`flex text-left p-2 rounded-md mb-2 w-full ${
@@ -714,10 +724,21 @@ const AdminPage = () => {
       <div className="w-3/4 h-full flex flex-col justify-center items-center bg-gray-100">
         {/* Welcome Message Section */}
         {activeOption === "welcome" && (
-          <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-4 mb-36">
+          <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-4 mb-36 flex items-center justify-center flex-col">
             <h1 className="text-3xl font-bold text-center text-indigo-600">
               Welcome to Admin Section
             </h1>
+            <button
+              onClick={() => {
+                // Remove the token from localStorage
+                localStorage.removeItem("authToken");
+                // Optionally redirect to the login page after logout
+                navigate("/adminlogin");
+              }}
+              className="mt-4 w-[10vw] bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition duration-200"
+            >
+              Logout
+            </button>
           </div>
         )}
 
@@ -731,13 +752,17 @@ const AdminPage = () => {
             </div>
           )}
 
-        {activeOption === "Settings" && activeSubOption !== "Tariff"  && activeSubOption !== "Protected Tariff" && activeSubOption !== "Fixed Charges" && activeSubOption !== "Configuration" && (
-          <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-4 mb-36">
-            <h1 className="text-3xl font-bold text-center text-indigo-600">
-              Welcome to Settings Section
-            </h1>
-          </div>
-        )}
+        {activeOption === "Settings" &&
+          activeSubOption !== "Tariff" &&
+          activeSubOption !== "Protected Tariff" &&
+          activeSubOption !== "Fixed Charges" &&
+          activeSubOption !== "Configuration" && (
+            <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-4 mb-36">
+              <h1 className="text-3xl font-bold text-center text-indigo-600">
+                Welcome to Settings Section
+              </h1>
+            </div>
+          )}
 
         {activeOption === "Settings" &&
           activeSubOption === "Configuration" &&

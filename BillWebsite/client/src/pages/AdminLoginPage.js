@@ -1,46 +1,45 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Loading from '../components/Loading'; // Import the Loading component
 
 const AdminLoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Hook for navigation
+  const [isLoading, setIsLoading] = useState(false); // State to track loading
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    
-    // Validation checks
-    if (!email) {
-      alert('Email is required.');
-      return;
-    }
-    
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      alert('Please enter a valid email.');
+
+    if (!email || !password) {
+      alert('Email and password are required.');
       return;
     }
 
-    if (!password) {
-      alert('Password is required.');
-      return;
-    }
+    setIsLoading(true); // Show loading indicator when the request starts
 
     try {
-      const response = await axios.post('https://nust-bill-system-server.vercel.app/api/admin-login/login', { email, password });
-      console.log(response.data);
-      
-      // Assuming the response includes a success flag or similar
-      if (response.data.success) {
+      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/admin-login/login`, {
+        email,
+        password
+      });
+
+      // Assuming successful response contains a token
+      const { token } = response.data;
+      if (token) {
+        // Save the token (e.g., in localStorage)
+        localStorage.setItem('authToken', token);
         // Redirect to the Admin page
         navigate('/admin');
       } else {
-        alert('Invalid login credentials. Please try again.');
+        alert('Login failed. Please try again.');
       }
     } catch (error) {
-      console.error(error);
-      alert('Login failed. Please try again.');
+      console.error('Login error:', error);
+      alert('Invalid credentials. Please try again.');
+    } finally {
+      setIsLoading(false); // Hide loading indicator once the request is complete
     }
   };
 
@@ -48,7 +47,7 @@ const AdminLoginPage = () => {
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white p-8 rounded shadow-md">
         <h2 className="text-2xl font-bold mb-6 text-center">Admin Login</h2>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} className="mb-4">
           <div className="mb-4">
             <label className="block text-gray-700">Email</label>
             <input
@@ -72,10 +71,14 @@ const AdminLoginPage = () => {
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200"
+            disabled={isLoading} // Disable button when loading
           >
-            Login
+            {isLoading ? 'Logging in...' : 'Login'} {/* Change button text when loading */}
           </button>
         </form>
+
+        {/* Show Loading component when isLoading is true */}
+        {isLoading && <Loading />}
       </div>
     </div>
   );
