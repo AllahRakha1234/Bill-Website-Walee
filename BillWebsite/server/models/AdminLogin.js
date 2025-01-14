@@ -25,11 +25,8 @@ adminLoginSchema.pre('save', async function (next) {
   }
 });
 
-  
-
 // Method to compare entered password with hashed password
 adminLoginSchema.methods.comparePassword = async function (password) {
-    console.log("Comparing:", password, "with", this.password);
     return await bcrypt.compare(password, this.password);
   };
   
