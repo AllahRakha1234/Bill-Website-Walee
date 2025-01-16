@@ -9,6 +9,7 @@ import AboutPage from './pages/AboutPage';
 import DownloadBillPage from './pages/DownloadBillPage';
 import BillDesign from './components/BillDesign';
 import PrivateRoute from './components/PrivateRoute';  // Import the PrivateRoute component
+import ChangePasswordPage from './components/AdminPageComponents/ChangePassword';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/print" element={<DownloadBillPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/adminlogin" element={<AdminLoginPage />} />
+          <Route path="/change-password" element={<ChangePasswordPage />} />
           
           {/* Protected Route for Admin Page */}
           <Route 

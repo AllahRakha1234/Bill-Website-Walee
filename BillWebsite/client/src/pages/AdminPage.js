@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Papa from "papaparse";
 import axios from "axios";
 import * as XLSX from "xlsx"; // Import the xlsx library
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
 import FixedSetting from "../components/AdminPageComponents/FixedSetting";
 import UploadData from "../components/AdminPageComponents/UploadData";
@@ -45,7 +45,7 @@ const AdminPage = () => {
   const [activeOption, setActiveOption] = useState("welcome"); // Set the default active option to be shown on the page when the admin page opens like "Once Upload Data"
   const [activeSubOption, setActiveSubOption] = useState(null);
   const [configurationSubOption, setConfigurationSubOption] = useState(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // EXPECTED COLUMN NAMES OF THE FILE UPLOAD
   const expectedUserColumns = [
@@ -724,21 +724,31 @@ const AdminPage = () => {
       <div className="w-3/4 h-full flex flex-col justify-center items-center bg-gray-100">
         {/* Welcome Message Section */}
         {activeOption === "welcome" && (
-          <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-4 mb-36 flex items-center justify-center flex-col">
+          <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-4 mb-36 flex items-center justify-center flex-col gap-y-2">
             <h1 className="text-3xl font-bold text-center text-indigo-600">
               Welcome to Admin Section
             </h1>
-            <button
-              onClick={() => {
-                // Remove the token from localStorage
-                localStorage.removeItem("authToken");
-                // Optionally redirect to the login page after logout
-                navigate("/adminlogin");
-              }}
-              className="mt-4 w-[10vw] bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition duration-200"
-            >
-              Logout
-            </button>
+            <div className="flex items-center justify-center gap-x-3">
+              <button
+                onClick={() => {
+                  // Remove the token from localStorage
+                  localStorage.removeItem("authToken");
+                  // Optionally redirect to the login page after logout
+                  navigate("/adminlogin");
+                }}
+                className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
+              >
+                Logout
+              </button>
+              <button
+                onClick={() => {
+                  navigate("/change-password"); // Redirect to change password page
+                }}
+                className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
+              >
+                Change Password
+              </button>
+            </div>
           </div>
         )}
 
