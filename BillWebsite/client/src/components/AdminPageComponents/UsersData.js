@@ -36,48 +36,50 @@ const UsersData = () => {
         Users Data Section
       </h1>
       {/* USERS DATA DISPLAY SECTION */}
-      {usersData?.length > 0 ? (
-        <table className="w-full text-left border-collapse border border-gray-300">
-          <thead>
-            <tr className="bg-indigo-100">
-              <th className="border border-gray-300 px-4 py-2">User ID</th>
-              <th className="border border-gray-300 px-4 py-2">Name</th>
-              <th className="border border-gray-300 px-4 py-2">Location</th>
-              <th className="border border-gray-300 px-4 py-2">
-                Tariff Category
-              </th>
-              <th className="border border-gray-300 px-4 py-2">Phase</th>
-              <th className="border border-gray-300 px-4 py-2">Meter Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            {usersData.map((user) => (
-              <tr key={user.userId} className="hover:bg-indigo-50">
-                <td className="border border-gray-300 px-4 py-2">
-                  {user.userId}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {user.name}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {user.location}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {user.tariffCategory}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {user.phase}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {user.meterType}
-                </td>
+      <div className="overflow-y-auto max-h-96"> {/* Scrollable div with max height */}
+        {usersData?.length > 0 ? (
+          <table className="w-full text-left border-collapse border border-gray-300">
+            <thead>
+              <tr className="bg-indigo-100">
+                <th className="border border-gray-300 px-4 py-2">User ID</th>
+                <th className="border border-gray-300 px-4 py-2">Name</th>
+                <th className="border border-gray-300 px-4 py-2">Location</th>
+                <th className="border border-gray-300 px-4 py-2">
+                  Tariff Category
+                </th>
+                <th className="border border-gray-300 px-4 py-2">Phase</th>
+                <th className="border border-gray-300 px-4 py-2">Meter Type</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p className="text-center text-gray-600">No user data available.</p>
-      )}
+            </thead>
+            <tbody>
+              {usersData.map((user) => (
+                <tr key={user.userId} className="hover:bg-indigo-50">
+                  <td className="border border-gray-300 px-4 py-2">
+                    {user.userId}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {user.name}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {user.location}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {user.tariffCategory}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {user.phase}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {user.meterType}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="text-center text-gray-600">No user data available.</p>
+        )}
+      </div>
     </div>
   );
 };
