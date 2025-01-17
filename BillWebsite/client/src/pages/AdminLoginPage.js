@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../components/Loading'; // Import the Loading component
@@ -8,6 +8,15 @@ const AdminLoginPage = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false); // State to track loading
   const navigate = useNavigate();
+
+  // Check if the user is already logged in on component mount
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      // If token exists, navigate to the /admin route
+      navigate('/admin');
+    }
+  }, [navigate]);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -24,7 +33,7 @@ const AdminLoginPage = () => {
         password
       });
 
-      console.log("response: ", response)
+      console.log("response: ", response);
 
       // Assuming successful response contains a token
       const { token } = response.data;
