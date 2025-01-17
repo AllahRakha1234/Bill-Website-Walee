@@ -79,7 +79,7 @@ const AdminLoginPage = () => {
         </div>
         <button
           onClick={handleLogin}
-          className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200"
+          className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200 mb-2"
           disabled={isLoading} // Disable button when loading
         >
           {isLoading ? 'Logging in...' : 'Login'} {/* Change button text when loading */}
