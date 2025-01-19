@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
 import UploadData from "./UploadData";
-import Loading from '../Loading';
+import Loading from "../../components/Loading";
+import { toast } from "react-toastify";
 
-const GenerateBill = ({ handleMonthlyUploadFileUpload, handleSave }) => {
+const GenerateBill = ({ handleMonthlyUploadFileUpload, handleSave, resetFileDataState }) => {
   const [dateSetting, setDateSetting] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const apiUrl = `${process.env.REACT_APP_SERVER_URL}/api/date-setting`
+  const [generateButtonLoading, setGenerateButtonLoading] = useState(false);
+  const apiUrl = `${process.env.REACT_APP_SERVER_URL}/api/date-setting`;
 
   // Fetch date settings from the backend
   useEffect(() => {
@@ -16,11 +17,10 @@ const GenerateBill = ({ handleMonthlyUploadFileUpload, handleSave }) => {
       try {
         const response = await axios.get(apiUrl);
         const fetchedSettings = response.data.dateSettings;
-        // console.log("fetchedSettings: ", fetchedSettings); // Debugging log
         setDateSetting(fetchedSettings);
         setLoading(false);
       } catch (err) {
-        setError("Failed to fetch date settings");
+        toast.error("Failed to fetch date settings");
         setLoading(false);
       }
     };
@@ -53,37 +53,20 @@ const GenerateBill = ({ handleMonthlyUploadFileUpload, handleSave }) => {
     });
   };
 
-  // Save updated date settings to the backend
-  const saveDateSettings = async () => {
-    try {
-      const updatedSettings = prepareDateSettingsForBackend();
-      console.log("dateSetting inside update function: ", updatedSettings); // Debugging log
-      await axios.put(apiUrl, { dateSettings: updatedSettings });
-      alert("Date settings updated successfully");
-      window.location.reload(); // Reload the page to fetch updated values
-    } catch (err) {
-      setError("Failed to update date settings");
-    }
-  };
-
-  // Handle Generate Button Click Function
   // Handle Generate Button Click Function
   const handleGenerateButton = async () => {
     try {
+      setGenerateButtonLoading(true)
       const updatedSettings = prepareDateSettingsForBackend();
-
-      // Update date settings in the backend
       await axios.put(apiUrl, { dateSettings: updatedSettings });
-      //   alert("Date settings updated successfully");
-
-      // Call handleSave to save the file data
+      // Await handleSave and handle any potential errors
       await handleSave();
-
-      alert("Bill generated Successfully!");
-      // Optionally reload the page to fetch updated values
-      //   window.location.reload();
+      toast.success("Bill generated Successfully!");
+      setGenerateButtonLoading(false)
+      resetFileDataState();
     } catch (err) {
-      setError("Failed to update date settings");
+      toast.error(err.message || "Failed to generate bill");
+      setGenerateButtonLoading(false)
     }
   };
 
@@ -94,13 +77,9 @@ const GenerateBill = ({ handleMonthlyUploadFileUpload, handleSave }) => {
       .replace(/^./, (str) => str.toUpperCase()); // Capitalize the first letter
   };
 
-  // Render loading or error state
+  // Render loading state
   if (loading) {
-    return <Loading/>;
-  }
-
-  if (error) {
-    return <div className="text-red-500">{error}</div>;
+    return <Loading />;
   }
 
   // RETURN JSX
@@ -110,10 +89,7 @@ const GenerateBill = ({ handleMonthlyUploadFileUpload, handleSave }) => {
         Bill Generate Section
       </h1>
       {/* Date Section */}
-      <p className="text-2xl font-semibold text-indigo-600 my-2">
-        {" "}
-        Date Section
-      </p>
+      <p className="text-2xl font-semibold text-indigo-600 my-2">Date Section</p>
       <div className="grid grid-cols-12 gap-2">
         {dateSetting.map((item) => (
           <div key={item.key} className="mb-4 col-span-6 md:col-span-4">
@@ -121,9 +97,7 @@ const GenerateBill = ({ handleMonthlyUploadFileUpload, handleSave }) => {
               className="block text-gray-700 text-sm font-bold mb-2 capitalize"
               htmlFor={item.key}
             >
-              {item.key == "billFPADate"
-                ? "Bill FPA Date"
-                : formatKey(item.key)}
+              {item.key === "billFPADate" ? "Bill FPA Date" : formatKey(item.key)}
             </label>
             <input
               type={
@@ -141,9 +115,7 @@ const GenerateBill = ({ handleMonthlyUploadFileUpload, handleSave }) => {
                   ? dayjs(item.value, "DD-MM-YYYY").format("YYYY-MM-DD")
                   : ""
               }
-              onChange={(e) =>
-                handleUpdateDateSetting(item.key, e.target.value)
-              }
+              onChange={(e) => handleUpdateDateSetting(item.key, e.target.value)}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
@@ -152,7 +124,6 @@ const GenerateBill = ({ handleMonthlyUploadFileUpload, handleSave }) => {
 
       {/* File Upload Section */}
       <p className="text-2xl font-semibold text-indigo-600 my-2">
-        {" "}
         File Upload Section
       </p>
       <div className="mb-4 flex justify-between items-center">
@@ -177,24 +148,19 @@ const GenerateBill = ({ handleMonthlyUploadFileUpload, handleSave }) => {
           <a
             href="/MonthlyUploadData.xlsx" // Link to the file in public folder
             download="MonthlyUploadData.xlsx"
-            className="bg-indigo-500  text-white px-4 py-2 rounded-md hover:bg-indigo-600"
+            className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600"
           >
             Download Sample File
           </a>
         </div>
       </div>
 
-      {/* <button
-        onClick={saveDateSettings}
-        className="w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-      >
-        Save Settings
-      </button> */}
       <button
+        disabled={generateButtonLoading}
         onClick={handleGenerateButton}
         className="w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400"
       >
-        Generate Bill
+       { generateButtonLoading ? "Generating ..." : "Generate Bill"}
       </button>
     </div>
   );

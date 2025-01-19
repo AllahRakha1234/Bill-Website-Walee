@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import axios from "axios"; 
-import { useNavigate } from "react-router-dom"; 
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Loading from '../components/Loading'; // Import the Loading component
+import { toast } from 'react-toastify'; // Import toast from react-toastify
 
 const SearchBox = () => {
   const [referenceNo, setReferenceNo] = useState("");
@@ -18,12 +19,13 @@ const SearchBox = () => {
         localStorage.setItem("referenceNo", JSON.stringify(referenceNo));
         localStorage.setItem("billDetails", JSON.stringify(response.data));
         navigate("/print");
+        toast.success("Bill details loaded successfully!"); // Success toast
       }
     } catch (error) {
       if (error.response?.status === 404) {
-        alert("Consumer ID does not exist.");
+        toast.error("Consumer ID does not exist."); // Error toast for 404
       } else {
-        alert("Error occurred while searching for Meter ID.");
+        toast.error("Error occurred while searching for Meter ID."); // General error toast
       }
     } finally {
       setIsLoading(false); // Reset loading state after request completes

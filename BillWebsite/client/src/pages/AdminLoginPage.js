@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../components/Loading'; // Import the Loading component
+import { toast } from 'react-toastify';
 
 const AdminLoginPage = () => {
   const [email, setEmail] = useState('');
@@ -20,7 +21,7 @@ const AdminLoginPage = () => {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      alert('Email and password are required.');
+      toast.warn('Email and password are required.'); // Replaces alert
       return;
     }
 
@@ -42,12 +43,13 @@ const AdminLoginPage = () => {
         localStorage.setItem('authToken', token);
         // Redirect to the Admin page
         navigate('/admin');
+        toast.success('Login successful!'); // Success toast
       } else {
-        alert('Login failed. Please try again.');
+        toast.error('Login failed. Please try again.'); // Error toast
       }
     } catch (error) {
       console.error('Login error:', error);
-      alert('Invalid credentials. Please try again.');
+      toast.error('Invalid credentials. Please try again.'); // Error toast
     } finally {
       setIsLoading(false); // Hide loading indicator once the request is complete
     }

@@ -23,6 +23,7 @@ import { BiShieldQuarter } from "react-icons/bi";
 import { RiPriceTag3Line } from "react-icons/ri";
 import { HiAdjustments } from "react-icons/hi";
 import { AiOutlineCloudDownload } from "react-icons/ai";
+import { toast } from "react-toastify";
 
 // VALIDATION FUNCTION
 const validateColumns = (fileData, expectedColumns) => {
@@ -41,7 +42,7 @@ const validateColumns = (fileData, expectedColumns) => {
 // MAIN ADMINPAGE
 const AdminPage = () => {
   // USESTATES AND OTHER
-  const [fileData, setFileData] = useState([]);
+  const [fileData, setFileData] = useState(null);
   const [activeOption, setActiveOption] = useState("welcome"); // Set the default active option to be shown on the page when the admin page opens like "Once Upload Data"
   const [activeSubOption, setActiveSubOption] = useState(null);
   const [configurationSubOption, setConfigurationSubOption] = useState(null);
@@ -63,8 +64,13 @@ const AdminPage = () => {
     "present_off_peak_reading",
   ];
 
+  // FUNCTION TO RESET THE FILEDATA USESTATE (It is because in one component after saving data, the filedata still has the data and can be use in other component during saing data there.)
+  const resetFileDataState = () => {
+    setFileData(null); // Reset fileData state
+  };
+
   // HANDLE ONCE UPLOAD DATA FILE FUNCTION
-  const handleFileUpload = (e) => {
+  const handleOnceConfigureDataUpload = (e) => {
     const file = e.target.files[0];
 
     if (file) {
@@ -72,7 +78,9 @@ const AdminPage = () => {
       const validFileTypes = ["csv", "xlsx"]; // Allowed file types
 
       if (!validFileTypes.includes(fileType)) {
-        alert("Invalid file type! Please upload a CSV or Excel (.xlsx) file.");
+        toast.error(
+          "Invalid file type! Please upload a CSV or Excel (.xlsx) file."
+        );
         return;
       }
 
@@ -95,9 +103,6 @@ const AdminPage = () => {
 
       const validateColumns = (parsedData) => {
         const fileColumns = Object.keys(parsedData[0]);
-        // console.log("File Columns:", fileColumns); // Log actual columns
-        // console.log("Expected Columns:", expectedColumns); // Log expected columns
-
         const missingColumns = expectedColumns.filter(
           (col) => !fileColumns.includes(col)
         );
@@ -114,16 +119,15 @@ const AdminPage = () => {
 
       const handleFileParsing = (parsedData) => {
         if (parsedData.length === 0) {
-          alert("Uploaded file is empty. Please upload a valid file.");
+          toast.error("Uploaded file is empty. Please upload a valid file.");
           return;
         }
 
-        // Validate the columns in the uploaded file
         const { isValid, missingColumns, extraColumns } =
           validateColumns(parsedData);
 
         if (!isValid) {
-          alert(
+          toast.error(
             `Column mismatch! Missing: ${missingColumns.join(
               ", "
             )}, Extra: ${extraColumns.join(", ")}`
@@ -134,9 +138,8 @@ const AdminPage = () => {
         const transformedData = parsedData.map((row, rowIndex) => {
           const userId = row.userId;
 
-          // Validate `userId` is present
           if (!userId || String(userId).trim() === "") {
-            alert(`Missing userId in row ${rowIndex + 1}.`);
+            toast.error(`Missing userId in row ${rowIndex + 1}.`);
             return;
           }
 
@@ -145,9 +148,8 @@ const AdminPage = () => {
           for (let i = 1; i <= 14; i++) {
             let month = row[`month_${i}`];
 
-            // Handle empty or missing month values
             if (!month || String(month).trim() === "") {
-              alert(
+              toast.error(
                 `Missing or empty month_${i} for userId ${userId} in row ${
                   rowIndex + 1
                 }.`
@@ -155,15 +157,13 @@ const AdminPage = () => {
               return;
             }
 
-            // Step 1: Remove quotes if present
             if (month.startsWith('"') && month.endsWith('"')) {
-              month = month.substring(1, month.length - 1); // Remove outer quotes
+              month = month.substring(1, month.length - 1);
             }
 
-            // Step 2: Validate month format
             const isMonthValid = /^[A-Za-z]{3}-\d{2}$/.test(month);
             if (!isMonthValid) {
-              alert(
+              toast.error(
                 `Invalid month format for month_${i} in row ${
                   rowIndex + 1
                 }. Expected format: "Nov-24".`
@@ -171,11 +171,10 @@ const AdminPage = () => {
               return;
             }
 
-            // Convert numeric fields to numbers
             const convertToNumber = (value, fieldName) => {
               const num = parseFloat(value);
               if (isNaN(num)) {
-                alert(
+                toast.error(
                   `Invalid value for ${fieldName} in month_${i} for userId ${userId}. Expected a number.`
                 );
                 return null;
@@ -203,7 +202,7 @@ const AdminPage = () => {
               payment === null ||
               bill === null
             ) {
-              return; // Skip invalid rows
+              return;
             }
 
             previousReadings.push({
@@ -218,22 +217,20 @@ const AdminPage = () => {
           return { userId, previousReadings };
         });
 
-        // Filter out `undefined` rows caused by validation failures
         const validData = transformedData.filter((row) => row !== undefined);
 
         if (validData.length === 0) {
-          alert("All rows in the uploaded file are invalid.");
+          toast.error("All rows in the uploaded file are invalid.");
           return;
         }
 
-        // console.log("Transformed Data:", validData);
         setFileData(validData);
       };
 
       if (fileType === "csv") {
         Papa.parse(file, {
           header: true,
-          skipEmptyLines: true, // Automatically skip empty rows
+          skipEmptyLines: true,
           complete: (result) => {
             handleFileParsing(result.data);
           },
@@ -265,7 +262,9 @@ const AdminPage = () => {
       const validFileTypes = ["csv", "xlsx"]; // Allowed file types
 
       if (!validFileTypes.includes(fileType)) {
-        alert("Invalid file type! Please upload a CSV or Excel (.xlsx) file.");
+        toast.error(
+          "Invalid file type! Please upload a CSV or Excel (.xlsx) file."
+        );
         return;
       }
 
@@ -283,10 +282,10 @@ const AdminPage = () => {
               );
             });
 
-            // console.log("Filtered CSV Data:", filteredData);
-
             if (filteredData.length === 0) {
-              alert("The uploaded file is empty or contains no valid data.");
+              toast.warn(
+                "The uploaded file is empty or contains no valid data."
+              );
               return;
             }
 
@@ -294,7 +293,9 @@ const AdminPage = () => {
           },
           error: (error) => {
             console.error("Error parsing CSV:", error);
-            alert("Error parsing the CSV file. Please check the file format.");
+            toast.error(
+              "Error parsing the CSV file. Please check the file format."
+            );
           },
         });
       } else if (fileType === "xlsx") {
@@ -313,10 +314,8 @@ const AdminPage = () => {
             );
           });
 
-          // console.log("Filtered Excel Data:", filteredData);
-
           if (filteredData.length === 0) {
-            alert("The uploaded file is empty or contains no valid data.");
+            toast.warn("The uploaded file is empty or contains no valid data.");
             return;
           }
 
@@ -336,16 +335,17 @@ const AdminPage = () => {
       const validFileTypes = ["csv", "xlsx"]; // Allowed file types
 
       if (!validFileTypes.includes(fileType)) {
-        alert("Invalid file type! Please upload a CSV or Excel (.xlsx) file.");
+        toast.error(
+          "Invalid file type! Please upload a CSV or Excel (.xlsx) file."
+        );
         return;
       }
 
-      // Common regex pattern for validating "MMM-YY" format
       const monthYearIdPattern = /^[A-Za-z]{3}-\d{2}$/;
 
       const validateColumns = (columns) => {
         if (!Array.isArray(columns)) {
-          alert("File format error: Unable to read columns.");
+          toast.error("File format error: Unable to read columns.");
           return false;
         }
 
@@ -353,7 +353,7 @@ const AdminPage = () => {
           (col) => !columns.includes(col)
         );
         if (missingColumns.length > 0) {
-          alert(`Missing required columns: ${missingColumns.join(", ")}`);
+          toast.warn(`Missing required columns: ${missingColumns.join(", ")}`);
           return false;
         }
         return true;
@@ -361,62 +361,53 @@ const AdminPage = () => {
 
       const processMeterInfo = (rows, currentMonthYearId) => {
         const meterInfoArray = rows.map((row) => ({
-          userId: parseInt(row[0], 10) || 0, // User ID is in the first column
-          present_peak_reading: parseFloat(row[1]) || 0.0, // Peak reading is in the second column
-          present_off_peak_reading: parseFloat(row[2]) || 0.0, // Off-peak reading is in the third column
+          userId: parseInt(row[0], 10) || 0,
+          present_peak_reading: parseFloat(row[1]) || 0.0,
+          present_off_peak_reading: parseFloat(row[2]) || 0.0,
         }));
 
         setFileData({
           currentMonthYearId,
           meterInfoArray,
         });
-
-        // console.log("Processed Meter Info Array:", meterInfoArray);
       };
 
       if (fileType === "csv") {
         Papa.parse(file, {
-          header: false, // Parse without header to handle the second row for columns
-          skipEmptyLines: true, // Skip empty rows
+          header: false,
+          skipEmptyLines: true,
           complete: (result) => {
             if (!result || !result.data || result.data.length < 2) {
-              alert("File is empty or improperly formatted.");
+              toast.warn("File is empty or improperly formatted.");
               return;
             }
 
             const parsedData = result.data;
 
-            // Extract "Month-Year" from the first row and second column
             let currentMonthYearId = parsedData[0][1]?.trim() || "";
-
-            // Remove extra quotation marks if present
             currentMonthYearId = currentMonthYearId.replace(/^"|"$/g, "");
 
             if (
               !currentMonthYearId ||
               !monthYearIdPattern.test(currentMonthYearId)
             ) {
-              alert(
+              toast.error(
                 'Invalid "Month-Year" format! Please provide the value in the format "MMM-YY" (e.g., "Dec-24").'
               );
               return;
             }
 
-            // console.log("Current Month-Year ID:", currentMonthYearId);
-
-            // Extract column names from the second row
             const columnNames = parsedData[1];
-            // console.log("CSV Column Names:", columnNames);
 
-            // Validate column names
             if (!validateColumns(columnNames)) return;
 
-            // Process remaining rows starting from the third row
             processMeterInfo(parsedData.slice(2), currentMonthYearId);
           },
           error: (error) => {
             console.error("Error parsing CSV:", error);
-            alert("Error parsing the CSV file. Please check the file format.");
+            toast.error(
+              "Error parsing the CSV file. Please check the file format."
+            );
           },
         });
       } else if (fileType === "xlsx") {
@@ -426,39 +417,30 @@ const AdminPage = () => {
           const workbook = XLSX.read(data, { type: "array" });
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
-          const parsedData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); // Parse as an array of arrays
+          const parsedData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
           if (!parsedData || parsedData.length < 2) {
-            alert("File is empty or improperly formatted.");
+            toast.warn("File is empty or improperly formatted.");
             return;
           }
 
-          // Extract "Month-Year" from the first row and second column
           let currentMonthYearId = parsedData[0]?.[1]?.trim() || "";
-
-          // Remove extra quotation marks if present
           currentMonthYearId = currentMonthYearId.replace(/^"|"$/g, "");
 
           if (
             !currentMonthYearId ||
             !monthYearIdPattern.test(currentMonthYearId)
           ) {
-            alert(
+            toast.error(
               'Invalid "Month-Year" format! Please provide the value in the format "MMM-YY" (e.g., "Dec-24").'
             );
             return;
           }
 
-          // console.log("Current Month-Year ID:", currentMonthYearId);
-
-          // Extract column names from the second row
           const columnNames = parsedData[1];
-          // console.log("Excel Column Names:", columnNames);
 
-          // Validate column names
           if (!validateColumns(columnNames)) return;
 
-          // Process remaining rows starting from the third row
           processMeterInfo(parsedData.slice(2), currentMonthYearId);
         };
 
@@ -466,96 +448,73 @@ const AdminPage = () => {
       }
     }
   };
-
   // HANDLE SAVE FILE FUNCTION
   const handleSave = async () => {
-    if (fileData) {
-      //VALIDATING DATA BEFORE SENDING TO BACKEND
-      let expectedColumns = [];
-      // Determine expected columns based on file type
-      if (activeOption === "Users Data") {
-        expectedColumns = expectedUserColumns;
+    if (!fileData) {
+      // toast.warning("No data found! Please upload a file first.");
+      throw new Error("No file data available");
+    }
+
+    let expectedColumns = [];
+    if (activeOption === "Users Data") {
+      expectedColumns = expectedUserColumns;
+      const validation = validateColumns(fileData, expectedColumns);
+
+      if (validation.missingColumns.length || validation.extraColumns.length) {
+        toast.error(
+          `Column mismatch! Missing: ${validation.missingColumns.join(
+            ", "
+          )}, Extra: ${validation.extraColumns.join(", ")}`
+        );
+        throw new Error("Column validation failed");
       }
-      // Validate columns before saving
-      if (activeOption == "Users Data") {
-        const validation = validateColumns(fileData, expectedColumns);
+    }
 
-        if (
-          validation.missingColumns.length ||
-          validation.extraColumns.length
-        ) {
-          alert(
-            `Column mismatch! Missing: ${validation.missingColumns.join(
-              ", "
-            )}, Extra: ${validation.extraColumns.join(", ")}`
-          );
-          return;
-        }
+    try {
+      let response = null;
+      if (activeOption === "Generate Bill") {
+        response = await axios.post(
+          `${process.env.REACT_APP_SERVER_URL}/api/meter-info`,
+          fileData
+        );
+      } else if (
+        activeOption === "Settings" &&
+        activeSubOption === "Configuration" &&
+        configurationSubOption === "Load Previous Data"
+      ) {
+        response = await axios.post(
+          `${process.env.REACT_APP_SERVER_URL}/api/upload-once-bill-data`,
+          fileData
+        );
+      } else if (
+        activeOption === "Users Data" &&
+        activeSubOption === "Upload Users Data"
+      ) {
+        response = await axios.post(
+          `${process.env.REACT_APP_SERVER_URL}/api/user-info`,
+          fileData
+        );
       }
 
-      // console.log("file data: ", fileData);
-
-      // SENDING DATA TO BACKEND
-      try {
-        // Send the data to the backend using axios
-        let response = null;
-        // if (activeOption === "Monthly Upload Data") {
-        //   response = await axios.post(
-        //     "http://localhost:3001/api/meter-info",
-        //     fileData
-        //   );
-        // }
-        if (activeOption === "Generate Bill") {
-          response = await axios.post(
-            `${process.env.REACT_APP_SERVER_URL}/api/meter-info`,
-            fileData
-          );
-        } else if (
-          activeOption === "Settings" &&
-          activeSubOption === "Configuration" &&
-          configurationSubOption === "Load Previous Data"
-        ) {
-          console.log("Inside Monthly Upload Data");
-          response = await axios.post(
-            `${process.env.REACT_APP_SERVER_URL}/api/upload-once-bill-data`,
-            fileData
-          );
-        } else if (
-          activeOption === "Users Data" &&
-          activeSubOption === "Upload Users Data"
-        ) {
-          console.log("Inside Users Upload Data");
-          response = await axios.post(
-            `${process.env.REACT_APP_SERVER_URL}/api/user-info`,
-            fileData
-          );
+      if (response.status === 200) {
+        if (activeOption !== "Generate Bill") {
+          toast.success("Data saved successfully!");
         }
-
-        // RESPONSE HANDLING
-        if (response.status === 200) {
-          console.log("Data saved successfully:", fileData);
-          alert("Data saved successfully!");
-          // window.location.reload();
-        } else {
-          console.error("Failed to save data:", response);
-          alert("Error saving data. Please try again.");
-        }
-      } catch (error) {
-        // Handling error response from the backend
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.message
-        ) {
-          console.error("Backend error:", error.response.data.message);
-          alert(`Error from server: ${error.response.data.message}`);
-        } else {
-          console.error("Error saving data:", error);
-          alert("An unknown error occurred. Please try again.");
-        }
+      } else {
+        toast.error("Error saving data. Please try again.");
+        throw new Error("Error saving data");
       }
-    } else {
-      alert("No data found! Please upload a file first.");
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(`Error from server: ${error.response.data.message}`);
+      } else {
+        toast.error("An unknown error occurred. Please try again.");
+      }
+      throw error; // Re-throw the error to be caught in handleGenerateButton
     }
   };
 
@@ -789,6 +748,7 @@ const AdminPage = () => {
           <GenerateBill
             handleMonthlyUploadFileUpload={handleMonthlyUploadFileUpload}
             handleSave={handleSave}
+            resetFileDataState={resetFileDataState}
           />
         )}
 
@@ -800,26 +760,11 @@ const AdminPage = () => {
             handleSave={handleSave}
             activeOption={activeOption}
             title={"User Data Upload Section"}
-          />
-        )}
-
-        {/* Once Upload Data Section */}
-        {activeOption === "Once Upload Data" && (
-          <UploadData
-            handleFileUpload={handleFileUpload}
-            handleSave={handleSave}
-            title={"Once Upload Data Section"}
+            resetFileDataState={resetFileDataState}
           />
         )}
 
         {/* SETTINGS OPTIONS SECTION */}
-
-        {/* Tariff Section */}
-        {/* {(activeSubOption === "Residential" ||
-          activeSubOption === "Industrial" ||
-          activeSubOption === "Commercial") && (
-          <TariffSetting activeSubOption={activeSubOption} />
-        )} */}
 
         {/* Tariff Section */}
         {activeOption === "Settings" && activeSubOption === "Tariff" && (
@@ -839,9 +784,11 @@ const AdminPage = () => {
         {activeSubOption === "Configuration" &&
           configurationSubOption === "Load Previous Data" && (
             <UploadData
-              handleFileUpload={handleFileUpload}
+              handleFileUpload={handleOnceConfigureDataUpload}
               handleSave={handleSave}
+              activeOption={activeOption}
               title={"Load Previous Data Section"}
+              resetFileDataState={resetFileDataState}
             />
           )}
       </div>

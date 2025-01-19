@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Loading from "../Loading";
+import { toast } from "react-toastify";
 
 const TariffSetting = ({ activeSubOption }) => {
   const [tariffSettings, setTariffSettings] = useState([]);
   const [loading, setLoading] = useState(true); // Track loading state
+  const [saveButtonLoading, setSaveButtonLoading] = useState(false); // Track save button loading state
 
   // Update a specific setting's value in local state
   const handleUpdateSetting = (name, newValue) => {
@@ -23,10 +25,13 @@ const TariffSetting = ({ activeSubOption }) => {
     const invalidSettings = tariffSettings.filter(({ value }) => value <= 0);
 
     if (invalidSettings.length > 0) {
-      alert("All values must be greater than 0.");
+      toast.error("All values must be greater than 0.");
       return; // Stop execution if there are invalid values
     }
+
     try {
+      setSaveButtonLoading(true); // Start loading
+
       // Prepare data to send to backend
       const residentailTariffValues = tariffSettings.map(({ name, value }) => ({
         name,
@@ -41,12 +46,12 @@ const TariffSetting = ({ activeSubOption }) => {
 
       // Confirm save to the user
       if (response.status === 200) {
-        alert("Tariff Settings saved successfully!");
-        window.location.reload();
+        toast.success("Tariff Settings saved successfully!");
       }
     } catch (error) {
-      console.error("Error saving tariff settings:", error);
-      alert("Failed to save tariff settings. Please try again.");
+      toast.error("Failed to save tariff settings. Please try again.");
+    } finally {
+      setSaveButtonLoading(false); // Ensure to turn off the loading state
     }
   };
 
@@ -61,8 +66,7 @@ const TariffSetting = ({ activeSubOption }) => {
           setTariffSettings(response.data.residentailTariffValues);
         }
       } catch (error) {
-        console.error("Error fetching settings:", error);
-        alert("Failed to fetch settings. Please try again.");
+        toast.error("Failed to fetch settings. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -104,7 +108,7 @@ const TariffSetting = ({ activeSubOption }) => {
         onClick={handleSaveSettings}
         className="w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400"
       >
-        Save Settings
+        {saveButtonLoading ? "Saving..." : "Save Settings"}
       </button>
     </div>
   );

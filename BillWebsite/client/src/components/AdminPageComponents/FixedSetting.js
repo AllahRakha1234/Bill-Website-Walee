@@ -1,62 +1,64 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Loading from "../Loading";
+import { toast } from "react-toastify";
 
 const FixedSetting = () => {
   const [fixedSettings, setFixedSettings] = useState([]);
   const [loading, setLoading] = useState(true); // Track loading state
+  const [saveButtonLoading, setSaveButtonLoading] = useState(false); // Track save button loading state
 
   const handleUpdateSetting = (name, newValue) => {
     setFixedSettings((prevSettings) =>
       prevSettings.map((setting) =>
-        setting.name === name ? { ...setting, value: parseFloat(newValue) } : setting
+        setting.name === name
+          ? { ...setting, value: parseFloat(newValue) }
+          : setting
       )
     );
   };
 
   const handleSaveSettings = async () => {
     try {
+
+
+      setSaveButtonLoading(true); // Start loading
+      // Prepare data to send to backend
       const dataToSend = fixedSettings.map(({ name, value }) => ({
         name,
         value,
       }));
-      console.log("Saving settings with data:", dataToSend);
 
       const response = await axios.put(
         `${process.env.REACT_APP_SERVER_URL}/api/fixed-settings`,
         { settings: dataToSend }
       );
 
+      // Confirm save to the user
       if (response.status === 200) {
-        console.log("Settings saved successfully, server response:", response.data);
-        alert("Settings saved successfully!");
-        window.location.reload();
-      } else {
-        console.warn("Unexpected response status:", response.status);
+        toast.success("Fixed Settings saved successfully!");
       }
     } catch (error) {
-      console.error("Error saving settings:", error.response || error.message || error);
-      alert("Failed to save settings. Please try again.");
+      toast.error("Failed to save fixed settings. Please try again.");
+    } finally {
+      setSaveButtonLoading(false); // Ensure to turn off the loading state
     }
   };
 
+  // Function to fetch settings from the backend
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        console.log("Fetching settings from the server...");
-        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/fixed-settings`);
-        console.log(response);
+        const response = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/api/fixed-settings`
+        );
         if (response.status === 200) {
-          console.log("Settings fetched successfully:", response.data);
           setFixedSettings(response.data.settings);
-        } else {
-          console.warn("Unexpected response status:", response.status);
         }
       } catch (error) {
-        console.error("Error fetching settings:", error.response || error.message || error);
-        alert("Failed to fetch settings. Please try again.");
+        toast.error("Failed to fetch settings. Please try again.");
       } finally {
-        setLoading(false); // Stop loading once data is fetched
+        setLoading(false);
       }
     };
     fetchSettings();
@@ -95,7 +97,7 @@ const FixedSetting = () => {
         onClick={handleSaveSettings}
         className="w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400"
       >
-        Save Settings
+        {saveButtonLoading ? "Saving..." : "Save Settings"}
       </button>
     </div>
   );
