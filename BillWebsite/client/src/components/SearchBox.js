@@ -61,7 +61,7 @@ const SearchBox = () => {
               className="border border-gray-300 p-2 rounded w-56 h-8"
             />
           </div>
-        </div>
+        </div>  
         <div className="p-2">
           <button
             onClick={handleSearchBtnClick}
@@ -72,9 +72,6 @@ const SearchBox = () => {
           </button>
         </div>
       </div>
-
-      {/* Show Loading component when isLoading is true */}
-      {isLoading && <Loading />}
     </div>
   );
 };
