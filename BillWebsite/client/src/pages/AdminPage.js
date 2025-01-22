@@ -558,7 +558,7 @@ const AdminPage = () => {
               }`}
               onClick={() => {
                 setActiveOption("Users Data");
-                setActiveSubOption(null);
+                setActiveSubOption("View Users Data");
               }}
             >
               <FiUsers className="mt-1 mr-1" /> Users Data
@@ -596,7 +596,7 @@ const AdminPage = () => {
               }`}
               onClick={() => {
                 setActiveOption("Settings");
-                setActiveSubOption("");
+                setActiveSubOption("Tariff");
                 setConfigurationSubOption(null);
               }}
             >
@@ -644,11 +644,11 @@ const AdminPage = () => {
                 </button>
                 <button
                   className={`flex text-left p-2 rounded-md mb-2 w-full ${
-                    activeSubOption === "Configuration" ? "bg-indigo-400" : ""
+                    activeSubOption === "Configuration" ? "bg-indigo-500" : ""
                   }`}
                   onClick={() => {
                     setActiveSubOption("Configuration");
-                    setConfigurationSubOption(null);
+                    setConfigurationSubOption("Load Previous Data");
                   }}
                 >
                   <HiAdjustments className="mt-1 mr-1" />
@@ -711,38 +711,6 @@ const AdminPage = () => {
           </div>
         )}
 
-        {activeOption === "Users Data" &&
-          activeSubOption !== "View Users Data" &&
-          activeSubOption !== "Upload Users Data" && (
-            <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-4 mb-36">
-              <h1 className="text-3xl font-bold text-center text-indigo-600">
-                Welcome to Users Section
-              </h1>
-            </div>
-          )}
-
-        {activeOption === "Settings" &&
-          activeSubOption !== "Tariff" &&
-          activeSubOption !== "Protected Tariff" &&
-          activeSubOption !== "Fixed Charges" &&
-          activeSubOption !== "Configuration" && (
-            <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-4 mb-36">
-              <h1 className="text-3xl font-bold text-center text-indigo-600">
-                Welcome to Settings Section
-              </h1>
-            </div>
-          )}
-
-        {activeOption === "Settings" &&
-          activeSubOption === "Configuration" &&
-          configurationSubOption !== "Load Previous Data" && (
-            <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-4 mb-36">
-              <h1 className="text-3xl font-bold text-center text-indigo-600">
-                Welcome to Configuration Section
-              </h1>
-            </div>
-          )}
-
         {/* Generate Bill Section */}
         {activeOption === "Generate Bill" && (
           <GenerateBill
@@ -751,6 +719,16 @@ const AdminPage = () => {
             resetFileDataState={resetFileDataState}
           />
         )}
+
+        {/* {activeOption === "Users Data" &&
+          activeSubOption !== "View Users Data" &&
+          activeSubOption !== "Upload Users Data" && (
+            <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-4 mb-36">
+              <h1 className="text-3xl font-bold text-center text-indigo-600">
+                Welcome to Users Section
+              </h1>
+            </div>
+          )} */}
 
         {/* User Data Section */}
         {activeSubOption === "View Users Data" && <UsersData />}
@@ -763,6 +741,30 @@ const AdminPage = () => {
             resetFileDataState={resetFileDataState}
           />
         )}
+
+        {/* Settings Section */}
+
+        {/* {activeOption === "Settings" &&
+          activeSubOption !== "Tariff" &&
+          activeSubOption !== "Protected Tariff" &&
+          activeSubOption !== "Fixed Charges" &&
+          activeSubOption !== "Configuration" && (
+            <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-4 mb-36">
+              <h1 className="text-3xl font-bold text-center text-indigo-600">
+                Welcome to Settings Section
+              </h1>
+            </div>
+          )} */}
+
+        {/* {activeOption === "Settings" &&
+          activeSubOption === "Configuration" &&
+          configurationSubOption !== "Load Previous Data" && (
+            <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-4 mb-36">
+              <h1 className="text-3xl font-bold text-center text-indigo-600">
+                Welcome to Configuration Section
+              </h1>
+            </div>
+          )} */}
 
         {/* SETTINGS OPTIONS SECTION */}
 
