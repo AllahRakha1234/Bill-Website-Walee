@@ -28,7 +28,6 @@ import { toast } from "react-toastify";
 // VALIDATION FUNCTION
 const validateColumns = (fileData, expectedColumns) => {
   const fileColumns = Object.keys(fileData[0]); // Get column names from the first row
-  const [totalUsers, setTotalUsers] = useState(null)
 
   const missingColumns = expectedColumns.filter(
     (col) => !fileColumns.includes(col)
@@ -47,6 +46,7 @@ const AdminPage = () => {
   const [activeOption, setActiveOption] = useState("welcome"); // Set the default active option to be shown on the page when the admin page opens like "Once Upload Data"
   const [activeSubOption, setActiveSubOption] = useState(null);
   const [configurationSubOption, setConfigurationSubOption] = useState(null);
+  const [totalUsers, setTotalUsers] = useState(null)
   const navigate = useNavigate();
 
   // EXPECTED COLUMN NAMES OF THE FILE UPLOAD
@@ -772,7 +772,10 @@ const AdminPage = () => {
                     <h3 className="text-indigo-600 font-semibold">
                       Total Users
                     </h3>
-                    <p className="text-2xl font-bold">120</p>
+                    {totalUsers !== null ?
+                    <p className="text-2xl font-bold">{totalUsers}</p>:
+                    <p className="text-xl font-bold">Loading ...</p>
+                    }
                   </div>
                   {/* <div className="bg-white p-6 rounded-lg shadow-md shadow-indigo-300 text-center">
                     <h3 className="text-indigo-600 font-semibold">
