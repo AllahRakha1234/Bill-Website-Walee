@@ -11,6 +11,8 @@ const UsersData = () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/user-info`);
         if (response.status === 200) {
+          localStorage.setItem("app_totalUser", JSON.stringify(response.data.userInfo.length));
+          console.log("response.data.userInfo.length: ", response.data.userInfo.length)
           setUsersData(response.data.userInfo);
         } else {
           setUsersData([]);

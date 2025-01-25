@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
 import axios from "axios";
 import * as XLSX from "xlsx"; // Import the xlsx library
@@ -28,6 +28,7 @@ import { toast } from "react-toastify";
 // VALIDATION FUNCTION
 const validateColumns = (fileData, expectedColumns) => {
   const fileColumns = Object.keys(fileData[0]); // Get column names from the first row
+  const [totalUsers, setTotalUsers] = useState(null)
 
   const missingColumns = expectedColumns.filter(
     (col) => !fileColumns.includes(col)
@@ -517,6 +518,22 @@ const AdminPage = () => {
       throw error; // Re-throw the error to be caught in handleGenerateButton
     }
   };
+
+  // To get the number of users
+  useEffect(() => {
+    const fetchUsersData = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/user-info`);
+        if (response.status === 200) {
+          setTotalUsers(response.data.userInfo.length)
+        }
+      } catch (error) {
+        console.error("Error fetching users data:", error);
+      }
+    };
+  
+    fetchUsersData();
+  }, []);
 
   // RETURN JSX CODE
   return (
