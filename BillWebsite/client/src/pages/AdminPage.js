@@ -777,12 +777,6 @@ const AdminPage = () => {
                     <p className="text-xl font-bold">Loading ...</p>
                     }
                   </div>
-                  {/* <div className="bg-white p-6 rounded-lg shadow-md shadow-indigo-300 text-center">
-                    <h3 className="text-indigo-600 font-semibold">
-                      Pending Bills
-                    </h3>
-                    <p className="text-2xl font-bold">45</p>
-                  </div> */}
                   <div className="bg-white p-6 rounded-lg shadow-md shadow-indigo-300 text-center">
                     <h3 className="text-indigo-600 font-semibold">
                       System Status
