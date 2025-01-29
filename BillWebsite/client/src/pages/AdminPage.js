@@ -498,7 +498,7 @@ const AdminPage = () => {
       }
 
       if (response.status === 200) {
-        if (activeOption !== "Generate Bill") {
+        if (activeOption !== "Generate Bill") { 
           toast.success("Data saved successfully!");
         }
       } else {

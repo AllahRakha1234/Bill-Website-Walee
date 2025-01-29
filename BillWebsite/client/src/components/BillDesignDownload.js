@@ -647,21 +647,24 @@ const BillDesign = ({ billDetails, formatDate }) => {
             </div>
           </div>
           {/* Contact Billing Department for any inquiries */}
-          <div className="border-b-2 border-black text-[13px] font-semibold">
-            <div className="text-[#1301ff] pl-1 underline border-b">
+          <div className="border-b-2 border-black text-[13px] font-semibold mt-[2px]">
+            <div className="text-[#1301ff] pl-1 underline border-b font-bold">
               For Electric Supply Failure Contact
             </div>
             <div className="text-[#1301ff] pl-1 border-b">
-              <span className="underline">Sub Engr. E&M </span>: 0301 5596511
+              <span className="underline">AD (C&M): </span> 051 9085 1281 (#1281)
             </div>
             <div className="text-[#1301ff] pl-1 border-b">
-              <span className="underline">CH. E&M </span>: 0300 5332432
+              <span className="underline">AE (E&M): </span> 051 9085 1276 (#1276)
             </div>
-            <div className="text-[#1301ff] pl-1 border-b-2 border-black">
+            <div className="text-[#1301ff] pl-1 border-b">
+              <span className="underline">Billing inquiries: </span> 051 9085 1282
+            </div>
+            <div className="text-[#1301ff] pl-1 border-b-1 border-black">
               <span className="underline">COMPLAINT OFFICE </span>: 051 9085
               1279
             </div>
-            <div className="text-[#1301ff] pl-1 pt-[1px]">-</div>
+            {/* <div className="text-[#1301ff] pl-1 pt-[1px]">-</div> */}
           </div>
           {/* Nust SGI */}
           <div className="bg-[#FFFF00] pt-1 text-3xl font-bold flex items-center justify-center">
