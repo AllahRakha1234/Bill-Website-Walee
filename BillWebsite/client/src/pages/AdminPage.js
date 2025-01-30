@@ -24,6 +24,7 @@ import { RiPriceTag3Line } from "react-icons/ri";
 import { HiAdjustments } from "react-icons/hi";
 import { AiOutlineCloudDownload } from "react-icons/ai";
 import { toast } from "react-toastify";
+import { FaUserCircle } from "react-icons/fa"; // Import profile icon
 
 // VALIDATION FUNCTION
 const validateColumns = (fileData, expectedColumns) => {
@@ -47,6 +48,7 @@ const AdminPage = () => {
   const [activeSubOption, setActiveSubOption] = useState(null);
   const [configurationSubOption, setConfigurationSubOption] = useState(null);
   const [totalUsers, setTotalUsers] = useState(null)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
   // EXPECTED COLUMN NAMES OF THE FILE UPLOAD
@@ -727,67 +729,76 @@ const AdminPage = () => {
             </div>
           </div>
         )} */}
-        {activeOption === "welcome" && (
-          <div className="min-h-screen flex flex-col w-[60vw] bg-gray-100 ">
-            {/* Navbar */}
-            <nav className="bg-indigo-500 shadow-md p-4 flex items-center justify-between rounded-xl mt-[5vh]">
-              <h1 className="text-white text-xl font-bold">Admin Section</h1>
-              <div className="flex items-center gap-x-3">
+    {activeOption === "welcome" && (
+      <div className="min-h-screen flex flex-col w-[60vw] bg-gray-100">
+        {/* Navbar */}
+        <nav className="bg-indigo-500 shadow-md p-4 flex items-center justify-between rounded-xl mt-[5vh]">
+          <h1 className="text-white text-xl font-bold">Admin Section</h1>
+          
+          {/* Profile Dropdown */}
+          <div className="relative">
+            {/* Profile Icon */}
+            <button 
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="text-white text-3xl focus:outline-none"
+            >
+              <FaUserCircle />
+            </button>
+
+            {/* Dropdown Menu */}
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md overflow-hidden">
+                <button
+                  onClick={() => navigate("/change-password")}
+                  className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-200"
+                >
+                  Change Password
+                </button>
                 <button
                   onClick={() => {
                     localStorage.removeItem("authToken");
                     navigate("/adminlogin");
                   }}
-                  className="px-4 py-2 bg-teal-500 text-white font-semibold rounded-md hover:bg-teal-600 transition duration-200"
+                  className="block w-full px-4 py-2 text-left text-red-600 hover:bg-gray-200"
                 >
                   Logout
                 </button>
-                <button
-                  onClick={() => {
-                    navigate("/change-password");
-                  }}
-                  className="px-4 py-2 bg-teal-500 text-white font-semibold rounded-md hover:bg-teal-600 transition duration-200"
-                >
-                  Change Password
-                </button>
               </div>
-            </nav>
+            )}
+          </div>
+        </nav>
 
-            {/* Main Content */}
-            <div className="flex mt-[10vh]">
-              {/* Welcome Section */}
-              <div className="flex-grow flex flex-col items-center justify-center">
-                <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-8 flex flex-col items-center gap-y-4">
-                  <h1 className="text-3xl font-bold text-center text-indigo-600">
-                    Welcome to Admin Section
-                  </h1>
-                  <p className="text-gray-500 text-center">
-                    Use the menu to navigate through admin options.
-                  </p>
-                </div>
+        {/* Main Content */}
+        <div className="flex mt-[10vh]">
+          <div className="flex-grow flex flex-col items-center justify-center">
+            <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-8 flex flex-col items-center gap-y-4">
+              <h1 className="text-3xl font-bold text-center text-indigo-600">
+                Welcome to Admin Section
+              </h1>
+              <p className="text-gray-500 text-center">
+                Use the menu to navigate through admin options.
+              </p>
+            </div>
 
-                {/* Example Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 w-full px-10">
-                  <div className="bg-white p-6 rounded-lg shadow-md shadow-indigo-300 text-center">
-                    <h3 className="text-indigo-600 font-semibold">
-                      Total Users
-                    </h3>
-                    {totalUsers !== null ?
-                    <p className="text-2xl font-bold">{totalUsers}</p>:
-                    <p className="text-xl font-bold">Loading ...</p>
-                    }
-                  </div>
-                  <div className="bg-white p-6 rounded-lg shadow-md shadow-indigo-300 text-center">
-                    <h3 className="text-indigo-600 font-semibold">
-                      System Status
-                    </h3>
-                    <p className="text-2xl font-bold text-green-500">Active</p>
-                  </div>
-                </div>
+            {/* Example Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 w-full px-10">
+              <div className="bg-white p-6 rounded-lg shadow-md shadow-indigo-300 text-center">
+                <h3 className="text-indigo-600 font-semibold">Total Users</h3>
+                {totalUsers !== null ? (
+                  <p className="text-2xl font-bold">{totalUsers}</p>
+                ) : (
+                  <p className="text-xl font-bold">Loading ...</p>
+                )}
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md shadow-indigo-300 text-center">
+                <h3 className="text-indigo-600 font-semibold">System Status</h3>
+                <p className="text-2xl font-bold text-green-500">Active</p>
               </div>
             </div>
           </div>
-        )}
+        </div>
+      </div>
+    )}
         {/* Generate Bill Section */}
         {activeOption === "Generate Bill" && (
           <GenerateBill
