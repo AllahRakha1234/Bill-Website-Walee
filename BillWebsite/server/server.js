@@ -13,7 +13,7 @@ const templateBillData = require("./routes/TemplateBillData");
 const tariff = require("./routes/Tariff");
 const dateSetting = require("./routes/DateSetting");
 const adminLogin = require("./routes/AdminLogin");
-const verifyToken = require("./routes/VeriftToken");
+const verifyToken = require("./routes/VerifyToken");
 
 const app = express();
 
