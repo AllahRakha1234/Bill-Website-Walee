@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Papa from "papaparse";
 import axios from "axios";
-import * as XLSX from "xlsx"; // Import the xlsx library
+import * as XLSX from "xlsx"; 
 import { useNavigate } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
 import FixedSetting from "../components/AdminPageComponents/FixedSetting";
 import UploadData from "../components/AdminPageComponents/UploadData";
 import TariffSetting from "./../components/AdminPageComponents/TariffSetting";
@@ -24,7 +23,7 @@ import { RiPriceTag3Line } from "react-icons/ri";
 import { HiAdjustments } from "react-icons/hi";
 import { AiOutlineCloudDownload } from "react-icons/ai";
 import { toast } from "react-toastify";
-import { FaUserCircle } from "react-icons/fa"; // Import profile icon
+import { FaUserCircle } from "react-icons/fa";
 
 // VALIDATION FUNCTION
 const validateColumns = (fileData, expectedColumns) => {
@@ -50,6 +49,26 @@ const AdminPage = () => {
   const [totalUsers, setTotalUsers] = useState(null)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
+
+  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Handle Click Outside Dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    // Add event listener
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Cleanup event listener on unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // EXPECTED COLUMN NAMES OF THE FILE UPLOAD
   const expectedUserColumns = [
@@ -701,103 +720,75 @@ const AdminPage = () => {
       {/* MAIN CONTENT PORTION */}
       <div className="w-3/4 h-full flex flex-col justify-center items-center bg-gray-100">
         {/* Welcome Message Section */}
-        {/* {activeOption === "welcome" && (
-          <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-4 mb-36 flex items-center justify-center flex-col gap-y-2">
-            <h1 className="text-3xl font-bold text-center text-indigo-600">
-              Welcome to Admin Section
-            </h1>
-            <div className="flex items-center justify-center gap-x-3">
+    {activeOption === "welcome" && (
+      <div className="min-h-screen flex flex-col w-[60vw] bg-gray-100">
+      {/* Navbar */}
+      <nav className="bg-indigo-500 shadow-md p-4 flex items-center justify-between rounded-xl mt-[5vh]">
+        <h1 className="text-white text-xl font-bold">Admin Section</h1>
+
+        {/* Profile Dropdown */}
+        <div className="relative" ref={dropdownRef}>
+          {/* Profile Icon */}
+          <button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="text-white text-3xl focus:outline-none"
+          >
+            <FaUserCircle />
+          </button>
+
+          {/* Dropdown Menu */}
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md overflow-hidden">
               <button
-                onClick={() => {
-                  // Remove the token from localStorage
-                  localStorage.removeItem("authToken");
-                  // Optionally redirect to the login page after logout
-                  navigate("/adminlogin");
-                }}
-                className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
-              >
-                Logout
-              </button>
-              <button
-                onClick={() => {
-                  navigate("/change-password"); // Redirect to change password page
-                }}
-                className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
+                onClick={() => navigate("/change-password")}
+                className="block w-full px-4 py-2 text-left font-semibold text-gray-700 hover:bg-gray-200"
               >
                 Change Password
               </button>
+              <button
+                onClick={() => {
+                  localStorage.removeItem("authToken");
+                  navigate("/adminlogin");
+                }}
+                className="block w-full px-4 py-2 text-left font-semibold text-red-600 hover:bg-gray-200"
+              >
+                Logout
+              </button>
             </div>
-          </div>
-        )} */}
-    {activeOption === "welcome" && (
-      <div className="min-h-screen flex flex-col w-[60vw] bg-gray-100">
-        {/* Navbar */}
-        <nav className="bg-indigo-500 shadow-md p-4 flex items-center justify-between rounded-xl mt-[5vh]">
-          <h1 className="text-white text-xl font-bold">Admin Section</h1>
-          
-          {/* Profile Dropdown */}
-          <div className="relative">
-            {/* Profile Icon */}
-            <button 
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="text-white text-3xl focus:outline-none"
-            >
-              <FaUserCircle />
-            </button>
+          )}
+        </div>
+      </nav>
 
-            {/* Dropdown Menu */}
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md overflow-hidden">
-                <button
-                  onClick={() => navigate("/change-password")}
-                  className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-200"
-                >
-                  Change Password
-                </button>
-                <button
-                  onClick={() => {
-                    localStorage.removeItem("authToken");
-                    navigate("/adminlogin");
-                  }}
-                  className="block w-full px-4 py-2 text-left text-red-600 hover:bg-gray-200"
-                >
-                  Logout
-                </button>
-              </div>
-            )}
+      {/* Main Content */}
+      <div className="flex mt-[10vh]">
+        <div className="flex-grow flex flex-col items-center justify-center">
+          <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-8 flex flex-col items-center gap-y-4">
+            <h1 className="text-3xl font-bold text-center text-indigo-600">
+              Welcome to Admin Section
+            </h1>
+            <p className="text-gray-500 text-center">
+              Use the menu to navigate through admin options.
+            </p>
           </div>
-        </nav>
 
-        {/* Main Content */}
-        <div className="flex mt-[10vh]">
-          <div className="flex-grow flex flex-col items-center justify-center">
-            <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-8 flex flex-col items-center gap-y-4">
-              <h1 className="text-3xl font-bold text-center text-indigo-600">
-                Welcome to Admin Section
-              </h1>
-              <p className="text-gray-500 text-center">
-                Use the menu to navigate through admin options.
-              </p>
+          {/* Example Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 w-full px-10">
+            <div className="bg-white p-6 rounded-lg shadow-md shadow-indigo-300 text-center">
+              <h3 className="text-indigo-600 font-semibold">Total Users</h3>
+              {totalUsers !== null ? (
+                <p className="text-2xl font-bold">{totalUsers}</p>
+              ) : (
+                <p className="text-xl font-bold">Loading ...</p>
+              )}
             </div>
-
-            {/* Example Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 w-full px-10">
-              <div className="bg-white p-6 rounded-lg shadow-md shadow-indigo-300 text-center">
-                <h3 className="text-indigo-600 font-semibold">Total Users</h3>
-                {totalUsers !== null ? (
-                  <p className="text-2xl font-bold">{totalUsers}</p>
-                ) : (
-                  <p className="text-xl font-bold">Loading ...</p>
-                )}
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow-md shadow-indigo-300 text-center">
-                <h3 className="text-indigo-600 font-semibold">System Status</h3>
-                <p className="text-2xl font-bold text-green-500">Active</p>
-              </div>
+            <div className="bg-white p-6 rounded-lg shadow-md shadow-indigo-300 text-center">
+              <h3 className="text-indigo-600 font-semibold">System Status</h3>
+              <p className="text-2xl font-bold text-green-500">Active</p>
             </div>
           </div>
         </div>
       </div>
+    </div>
     )}
         {/* Generate Bill Section */}
         {activeOption === "Generate Bill" && (
@@ -807,16 +798,6 @@ const AdminPage = () => {
             resetFileDataState={resetFileDataState}
           />
         )}
-
-        {/* {activeOption === "Users Data" &&
-          activeSubOption !== "View Users Data" &&
-          activeSubOption !== "Upload Users Data" && (
-            <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-4 mb-36">
-              <h1 className="text-3xl font-bold text-center text-indigo-600">
-                Welcome to Users Section
-              </h1>
-            </div>
-          )} */}
 
         {/* User Data Section */}
         {activeSubOption === "View Users Data" && <UsersData />}
@@ -829,30 +810,6 @@ const AdminPage = () => {
             resetFileDataState={resetFileDataState}
           />
         )}
-
-        {/* Settings Section */}
-
-        {/* {activeOption === "Settings" &&
-          activeSubOption !== "Tariff" &&
-          activeSubOption !== "Protected Tariff" &&
-          activeSubOption !== "Fixed Charges" &&
-          activeSubOption !== "Configuration" && (
-            <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-4 mb-36">
-              <h1 className="text-3xl font-bold text-center text-indigo-600">
-                Welcome to Settings Section
-              </h1>
-            </div>
-          )} */}
-
-        {/* {activeOption === "Settings" &&
-          activeSubOption === "Configuration" &&
-          configurationSubOption !== "Load Previous Data" && (
-            <div className="bg-white shadow-md shadow-indigo-500 rounded-lg p-4 mb-36">
-              <h1 className="text-3xl font-bold text-center text-indigo-600">
-                Welcome to Configuration Section
-              </h1>
-            </div>
-          )} */}
 
         {/* SETTINGS OPTIONS SECTION */}
 
