@@ -13,6 +13,7 @@ const templateBillData = require("./routes/TemplateBillData");
 const tariff = require("./routes/Tariff");
 const dateSetting = require("./routes/DateSetting");
 const adminLogin = require("./routes/AdminLogin");
+const verifyToken = require("./routes/VeriftToken");
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use("/api/get-bill-template-data", templateBillData);
 app.use("/api/resid-tariff-values", tariff); 
 app.use("/api/date-setting", dateSetting); 
 app.use("/api/admin-login", adminLogin); 
+app.use("/api/verify-token", verifyToken); 
 
 // Defining a basic route
 app.get('/', (req, res) => {
