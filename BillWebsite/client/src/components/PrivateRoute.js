@@ -12,28 +12,20 @@ const PrivateRoute = ({ children }) => {
     const verifyAuth = async () => {
       const token = localStorage.getItem("authToken");
 
-      console.log("Auth Token in PR: ", token)
-
       if (!token) {
         toast.error("Authentication required.");
         navigate("/adminlogin");
         return;
       }
 
-      console.log("Token pass: ", token)
 
       try {
-        // console.log("Sending Request Headers: ", {
-        //   Authorization: `Bearer ${token}`,
-        // });
         
         const response = await axios.post(
           `${process.env.REACT_APP_SERVER_URL}/api/verify-token`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
-
-      console.log("Response: ", response)
 
 
         if (response.data.valid) {
@@ -44,7 +36,6 @@ const PrivateRoute = ({ children }) => {
           navigate("/adminlogin");
         }
       } catch (error) {
-      console.log("Response in catch: ", error)
         toast.error("Authentication failed. Please log in again.");
         localStorage.removeItem("authToken");
         navigate("/adminlogin");
