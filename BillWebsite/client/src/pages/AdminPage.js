@@ -235,7 +235,6 @@ const AdminPage = () => {
               bill,
             });
           }
-
           return { userId, previousReadings };
         });
 

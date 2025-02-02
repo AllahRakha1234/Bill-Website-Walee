@@ -47,10 +47,10 @@ const PrivateRoute = ({ children }) => {
 
   if (isAuthenticated === null) {
     return (
-      <div className="w-screen h-screen flex items-center justify-center">
+      <div className="w-full h-screen flex items-center justify-center overflow-hidden">
         <Loading />
       </div>
-    ); // Show loader while verifying authentication
+    ); 
   }
 
   return isAuthenticated ? children : null;
