@@ -39,15 +39,15 @@ const SearchBox = () => {
   };
 
   return (
-    <div className="container mx-auto flex items-center justify-center flex-col mt-20">
+    <div className="container mx-auto flex items-center justify-center flex-col my-20 lg:mt-20">
       <div className="text-2xl font-semibold mb-3">
         <h2>NUST Bill</h2>
       </div>
-      <div className="border border-gray-400 w-[35%] flex flex-col mb-4">
+      <div className="border border-gray-400 w-[90%] sm:w-[80%] md:w-[50%] lg:w-[40%] flex flex-col mb-4">
         <div className="text-lg font-semibold mb-2 bg-slate-300 p-2">
           Search Electricity Bill
         </div>
-        <div className="flex flex-row items-center justify-center p-2">
+        <div className="flex flex-col items-center justify-center p-2 md:flex-row">
           <div>
             <h3 className="font-semibold text-blue-800">NUST/RESIDENT/</h3>
           </div>
@@ -62,7 +62,7 @@ const SearchBox = () => {
             />
           </div>
         </div>  
-        <div className="p-2">
+        <div className="w-full p-2 flex justify-center items-center md:justify-start">
           <button
             onClick={handleSearchBtnClick}
             className="flex text-white bg-indigo-500 border-0 py-1 px-4 focus:outline-none hover:bg-indigo-600 rounded text-md"

@@ -1,43 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Loading from "./Loading"; // Assuming you have a Loading component
+import Loading from "./Loading"; 
 import { toast } from "react-toastify";
 
 const PrivateRoute = ({ children }) => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const hasCheckedAuth = useRef(false); 
 
   useEffect(() => {
+    if (hasCheckedAuth.current) return; 
+    hasCheckedAuth.current = true; 
+
     const verifyAuth = async () => {
       const token = localStorage.getItem("authToken");
 
       if (!token) {
-        toast.error("Authentication required.");
         navigate("/adminlogin");
         return;
       }
 
-
       try {
-        
         const response = await axios.post(
           `${process.env.REACT_APP_SERVER_URL}/api/verify-token`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
-
         if (response.data.valid) {
           setIsAuthenticated(true);
         } else {
-          toast.error("Session expired. Please log in again.");
           localStorage.removeItem("authToken");
+          toast.error("Session expired. Please log in again.");
           navigate("/adminlogin");
         }
       } catch (error) {
-        toast.error("Authentication failed. Please log in again.");
         localStorage.removeItem("authToken");
+
+        if (token) {
+          toast.error("Authentication failed. Please log in again.");
+        }
+
         navigate("/adminlogin");
       }
     };
@@ -50,7 +54,7 @@ const PrivateRoute = ({ children }) => {
       <div className="w-full h-screen flex items-center justify-center overflow-hidden">
         <Loading />
       </div>
-    ); 
+    );
   }
 
   return isAuthenticated ? children : null;

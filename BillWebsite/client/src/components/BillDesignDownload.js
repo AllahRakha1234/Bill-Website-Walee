@@ -598,8 +598,13 @@ const BillDesign = ({ billDetails, formatDate }) => {
         </div>
         {/* ARREARS - RIGHT PART */}
         <div className="col-span-4 border-b-2 border-black">
-          <div className="border-b-2 border-black pl-1 text-left text-sm text-[#1301ff] font-semibold">
-            Arrear
+        <div className="grid grid-rows-1 grid-cols-5 border-b-2 border-black text-left text-sm text-[#1301ff] font-semibold">
+            <div className="col-span-4 pl-1 border-black border-r-2">
+              Arrear
+            </div>
+            <div className="col-span-1 flex items-center justify-center ">
+              0
+            </div>
           </div>
           <div className="grid grid-flow-row grid-cols-5 grid-rows-8">
             {Object.keys(arrearsDetails).map((key, index) => {

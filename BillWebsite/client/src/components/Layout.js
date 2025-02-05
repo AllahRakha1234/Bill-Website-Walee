@@ -19,7 +19,7 @@ const Layout = ({ children }) => {
       {/* Add the ToastContainer at the top level with custom style */}
       <ToastContainer
         position="top-right"
-        autoClose={2000}
+        autoClose={3000}
         style={styles.toastStyle} // Apply the custom style
       />
       <main className="flex-grow">{children}</main>

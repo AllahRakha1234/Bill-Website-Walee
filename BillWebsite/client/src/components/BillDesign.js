@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 
 const BillDesign = ({ billDetails, formatDate }) => {
@@ -107,12 +107,11 @@ const BillDesign = ({ billDetails, formatDate }) => {
           typeof data.payment === "number" &&
           typeof data.bill === "number"
         ) {
-          const response = await axios.put(
+          await axios.put(
             `${process.env.REACT_APP_SERVER_URL}/api/upload-once-bill-data`,
             data
           );
-          // console.log("Response.data.message: ", response.data.message);
-        } 
+        }
       } catch (error) {
         console.error("Error sending data:", error);
       }
@@ -660,8 +659,13 @@ const BillDesign = ({ billDetails, formatDate }) => {
         </div>
         {/* ARREARS - RIGHT PART */}
         <div className="col-span-4 border-b-2 border-black">
-          <div className="border-b-2 border-black pl-1 text-left text-sm text-[#1301ff] font-semibold">
-            Arrear
+          <div className="grid grid-rows-1 grid-cols-5 border-b-2 border-black text-left text-sm text-[#1301ff] font-semibold">
+            <div className="col-span-4 pl-1 border-black border-r-2">
+              Arrear
+            </div>
+            <div className="col-span-1 flex items-center justify-center ">
+              0
+            </div>
           </div>
           <div className="grid grid-flow-row grid-cols-5 grid-rows-8">
             {Object.keys(arrearsDetails).map((key, index) => {
@@ -714,13 +718,16 @@ const BillDesign = ({ billDetails, formatDate }) => {
               For Electric Supply Failure Contact
             </div>
             <div className="text-[#1301ff] pl-1 border-b">
-              <span className="underline">AD (C&M): </span> 051 9085 1281 (#1281)
+              <span className="underline">AD (C&M): </span> 051 9085 1281
+              (#1281)
             </div>
             <div className="text-[#1301ff] pl-1 border-b">
-              <span className="underline">AE (E&M): </span> 051 9085 1276 (#1276)
+              <span className="underline">AE (E&M): </span> 051 9085 1276
+              (#1276)
             </div>
             <div className="text-[#1301ff] pl-1 border-b">
-              <span className="underline">Billing inquiries: </span> 051 9085 1282
+              <span className="underline">Billing inquiries: </span> 051 9085
+              1282
             </div>
             <div className="text-[#1301ff] pl-1 border-b-1 border-black">
               <span className="underline">COMPLAINT OFFICE </span>: 051 9085
