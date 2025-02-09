@@ -51,24 +51,24 @@ const AdminLoginPage = () => {
 
   return (
     <div className="flex justify-center items-center h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-400">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg transform transition-all hover:scale-105">
-        <h2 className="text-3xl font-bold text-center text-indigo-600 mb-4">
+      <div className="w-full max-w-md bg-white p-6 lg:p-8  mx-5 md:my-0 rounded-lg shadow-lg transform transition-all hover:scale-105">
+        <h2 className="text-lg md:text-xl lg:text-3xl font-bold text-center text-indigo-600 mb-2 lg:mb-4">
           Admin Login
         </h2>
-        <p className="text-center text-gray-500 mb-6">
+        <p className="text-center text-gray-500 text-sm lg:text-lg mb-2 lg:mb-6">
           Enter your credentials to access the admin panel.
         </p>
-        <div className="mb-4">
+        <div className="mb-2 md:mb-4">
           <label className="block text-gray-700 font-semibold mb-2">Email</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            className="w-full px-4 py-1 md:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
             placeholder="Enter your email"
           />
         </div>
-        <div className="mb-6">
+        <div className="mb-4 md:mb-6">
           <label className="block text-gray-700 font-semibold mb-2">
             Password
           </label>
@@ -76,19 +76,19 @@ const AdminLoginPage = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            className="w-full px-4 py-1 md:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
             placeholder="Enter your password"
           />
         </div>
         <button
           onClick={handleLogin}
-          className="w-full py-2 mb-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition duration-200"
+          className="w-full py-2 mb-0 md:mb-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition duration-200"
           disabled={isLoading}
         >
           {isLoading ? "Logging in..." : "Login"}
         </button>
         {isLoading && <Loading />}
-        <div className="mt-4 text-center">
+        <div className="mt-2 md:mt-4 text-center">
           <a
             href="/forgot-password"
             className="text-sm text-indigo-500 hover:underline"
