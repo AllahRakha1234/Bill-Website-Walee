@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Loading from '../components/Loading'; // Import the Loading component
-import { toast } from 'react-toastify'; // Import toast from react-toastify
+import { toast } from "react-toastify"; // Import toast from react-toastify
+import { FaSearch } from "react-icons/fa";
 
 const SearchBox = () => {
   const [referenceNo, setReferenceNo] = useState("");
@@ -61,14 +61,23 @@ const SearchBox = () => {
               className="border border-gray-300 p-2 rounded w-56 h-8"
             />
           </div>
-        </div>  
+        </div>
         <div className="w-full p-2 flex justify-center items-center md:justify-start">
           <button
             onClick={handleSearchBtnClick}
-            className="flex text-white bg-indigo-500 border-0 py-1 px-4 focus:outline-none hover:bg-indigo-600 rounded text-md"
+            className="flex items-center text-white bg-indigo-500 border-0 py-1 px-4 focus:outline-none hover:bg-indigo-600 rounded text-md"
             disabled={isLoading} // Disable button when loading
           >
-            {isLoading ? 'Searching...' : 'Search'}
+            {isLoading ? (
+              <>
+                <span className="ml-1">Searching...</span>
+              </>
+            ) : (
+              <>
+                <FaSearch className="mr-1" /> 
+                Search
+              </>
+            )}
           </button>
         </div>
       </div>
