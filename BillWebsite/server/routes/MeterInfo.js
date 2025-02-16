@@ -6,9 +6,18 @@ const {
 
 const router = express.Router();
 
-// Define routes and link them to controller functions
-router.get("/", getAllMeterInfo);
-router.post("/", addMeterInfo);
+// Add middleware to handle larger payloads
+router.use(express.json({ limit: '10mb' }));
 
-// Export the router
+// Add basic request timeout middleware
+const timeoutMiddleware = (req, res, next) => {
+    res.setTimeout(25000, () => {
+        res.status(408).json({ message: "Request timeout" });
+    });
+    next();
+};
+
+router.get("/", getAllMeterInfo);
+router.post("/", timeoutMiddleware, addMeterInfo);
+
 module.exports = router;
