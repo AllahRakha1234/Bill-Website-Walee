@@ -20,6 +20,16 @@ const getAllMeterInfo = async (req, res) => {
   }
 };
 
+const getLastMonthYearId = async () => {
+  // Fetch all data from the database
+  const uploadOnceBillData = await UploadOnceBillData.find();
+
+  // Find the first user in the collection
+  const firstDocPreviousReadingsArray = uploadOnceBillData[0].previousReadings;
+  return firstDocPreviousReadingsArray[firstDocPreviousReadingsArray.length - 1]
+    .month;
+};
+
 const addMeterInfo = async (req, res) => {
   try {
     // Start by fetching all necessary data in parallel
