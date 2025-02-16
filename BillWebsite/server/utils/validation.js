@@ -15,7 +15,12 @@ const validateMeterInfo = (meterInfo) => {
       }
     }
   
-    if (typeof meterInfo.userId !== 'string' || meterInfo.userId.trim() === '') {
+    // Allow userId to be either a string or a number
+    if (typeof meterInfo.userId !== 'string' && typeof meterInfo.userId !== 'number') {
+      return false;
+    }
+  
+    if (typeof meterInfo.userId === 'string' && meterInfo.userId.trim() === '') {
       return false;
     }
   
