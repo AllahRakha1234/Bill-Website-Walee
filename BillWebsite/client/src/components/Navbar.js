@@ -12,9 +12,9 @@ const Navbar = () => {
           <img
             src="/walee-logo.png"
             alt="Walee - NUST Bill System Logo"
-            className="h-10 w-auto"
+            className="h-10 w-auto hover:scale-110 transition-all duration-100"
             loading="lazy"
-            decoding="async"
+            decoding="async" 
           />
           <span className="ml-3 text-xl">NUST Bill System</span>
         </Link>
