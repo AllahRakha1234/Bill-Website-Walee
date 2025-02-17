@@ -445,7 +445,7 @@ const BillDesign = ({ billDetails, formatDate }) => {
               {billDetails?.rightSideOfAddressSection?.bills?.map((m, index) => {
                 return (
                   <div className="border-b" key={index} id={index}>
-                    {m}
+                    {Math.round(m)}
                   </div>
                 );
               })}
@@ -455,7 +455,7 @@ const BillDesign = ({ billDetails, formatDate }) => {
               {billDetails?.rightSideOfAddressSection?.payments?.map((m, index) => {
                 return (
                   <div className="border-b" key={index} id={index}>
-                    {m}
+                    {Math.round(m)}
                   </div>
                 );
               })}

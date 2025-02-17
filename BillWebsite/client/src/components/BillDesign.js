@@ -506,7 +506,7 @@ const BillDesign = ({ billDetails, formatDate }) => {
                 (m, index) => {
                   return (
                     <div className="border-b" key={index} id={index}>
-                      {m}
+                      {Math.round(m)}
                     </div>
                   );
                 }
@@ -518,7 +518,7 @@ const BillDesign = ({ billDetails, formatDate }) => {
                 (m, index) => {
                   return (
                     <div className="border-b" key={index} id={index}>
-                      {m}
+                      {Math.round(m)}
                     </div>
                   );
                 }
