@@ -21,13 +21,16 @@ const calculateQtrTex = (totalUnits, qtrRate) => {
 // FPA = (Total Units * FPA Rate) + GST on FPA + ED on FPA  
 const calculateFPA = (totalUnitsOld, fpaRate, edOnFpaRate, gstOnFpaRate) => {
   const fpaCost = totalUnitsOld * fpaRate;
-  const edOnFpa = totalUnitsOld * edOnFpaRate;
+  const edOnFpa = fpaCost * edOnFpaRate;
   const gstOnFpa = (fpaCost + edOnFpa) * gstOnFpaRate; 
   console.log("totalUnitsOld: ", totalUnitsOld);
   console.log("fpaRate: ", fpaRate);
+  console.log("fpaCost: ", fpaCost);
   console.log("edOnFpaRate: ", edOnFpaRate);
+  console.log("edOnFpa: ", edOnFpa);
   console.log("gstOnFpaRate: ", gstOnFpaRate);
-  console.log("(fpaCost + edOnFpa) + gstOnFpa: ", (fpaCost + edOnFpa) + gstOnFpa)
+  console.log("gstOnFpa: ", gstOnFpa);
+  console.log("fpa value: ", (fpaCost + edOnFpa) + gstOnFpa)
   return (fpaCost + edOnFpa) + gstOnFpa;
 };
 
