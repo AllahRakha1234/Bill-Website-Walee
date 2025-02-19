@@ -197,17 +197,17 @@ const calculateTotalUnitsForFPA = (
   const tempIndex = readings.length;
   if (lastMonthYearId != currentMonthYearId) {
     return (
-      readings[tempIndex - 3].previous_peak -
-      readings[tempIndex - 4].previous_peak +
-      (readings[tempIndex - 3].previous_off_peak -
-        readings[tempIndex - 4].previous_off_peak)
+      readings[tempIndex - 2].previous_peak -
+      readings[tempIndex - 3].previous_peak +
+      (readings[tempIndex - 2].previous_off_peak -
+        readings[tempIndex - 3].previous_off_peak)
     );
   }
   return (
-    readings[tempIndex - 4].previous_peak -
-    readings[tempIndex - 5].previous_peak +
-    (readings[tempIndex - 4].previous_off_peak -
-      readings[tempIndex - 5].previous_off_peak)
+    readings[tempIndex - 3].previous_peak -
+    readings[tempIndex - 4].previous_peak +
+    (readings[tempIndex - 3].previous_off_peak -
+      readings[tempIndex - 4].previous_off_peak)
   );
 };
 
