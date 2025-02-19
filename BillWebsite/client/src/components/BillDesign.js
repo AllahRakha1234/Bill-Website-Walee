@@ -120,6 +120,8 @@ const BillDesign = ({ billDetails, formatDate }) => {
     sendBillData();
   }, [data]);
 
+  console.log("bill details in bill design: ", billDetails)
+
   // RETURN JSX
   return (
     <div className="my-4 border-2 border-blue-800 max-w-4xl mx-auto">

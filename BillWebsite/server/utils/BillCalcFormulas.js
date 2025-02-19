@@ -23,11 +23,11 @@ const calculateFPA = (totalUnitsOld, fpaRate, edOnFpaRate, gstOnFpaRate) => {
   const fpaCost = totalUnitsOld * fpaRate;
   const edOnFpa = totalUnitsOld * edOnFpaRate;
   const gstOnFpa = (fpaCost + edOnFpa) * gstOnFpaRate; 
-  // console.log("totalUnitsOld: ", totalUnitsOld);
-  // console.log("fpaRate: ", fpaRate);
-  // console.log("edOnFpaRate: ", edOnFpaRate);
-  // console.log("gstOnFpaRate: ", gstOnFpaRate);
-  // console.log("(fpaCost + edOnFpa) + gstOnFpa: ", (fpaCost + edOnFpa) + gstOnFpa)
+  console.log("totalUnitsOld: ", totalUnitsOld);
+  console.log("fpaRate: ", fpaRate);
+  console.log("edOnFpaRate: ", edOnFpaRate);
+  console.log("gstOnFpaRate: ", gstOnFpaRate);
+  console.log("(fpaCost + edOnFpa) + gstOnFpa: ", (fpaCost + edOnFpa) + gstOnFpa)
   return (fpaCost + edOnFpa) + gstOnFpa;
 };
 
