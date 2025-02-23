@@ -15,10 +15,10 @@ const AboutPage = () => {
           opportunities.
         </p>
 
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">
           Our Solutions
         </h2>
-        <ul className="list-disc list-inside text-gray-600 mb-6">
+        <ul className="list-disc list-inside text-gray-600 mb-6 font-semibold">
           <li>Automated Influencer Marketing</li>
           <li>Influencer Insights</li>
           <li>Social Listening</li>
