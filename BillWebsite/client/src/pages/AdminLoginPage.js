@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Loading from "../components/Loading";
+// import Loading from "../components/Loading";
 import { toast } from "react-toastify";
 
 const AdminLoginPage = () => {
@@ -87,7 +87,7 @@ const AdminLoginPage = () => {
         >
           {isLoading ? "Logging in..." : "Login"}
         </button>
-        {isLoading && <Loading />}
+        {/* {isLoading && <Loading />} */}
         <div className="mt-2 md:mt-4 text-center">
           <a
             href="/forgot-password"
