@@ -55,7 +55,7 @@ const AdminLoginPage = () => {
         <h2 className="text-lg md:text-xl lg:text-3xl font-bold text-center text-indigo-600 mb-2 lg:mb-4">
           Admin Login
         </h2>
-        <p className="text-center text-gray-500 text-sm lg:text-lg mb-2 lg:mb-6">
+        <p className="text-center text-gray-500 text-sm lg:text-lg mb-2 lg:mb-4">
           Enter your credentials to access the admin panel.
         </p>
         <div className="mb-2 md:mb-4">
@@ -88,7 +88,7 @@ const AdminLoginPage = () => {
           {isLoading ? "Logging in..." : "Login"}
         </button>
         {/* {isLoading && <Loading />} */}
-        <div className="mt-2 md:mt-4 text-center">
+        <div className="mt-2 md:mt-2 text-center">
           <a
             href="/forgot-password"
             className="text-sm text-indigo-500 hover:underline"
