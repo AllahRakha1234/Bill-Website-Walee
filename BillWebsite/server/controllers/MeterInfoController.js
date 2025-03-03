@@ -322,6 +322,13 @@ const updateUploadOnceBillData = async (
   currentMonthYearId,
   lastMonthYearId
 ) => {
+  console.log("--------------------------------");
+  console.log("Current Month Year ID: ", currentMonthYearId);
+  console.log("Last Month Year ID: ", lastMonthYearId);
+  console.log("Previous Meter Info: ", previousMeterInfo);  
+  console.log("Present Peak Reading: ", present_peak_reading);
+  console.log("Present Off Peak Reading: ", present_off_peak_reading);
+  console.log("--------------------------------");
   // Format validation
   const formatMonth = (monthStr) => {
     if (/^[A-Za-z]{3}-\d{4}$/.test(monthStr)) {
