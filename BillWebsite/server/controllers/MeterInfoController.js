@@ -295,47 +295,74 @@ const addMeterInfo = async (req, res) => {
 
       // UPDATING THE ONCE UPLOAD ARRAY READINGS DATA WITH THE CURRENT READING. IT MEANS THAT PUSH THE CURRENT READING AT THE END OF THE ONCEUPLOADBILLDATA ARRAY.
 
-      if (lastMonthYearId != currentMonthYearId) {
-        const previousReadingsArrayOfMeter = previousMeterInfo.previousReadings;
-        // Remove the first entry
-        previousReadingsArrayOfMeter.shift();
-        // Add the new entry at the end
-        previousReadingsArrayOfMeter.push({
-          previous_peak: present_peak_reading,
-          previous_off_peak: present_off_peak_reading,
-          month: currentMonthYearId,
-          payment: 0,
-          bill: 0,
-        });
-        // Update the document in the database
+      const updateResult = await updateUploadOnceBillData(
+        previousMeterInfo,
+        present_peak_reading,
+        present_off_peak_reading,
+        currentMonthYearId,
+        lastMonthYearId
+      );
 
-        await UploadOnceBillData.updateOne(
-          { _id: previousMeterInfo._id }, // Match the document by ID or other criteria
-          { $set: { previousReadings: previousReadingsArrayOfMeter } } // Update the array
-        );
+      if (updateResult.modifiedCount > 0) {
+        res.status(200).json({ message: "Meter info added successfully" });
       } else {
-        // IF THE CURRENTMONTHYEARID == LASTMONTHYEARID, THEN JUST UPDATE THE LAST OBJECT OF ONCEUPLOADBILLDATA
-        const previousReadingsArrayOfMeter = previousMeterInfo.previousReadings;
-        const lastOnceUploadBillDataObject =
-          previousReadingsArrayOfMeter[previousReadingsArrayOfMeter.length - 1];
-
-        // Update the last object in the array with the new values
-        lastOnceUploadBillDataObject.previous_peak = present_peak_reading;
-        lastOnceUploadBillDataObject.previous_off_peak =
-          present_off_peak_reading;
-        lastOnceUploadBillDataObject.month = currentMonthYearId;
-        lastOnceUploadBillDataObject.payment = 0; // Assuming payment is 0
-        lastOnceUploadBillDataObject.bill = 0; // Assuming bill is 0
-
-        // Save the updated document by calling .save() on the instance of the document
-        await previousMeterInfo.save();
+        res.status(500).json({ message: "Failed to update UploadOnceBillData" });
       }
     }
-    // Return a success message
-    res.status(200).json({ message: "Meter info added successfully" });
   } catch (error) {
     console.log("Error adding meter info:", error);
     res.status(500).json({ message: "Failed to add meter info" });
+  }
+};
+
+const updateUploadOnceBillData = async (
+  previousMeterInfo,
+  present_peak_reading,
+  present_off_peak_reading,
+  currentMonthYearId,
+  lastMonthYearId
+) => {
+  // Format validation
+  const formatMonth = (monthStr) => {
+    if (/^[A-Za-z]{3}-\d{4}$/.test(monthStr)) {
+      // Convert from MMM-YYYY to MMM-YY
+      const [month, year] = monthStr.split('-');
+      return `${month}-${year.slice(2)}`;
+    }
+    return monthStr;
+  };
+
+  const formattedCurrentMonthYearId = formatMonth(currentMonthYearId);
+
+  if (lastMonthYearId != currentMonthYearId) {
+    const previousReadingsArrayOfMeter = [...previousMeterInfo.previousReadings];
+    previousReadingsArrayOfMeter.shift();
+    previousReadingsArrayOfMeter.push({
+      previous_peak: present_peak_reading,
+      previous_off_peak: present_off_peak_reading,
+      month: formattedCurrentMonthYearId, // Use formatted month
+      payment: 0,
+      bill: 0,
+    });
+    return UploadOnceBillData.updateOne(
+      { _id: previousMeterInfo._id },
+      { $set: { previousReadings: previousReadingsArrayOfMeter } }
+    );
+  } else {
+    const previousReadingsArrayOfMeter = [...previousMeterInfo.previousReadings];
+    const lastIndex = previousReadingsArrayOfMeter.length - 1;
+    previousReadingsArrayOfMeter[lastIndex] = {
+      ...previousReadingsArrayOfMeter[lastIndex],
+      previous_peak: present_peak_reading,
+      previous_off_peak: present_off_peak_reading,
+      month: formattedCurrentMonthYearId, // Use formatted month
+      payment: 0,
+      bill: 0
+    };
+    return UploadOnceBillData.updateOne(
+      { _id: previousMeterInfo._id },
+      { $set: { previousReadings: previousReadingsArrayOfMeter } }
+    );
   }
 };
 
