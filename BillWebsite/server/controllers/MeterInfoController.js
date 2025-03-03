@@ -265,6 +265,8 @@ const updateUploadOnceBillData = async (
   currentMonthYearId,
   lastMonthYearId
 ) => {
+  console.log("Current Month Year ID: ", currentMonthYearId)
+  console.log("Last Month Year ID: ", lastMonthYearId)
   if (lastMonthYearId != currentMonthYearId) {
     const previousReadingsArrayOfMeter = [
       ...previousMeterInfo.previousReadings,
@@ -311,6 +313,7 @@ const calculateTemplateBillData = async (
   const peakUnits = present_peak_reading - previousPeakReading;
   const offPeakUnits = present_off_peak_reading - previousOffPeakReading;
   const totalUnits = peakUnits + offPeakUnits;
+
 
   const costOfElectricity = await calculateElectricCost(
     peakUnits,

@@ -47,6 +47,8 @@ app.get('/', (req, res) => {
   res.send('Hello, World! Connected to MongoDB');
 });
 
+console.log("INside Server")
+
 // Starting the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
