@@ -116,7 +116,6 @@ const calculateTemplateBillData = async (
 // CONTROLLER FUNCTION TO ADD METER INFO
 const addMeterInfo = async (req, res) => {
   try {
-
     // TARIFF SLABS VALUES
     residentailTariffValues = await Tariff.find();
 
@@ -160,67 +159,60 @@ const addMeterInfo = async (req, res) => {
     // console.log("Cureeent:", currentMonthYearId);
     // console.log("meterInfoArray:::", meterInfoArray);
 
-    // LOOPING OVER ALL THE METER INFOs (There will be a list of current readings of meter infos)
+    // LOOPING OVER ALL THE METER INFOs
     for (let i = 0; i < meterInfoArray.length; i++) {
-      // Destructuring Present Meter Info
       const userId = meterInfoArray[i].userId;
       const present_peak_reading = meterInfoArray[i].present_peak_reading;
-      const present_off_peak_reading =
-        meterInfoArray[i].present_off_peak_reading;
+      const present_off_peak_reading = meterInfoArray[i].present_off_peak_reading;
 
-      // Variable to store Template Data Function Result
       let templateBillData = {};
 
       // Finding the previous meter info
-      const previousMeterInfo = await UploadOnceBillData.findOne({
-        userId: userId,
-      });
+      const previousMeterInfo = await UploadOnceBillData.findOne({ userId: userId });
 
-      if (previousMeterInfo?.previousReadings?.length) {
-        const previousReadingIndex =
-          previousMeterInfo.previousReadings.length -
-          (lastMonthYearId == currentMonthYearId ? 2 : 1); // Setting this index according to the meterinfo upload date
-        const previousPeakReading =
-          previousMeterInfo.previousReadings[previousReadingIndex]
-            .previous_peak;
-        const previousOffPeakReading =
-          previousMeterInfo.previousReadings[previousReadingIndex]
-            .previous_off_peak;
-        // Finding totalUnits value for FPA calculation :: (For August Required May Units)
-        const tempIndex = previousMeterInfo.previousReadings.length;
-        if (lastMonthYearId != currentMonthYearId) {
-          totalUnitsForFpaCalc =
-            previousMeterInfo.previousReadings[tempIndex - 3].previous_peak -
-            previousMeterInfo.previousReadings[tempIndex - 4].previous_peak +
-            (previousMeterInfo.previousReadings[tempIndex - 3]
-              .previous_off_peak -
-              previousMeterInfo.previousReadings[tempIndex - 4]
-                .previous_off_peak);
-        } else {
-          totalUnitsForFpaCalc =
-            previousMeterInfo.previousReadings[tempIndex - 4].previous_peak -
-            previousMeterInfo.previousReadings[tempIndex - 5].previous_peak +
-            (previousMeterInfo.previousReadings[tempIndex - 4]
-              .previous_off_peak -
-              previousMeterInfo.previousReadings[tempIndex - 5]
-                .previous_off_peak);
-        }
-
-        // Calling the function to calculate the template bill data
-        templateBillData = await calculateTemplateBillData(
-          previousPeakReading,
-          previousOffPeakReading,
-          present_peak_reading,
-          present_off_peak_reading,
-          totalUnitsForFpaCalc,
-          tariffSlabs
-        );
-      } else {
-        console.error("No previous readings found for the specified userId");
-        return res.status(400).json({
-          message: `No previous readings found for the specified userId: ${userId}`,
-        });
+      if (!previousMeterInfo?.previousReadings?.length) {
+        throw new Error(`No previous readings found for userId: ${userId}`);
       }
+
+      // Destructuring Present Meter Info
+      const previousReadingIndex =
+        previousMeterInfo.previousReadings.length -
+        (lastMonthYearId == currentMonthYearId ? 2 : 1); // Setting this index according to the meterinfo upload date
+      const previousPeakReading =
+        previousMeterInfo.previousReadings[previousReadingIndex]
+          .previous_peak;
+      const previousOffPeakReading =
+        previousMeterInfo.previousReadings[previousReadingIndex]
+          .previous_off_peak;
+      // Finding totalUnits value for FPA calculation :: (For August Required May Units)
+      const tempIndex = previousMeterInfo.previousReadings.length;
+      if (lastMonthYearId != currentMonthYearId) {
+        totalUnitsForFpaCalc =
+          previousMeterInfo.previousReadings[tempIndex - 3].previous_peak -
+          previousMeterInfo.previousReadings[tempIndex - 4].previous_peak +
+          (previousMeterInfo.previousReadings[tempIndex - 3]
+            .previous_off_peak -
+            previousMeterInfo.previousReadings[tempIndex - 4]
+              .previous_off_peak);
+      } else {
+        totalUnitsForFpaCalc =
+          previousMeterInfo.previousReadings[tempIndex - 4].previous_peak -
+          previousMeterInfo.previousReadings[tempIndex - 5].previous_peak +
+          (previousMeterInfo.previousReadings[tempIndex - 4]
+            .previous_off_peak -
+            previousMeterInfo.previousReadings[tempIndex - 5]
+              .previous_off_peak);
+      }
+
+      // Calling the function to calculate the template bill data
+      templateBillData = await calculateTemplateBillData(
+        previousPeakReading,
+        previousOffPeakReading,
+        present_peak_reading,
+        present_off_peak_reading,
+        totalUnitsForFpaCalc,
+        tariffSlabs
+      );
 
       // Adding remaining fields to template bill data
       const userData = await UserInfo.find({ userId: userId });
@@ -303,15 +295,23 @@ const addMeterInfo = async (req, res) => {
         lastMonthYearId
       );
 
-      if (updateResult.modifiedCount > 0) {
-        res.status(200).json({ message: "Meter info added successfully" });
-      } else {
-        res.status(500).json({ message: "Failed to update UploadOnceBillData" });
+      if (!updateResult.modifiedCount > 0) {
+        throw new Error(`Failed to update UploadOnceBillData for userId: ${userId}`);
       }
     }
+
+    // Send response only once after all operations are complete
+    res.status(200).json({ message: "Meter info added successfully" });
+
   } catch (error) {
     console.log("Error adding meter info:", error);
-    res.status(500).json({ message: "Failed to add meter info" });
+    // Only send error response if headers haven't been sent
+    if (!res.headersSent) {
+      res.status(500).json({ 
+        message: "Failed to add meter info",
+        error: error.message 
+      });
+    }
   }
 };
 
